@@ -1,0 +1,27 @@
+{
+    "variants": {
+        "facing=down": {
+            "model": "minecraft:block/observer",
+            "x": 90
+        },
+        "facing=up": {
+            "model": "minecraft:block/observer",
+            "x": -90
+        },
+        "facing=north": {
+            "model": "minecraft:block/observer"
+        },
+        "facing=south": {
+            "model": "minecraft:block/observer",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "minecraft:block/observer",
+            "y": 270
+        },
+        "facing=east": {
+            "model": "minecraft:block/observer",
+            "y": 90
+        }
+    }
+}

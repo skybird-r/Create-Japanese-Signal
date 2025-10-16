@@ -1,0 +1,36 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create_jp_signal:block/signal_casing/backplate_middle",
+		"particle": "create_jp_signal:block/signal_casing/backplate_middle"
+	},
+	"elements": [
+		{
+			"from": [-6, 0, 1.5],
+			"to": [-2.5, 5, 1.8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8.5, 11.5, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 5], "texture": "#0"},
+				"east": {"uv": [8, 0, 9, 5], "texture": "#0"},
+				"south": {"uv": [4, 0, 8, 5], "texture": "#0"},
+				"west": {"uv": [8, 5, 9, 10], "texture": "#0"},
+				"up": {"uv": [4, 11, 0, 10], "texture": "#0"},
+				"down": {"uv": [14, 0, 10, 1], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2.5, 0, 1.5],
+			"to": [6, 5, 1.8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 11.5, 0]},
+			"faces": {
+				"north": {"uv": [0, 5, 4, 10], "texture": "#0"},
+				"east": {"uv": [9, 0, 10, 5], "texture": "#0"},
+				"south": {"uv": [4, 5, 8, 10], "texture": "#0"},
+				"west": {"uv": [9, 5, 10, 10], "texture": "#0"},
+				"up": {"uv": [14, 2, 10, 1], "texture": "#0"},
+				"down": {"uv": [14, 2, 10, 3], "texture": "#0"}
+			}
+		}
+	]
+}

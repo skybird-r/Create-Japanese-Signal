@@ -1,0 +1,23 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create_jp_signal:block/signal_parts/mast_coupler",
+		"particle": "create_jp_signal:block/signal_parts/mast_coupler"
+	},
+	"elements": [
+		{
+			"from": [-0.5, 0.25, 0],
+			"to": [0.5, 1.75, 1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-3, 0.25, -2]},
+			"faces": {
+				"north": {"uv": [5, 0, 10, 2], "texture": "#0"},
+				"east": {"uv": [5, 2, 10, 4], "texture": "#0"},
+				"south": {"uv": [5, 4, 10, 6], "texture": "#0"},
+				"west": {"uv": [5, 6, 10, 8], "texture": "#0"},
+				"up": {"uv": [5, 5, 0, 0], "texture": "#0"},
+				"down": {"uv": [5, 5, 0, 10], "texture": "#0"}
+			}
+		}
+	]
+}

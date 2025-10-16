@@ -1,0 +1,24 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "com.skybird.create_jp_signal.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+        "SignalBlockEntityMixin",
+        "NavigationMixin",
+        "SignalBoundaryMixin",
+        "SignalEdgeGroupMixin",
+        "TrainMixin",
+        "GlobalRailwayManagerMixin",
+        "ScheduleMixin",
+        "ScheduleRuntimeMixin",
+        "TrackTargetingBlockItemMixin"
+    ],
+    "client": [
+    ],
+    "server": [
+    ],
+    "injectors": {
+      "defaultRequire": 1
+    }
+}

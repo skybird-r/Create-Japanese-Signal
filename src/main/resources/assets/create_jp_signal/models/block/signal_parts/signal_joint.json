@@ -1,0 +1,23 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create_jp_signal:block/signal_parts/signal_joint",
+		"particle": "create_jp_signal:block/signal_parts/signal_joint"
+	},
+	"elements": [
+		{
+			"from": [-0.75, 0, -0.75],
+			"to": [0.75, 2, 0.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.75, 0, -1.25]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"east": {"uv": [0, 2, 2, 4], "texture": "#0"},
+				"south": {"uv": [2, 0, 4, 2], "texture": "#0"},
+				"west": {"uv": [2, 2, 4, 4], "texture": "#0"},
+				"up": {"uv": [2, 6, 0, 4], "texture": "#0"},
+				"down": {"uv": [6, 0, 4, 2], "texture": "#0"}
+			}
+		}
+	]
+}
