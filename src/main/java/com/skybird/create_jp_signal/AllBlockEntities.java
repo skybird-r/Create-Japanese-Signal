@@ -5,7 +5,9 @@ import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
 import com.skybird.create_jp_signal.block.signal.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleRoundSignalMastBlockEntity;
+import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleSquareSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleSignalMastBlockEntity;
+import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,9 +48,19 @@ public class AllBlockEntities {
         BLOCK_ENTITIES.register("color_single_round_signal_mast_entity", () ->
             BlockEntityType.Builder.<ColorSingleRoundSignalMastBlockEntity>of(ColorSingleRoundSignalMastBlockEntity::new, AllBlocks.COLOR_SINGLE_ROUND_SIGNAL_MAST.get())
                     .build(null));
+
+    public static final RegistryObject<BlockEntityType<ColorSingleSquareSignalMastBlockEntity>> COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY =
+        BLOCK_ENTITIES.register("color_single_square_signal_mast_entity", () ->
+            BlockEntityType.Builder.<ColorSingleSquareSignalMastBlockEntity>of(ColorSingleSquareSignalMastBlockEntity::new, AllBlocks.COLOR_SINGLE_SQUARE_SIGNAL_MAST.get())
+                    .build(null));
     
     public static final RegistryObject<BlockEntityType<RepeaterSingleSignalMastBlockEntity>> REPEATER_SINGLE_SIGNAL_MAST_ENTITY =
         BLOCK_ENTITIES.register("repeater_single_signal_mast_entity", () ->
             BlockEntityType.Builder.<RepeaterSingleSignalMastBlockEntity>of(RepeaterSingleSignalMastBlockEntity::new, AllBlocks.REPEATER_SINGLE_SIGNAL_MAST.get())
+                    .build(null));
+
+    public static final RegistryObject<BlockEntityType<ShuntSingleSignalMastBlockEntity>> SHUNT_SINGLE_SIGNAL_MAST_ENTITY =
+        BLOCK_ENTITIES.register("shunt_single_signal_mast_entity", () ->
+            BlockEntityType.Builder.<ShuntSingleSignalMastBlockEntity>of(ShuntSingleSignalMastBlockEntity::new, AllBlocks.SHUNT_SINGLE_SIGNAL_MAST.get())
                     .build(null));
 }

@@ -34,6 +34,11 @@ public class SignalAspect {
         G(5, "進行"),
         GG(6, "高速進行"),
 
+        // 灯列式入換信号
+        S_STOP(0, "停止"),
+        S_CAUTION(1, "注意"),
+        S_PROCEED(2, "進行"),
+
         // 灯列式中継信号
         R_STOP(0, "停止"),
         R_RESTRICTED(1, "制限"),
@@ -135,7 +140,24 @@ public class SignalAspect {
 
 
         // 灯列式入換信号
-        
+
+        // 通常　白
+        PROCEED_S2(Aspect.S_PROCEED, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.WHITE),
+        STOP_S2(Aspect.S_STOP, gameTime -> true, LampColor.WHITE, LampColor.WHITE, LampColor.OFF),
+
+        // 通常 赤
+        PROCEED_S2R(Aspect.S_PROCEED, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.WHITE),
+        STOP_S2R(Aspect.S_STOP, gameTime -> true, LampColor.WHITE, LampColor.RED, LampColor.OFF),
+
+        // 3位式 白
+        PROCEED_S3(Aspect.S_PROCEED, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.OFF, LampColor.WHITE),
+        CAUTION_S3(Aspect.S_CAUTION, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.WHITE, LampColor.OFF),
+        STOP_S3(Aspect.S_STOP, gameTime -> true, LampColor.WHITE, LampColor.WHITE, LampColor.OFF, LampColor.OFF),
+
+        // 通常 赤
+        PROCEED_S3R(Aspect.S_PROCEED, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.OFF, LampColor.WHITE),
+        CAUTION_S3R(Aspect.S_CAUTION, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.WHITE, LampColor.OFF),
+        STOP_S3R(Aspect.S_STOP, gameTime -> true, LampColor.WHITE, LampColor.RED, LampColor.OFF, LampColor.OFF),
 
 
         // 灯列式中継信号
@@ -148,12 +170,12 @@ public class SignalAspect {
         STOP_R(Aspect.R_STOP, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.OFF),
 
         // 高速進行対応 横、斜め、縦、高速進行用縦
-        ALL_2R(Aspect.ALL, gameTime -> true, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE),
-        OFF_2R(Aspect.OFF, gameTime -> true, LampColor.OFF, LampColor.OFF, LampColor.OFF, LampColor.OFF),
-        HIGH_SPEED_2R(Aspect.R_HIGH_SPEED_PROCEED, gameTime -> true, LampColor.OFF, LampColor.OFF, LampColor.WHITE, LampColor.WHITE),
-        PROCEED_2R(Aspect.R_PROCEED, gameTime -> true, LampColor.OFF, LampColor.OFF, LampColor.WHITE, LampColor.OFF),
-        RESTRICTED_2R(Aspect.R_RESTRICTED, gameTime -> true, LampColor.OFF, LampColor.WHITE, LampColor.OFF, LampColor.OFF),
-        STOP_2R(Aspect.R_STOP, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.OFF, LampColor.OFF);
+        ALL_R2(Aspect.ALL, gameTime -> true, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE),
+        OFF_R2(Aspect.OFF, gameTime -> true, LampColor.OFF, LampColor.OFF, LampColor.OFF, LampColor.OFF),
+        HIGH_SPEED_R2(Aspect.R_HIGH_SPEED_PROCEED, gameTime -> true, LampColor.OFF, LampColor.OFF, LampColor.WHITE, LampColor.WHITE),
+        PROCEED_R2(Aspect.R_PROCEED, gameTime -> true, LampColor.OFF, LampColor.OFF, LampColor.WHITE, LampColor.OFF),
+        RESTRICTED_R2(Aspect.R_RESTRICTED, gameTime -> true, LampColor.OFF, LampColor.WHITE, LampColor.OFF, LampColor.OFF),
+        STOP_R2(Aspect.R_STOP, gameTime -> true, LampColor.WHITE, LampColor.OFF, LampColor.OFF, LampColor.OFF);
         
 
         private final Aspect aspect;

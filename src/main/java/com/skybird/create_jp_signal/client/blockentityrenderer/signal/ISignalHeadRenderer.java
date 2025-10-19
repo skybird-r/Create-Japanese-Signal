@@ -1,4 +1,4 @@
-package com.skybird.create_jp_signal.client.blockentityrenderer;
+package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Pair;

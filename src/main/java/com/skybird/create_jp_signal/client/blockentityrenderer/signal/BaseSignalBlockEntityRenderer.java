@@ -5,8 +5,6 @@ import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.utility.Pair;
-import com.skybird.create_jp_signal.JpSignals;
-import com.skybird.create_jp_signal.block.Signal3LBlockEntity;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity.AttachmentSlot;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
@@ -14,7 +12,6 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.BaseSignalMastBlock
 import com.skybird.create_jp_signal.block.signal.signal_mast.BaseSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
 import com.skybird.create_jp_signal.client.ModelRegistry;
-import com.skybird.create_jp_signal.client.blockentityrenderer.ISignalHeadRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

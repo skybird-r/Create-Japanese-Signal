@@ -4,8 +4,8 @@ import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.AllMenuTypes;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.client.blockentityrenderer.Signal3LBlockEntityRenderer;
-import com.skybird.create_jp_signal.client.blockentityrenderer.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.gui.ControlBoxScreen;
 import com.skybird.create_jp_signal.client.gui.MastConfigScreen;
 import com.skybird.create_jp_signal.client.gui.SignalLinkScreen;
@@ -39,7 +39,15 @@ public class ClientSetup {
                 BaseSignalBlockEntityRenderer::new
             );
             BlockEntityRenderers.register(
+                AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get(), 
+                BaseSignalBlockEntityRenderer::new
+            );
+            BlockEntityRenderers.register(
                 AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get(), 
+                BaseSignalBlockEntityRenderer::new
+            );
+            BlockEntityRenderers.register(
+                AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
 
@@ -68,6 +76,8 @@ public class ClientSetup {
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_indicator_departure_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_forecast_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/repeater_signal_casing"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/shunt_2_signal_casing"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/shunt_3_signal_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_coupler"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_pipe"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/signal_joint"));

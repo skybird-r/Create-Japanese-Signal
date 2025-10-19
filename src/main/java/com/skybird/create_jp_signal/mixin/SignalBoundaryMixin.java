@@ -51,7 +51,7 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
     //@Shadow abstract double getLocationOn(TrackEdge edge);
 
     @Unique public Couple<Double> reserverTrainMaxSpeeds; 
-    @Unique public Couple<Integer> nextRedIndexes;
+    // @Unique public Couple<Integer> nextRedIndexes;
 	@Unique public Couple<Pair<SignalBoundary, Boolean>> nextEntrySignals = Couple.create(null, null);
 	@Unique public Couple<OperationType> OperationTypes;
 
@@ -65,7 +65,7 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
     )
     private void create_jp_signal_onConstructorEnd(CallbackInfo ci) {
         this.reserverTrainMaxSpeeds = Couple.create(() -> 0.0);
-        this.nextRedIndexes = Couple.create(() -> null);
+        // this.nextRedIndexes = Couple.create(() -> null);
 		this.OperationTypes = Couple.create(() -> OperationType.TRAIN);
 		//this.nextEntrySignals = Couple.create(null, null);
     }
@@ -89,7 +89,7 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
         ordinal = 0
     )
     private boolean create_jp_signal_onLoopStart(boolean current) {
-        nextRedIndexes.set(current, null);
+        // nextRedIndexes.set(current, null);
 		if (this.types.get(current) == SignalType.ENTRY_SIGNAL) {
 			nextEntrySignals.set(current, null); 
 		}
@@ -190,9 +190,9 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
 			TrackEdge currentEdge = graph.getConnection(Couple.create(previousNode, currentNode));
 			if (currentEdge == null) return currentIndex; // null
 
-			//double distanceTraveled = 0;
+			double distanceTraveled = 0;
 			
-			while (true) {
+			while (distanceTraveled < 4096) {
 				// エッジ
 				double positionOnEdge = 0;
 				// 出発時、edge内の手前の信号をスキップ
@@ -257,7 +257,7 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
 				}
 				if (nextEdge == null) return currentIndex;//null
 				//次の区画へ移動
-				//distanceTraveled += nextEdge.getLength();
+				distanceTraveled += currentEdge.getLength();
 				previousNode = currentNode;
 				currentNode = nextEdge.node2;
 				currentEdge = nextEdge;

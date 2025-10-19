@@ -5,6 +5,7 @@ import com.skybird.create_jp_signal.block.signal.AspectMapping;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance;
+import com.skybird.create_jp_signal.block.signal.PositionLightShuntSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalAccessory;
 import com.skybird.create_jp_signal.block.signal.SignalAspect;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
@@ -129,10 +130,10 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
             addRenderableWidget(new DropdownWidget<>(x + 10, topY, 100, 16,
                 Arrays.asList(PositionLightRepeaterSignalAppearance.RepeaterForm.values()),
                 (ht) -> Component.literal("タイプ: " + ht.getDisplayName()),
-                (newHeadType) -> {
-                    if (plrAppearance.getForm() == newHeadType) return;
+                (newForm) -> {
+                    if (plrAppearance.getForm() == newForm) return;
                     
-                    plrAppearance.setForm(newHeadType);
+                    plrAppearance.setForm(newForm);
                     
                     // ローカルの全マッピングを、新しい灯数用のデフォルトにリセット
                     ISignalType type = this.menu.blockEntity.getSignalType();
@@ -158,6 +159,39 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
                     this.init();
                 }
             )).setCurrentOption(plrAppearance.getAccessory().getType());
+        } else if (this.appearance instanceof PositionLightShuntSignalAppearance plsAppearance) {
+            addRenderableWidget(new DropdownWidget<>(x + 10, topY, 100, 16,
+                Arrays.asList(PositionLightShuntSignalAppearance.ShuntType.values()),
+                (ht) -> Component.literal("タイプ: " + ht.getDisplayName()),
+                (newType) -> {
+                    if (plsAppearance.getType() == newType) return;
+                    
+                    plsAppearance.setType(newType);
+                    
+                    // ローカルの全マッピングを、新しい灯数用のデフォルトにリセット
+                    ISignalType type = this.menu.blockEntity.getSignalType();
+                    if (type != null) {
+                        this.sourceMappings.replaceAll((pos, oldMapping) -> {
+                            AspectMapping newDefaultMapping = type.createDefaultMapping(plsAppearance);
+                            // routeの設定を引き継ぐ
+                            newDefaultMapping.setRoute(oldMapping.getRoute());
+                            return newDefaultMapping;
+                        });
+                    }
+                    
+                    this.init();
+                }
+            )).setCurrentOption(plsAppearance.getType());
+
+            addRenderableWidget(new DropdownWidget<>(x + 195, topY, 120, 16,
+                plsAppearance.getValidAccesoryTypes(),
+                (ap) -> Component.literal("附属機: " + ap.getDisplayName()),
+                (newType) -> {
+                    if (plsAppearance.getAccessory().getType() == newType) return;
+                    plsAppearance.getAccessory().setType(newType);
+                    this.init();
+                }
+            )).setCurrentOption(plsAppearance.getAccessory().getType());
         }
 
         // 左側：Indexブロックリスト

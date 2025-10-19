@@ -26,6 +26,8 @@ public class ModelRegistry {
     public static final ResourceLocation ROUTE_INDICATOR_DEPARTURE_CASING_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_indicator_departure_casing");
     public static final ResourceLocation ROUTE_FORECAST_CASING_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_forecast_casing");
     public static final ResourceLocation REPEATER_SIGNAL_CASING_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_casing/repeater_signal_casing");
+    public static final ResourceLocation SHUNT_2_SIGNAL_CASING_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_casing/shunt_2_signal_casing");
+    public static final ResourceLocation SHUNT_3_SIGNAL_CASING_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_casing/shunt_3_signal_casing");
     public static final ResourceLocation MAST_COUPLER_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_coupler");
     public static final ResourceLocation MAST_PIPE_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_pipe");
     public static final ResourceLocation SIGNAL_JOINT_LOC = new ResourceLocation(JpSignals.MODID, "block/signal_parts/signal_joint");
@@ -46,6 +48,8 @@ public class ModelRegistry {
     public static BakedModel routeIndicatorDepartureCasing;
     public static BakedModel routeForecastCasing;
     public static BakedModel repeaterSignalCasing;
+    public static BakedModel shunt2SignalCasing;
+    public static BakedModel shunt3SignalCasing;
     public static BakedModel mastCoupler;
     public static BakedModel mastPipe;
     public static BakedModel signalJoint;
@@ -66,6 +70,8 @@ public class ModelRegistry {
         routeIndicatorDepartureCasing = event.getModelManager().getModel(ROUTE_INDICATOR_DEPARTURE_CASING_LOC);
         routeForecastCasing = event.getModelManager().getModel(ROUTE_FORECAST_CASING_LOC);
         repeaterSignalCasing = event.getModelManager().getModel(REPEATER_SIGNAL_CASING_LOC);
+        shunt2SignalCasing = event.getModelManager().getModel(SHUNT_2_SIGNAL_CASING_LOC);
+        shunt3SignalCasing = event.getModelManager().getModel(SHUNT_3_SIGNAL_CASING_LOC);
         mastCoupler = event.getModelManager().getModel(MAST_COUPLER_LOC);
         mastPipe = event.getModelManager().getModel(MAST_PIPE_LOC);
         signalJoint = event.getModelManager().getModel(SIGNAL_JOINT_LOC);

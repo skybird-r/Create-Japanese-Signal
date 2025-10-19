@@ -7,8 +7,9 @@ import com.skybird.create_jp_signal.block.signal.AspectMapping;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalAspect;
-import com.skybird.create_jp_signal.client.blockentityrenderer.ISignalHeadRenderer;
-import com.skybird.create_jp_signal.client.blockentityrenderer.PositionLightRepeaterSignalRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.signal.ISignalHeadRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.signal.PositionLightRepeaterSignalRenderer;
+
 import net.minecraft.resources.ResourceLocation;
 
 public class PositionLightRepeaterSignalType implements ISignalType {
@@ -48,10 +49,10 @@ public class PositionLightRepeaterSignalType implements ISignalType {
                 defaultMapping.addRule(2, SignalAspect.State.PROCEED_R);
                 break;
             case DOUBLE_DISC:
-                defaultMapping.addRule(0, SignalAspect.State.STOP_2R);
-                defaultMapping.addRule(1, SignalAspect.State.RESTRICTED_2R);
-                defaultMapping.addRule(2, SignalAspect.State.PROCEED_2R);
-                defaultMapping.addRule(3, SignalAspect.State.HIGH_SPEED_2R);
+                defaultMapping.addRule(0, SignalAspect.State.STOP_R2);
+                defaultMapping.addRule(1, SignalAspect.State.RESTRICTED_R2);
+                defaultMapping.addRule(2, SignalAspect.State.PROCEED_R2);
+                defaultMapping.addRule(3, SignalAspect.State.HIGH_SPEED_R2);
                 break;
         }
         return defaultMapping;

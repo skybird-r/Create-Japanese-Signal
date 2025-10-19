@@ -7,8 +7,9 @@ import com.skybird.create_jp_signal.block.signal.AspectMapping;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalAspect;
-import com.skybird.create_jp_signal.client.blockentityrenderer.ColorLightSignalRenderer;
-import com.skybird.create_jp_signal.client.blockentityrenderer.ISignalHeadRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.signal.ColorLightSignalRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.signal.ISignalHeadRenderer;
+
 import net.minecraft.resources.ResourceLocation;
 
 public class ColorLightSignalType implements ISignalType {

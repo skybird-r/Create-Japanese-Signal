@@ -8,7 +8,7 @@ public class PositionLightRepeaterSignalAppearance implements ISignalAppearance 
     // 灯列式専用の形状タイプ (円盤の枚数)
     public enum RepeaterForm {
         SINGLE_DISC("通常", List.of(SignalAspect.State.STOP_R, SignalAspect.State.RESTRICTED_R, SignalAspect.State.PROCEED_R)),
-        DOUBLE_DISC("高速対応", List.of(SignalAspect.State.STOP_2R, SignalAspect.State.RESTRICTED_2R, SignalAspect.State.PROCEED_2R, SignalAspect.State.HIGH_SPEED_2R));
+        DOUBLE_DISC("高速対応", List.of(SignalAspect.State.STOP_R2, SignalAspect.State.RESTRICTED_R2, SignalAspect.State.PROCEED_R2, SignalAspect.State.HIGH_SPEED_R2));
     
         private final String displayName;
         private final List<SignalAspect.State> validStates;

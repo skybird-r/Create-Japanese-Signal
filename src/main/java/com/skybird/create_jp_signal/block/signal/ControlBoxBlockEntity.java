@@ -6,6 +6,7 @@ import com.skybird.create_jp_signal.block.signal.SignalAspect.State;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_type.AllSignalTypes;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
+import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 import com.skybird.create_jp_signal.menu.ControlBoxMenu;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,6 +56,8 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
         double finalReserverMaxSpeed = 0.0;
         boolean mappingsChanged = false;
 
+        boolean forShunt = (be.appearance instanceof PositionLightShuntSignalAppearance);
+
         Iterator<Map.Entry<BlockPos, AspectMapping>> iterator = be.sourceMappings.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, AspectMapping> entry = iterator.next();
@@ -65,7 +68,13 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
                 mappingsChanged = true;
                 continue;
             }
-            int currentIndex = source.getRedSignalIndex(entry.getValue().getMaxIndex()); // aspectの最大値を上限に開いている閉塞数を要求
+            int currentIndex;
+            OperationType currentOperationType = source.getReserverOperationType();
+            if (forShunt == (currentOperationType == OperationType.SHUNT)) {
+                currentIndex = source.getRedSignalIndex(entry.getValue().getMaxIndex()); // aspectの最大値を上限に開いている閉塞数を要求
+            } else { //operationTypeとappearanceが一致しないとき
+                currentIndex = 0;
+            }
             int currentAspectIndex = entry.getValue().getAspectFor(currentIndex).getAspectIndex();
             // 現示が一番高いものを採用
             if (currentAspectIndex > highestAspectIndex) {

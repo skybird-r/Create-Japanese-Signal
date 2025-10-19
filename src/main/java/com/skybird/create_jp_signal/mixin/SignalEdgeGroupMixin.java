@@ -31,7 +31,7 @@ public abstract class SignalEdgeGroupMixin implements ISignalEdgeGroup {
 	}
     */
 
-    public boolean isThisOccupiedUnless2(SignalBoundary boundary) {
+  public boolean isThisOccupiedUnless2(SignalBoundary boundary) {
 		return !trains.isEmpty() && reserved != boundary || reserved != null && reserved != boundary;
 	}
 

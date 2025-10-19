@@ -28,7 +28,8 @@ public class SignalAccessory {
         NONE("なし"),
         FORECAST("進路予告機"),
         INDICATOR_HOME("場内用進路表示機"),
-        INDICATOR_DEPARTURE("出発用進路表示機");
+        INDICATOR_DEPARTURE("出発用進路表示機"),
+        INDICATOR_SHUNT("入換用進路表示器");
 
         private String displayName;
 

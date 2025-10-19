@@ -24,7 +24,15 @@ public class SignalHead {
         this.controllerPos = controllerPos;
 
         // SignalTypeから適切なデフォルト現示を取得するロジックが望ましい
-        this.currentAspect = SignalAspect.State.OFF_3;
+        if (appearance instanceof ColorLightSignalAppearance) {
+            this.currentAspect = SignalAspect.State.OFF_3;
+        } else if (appearance instanceof PositionLightRepeaterSignalAppearance) {
+            this.currentAspect = SignalAspect.State.OFF_R;
+        } else if (appearance instanceof PositionLightShuntSignalAppearance) {
+            this.currentAspect = SignalAspect.State.STOP_S2;
+        } else {
+            this.currentAspect = SignalAspect.State.OFF_3;
+        }
         this.currentRoute = SignalAccessory.Route.NONE;
     }
 
