@@ -1,6 +1,9 @@
 package com.skybird.create_jp_signal.block.signal;
 
 import java.util.List;
+
+import org.jline.terminal.Terminal.Signal;
+
 import net.minecraft.nbt.CompoundTag;
 
 public class PositionLightRepeaterSignalAppearance implements ISignalAppearance {
@@ -22,23 +25,29 @@ public class PositionLightRepeaterSignalAppearance implements ISignalAppearance 
         public String getDisplayName() { return displayName; }
     }
     
+    public enum SignalSize {
+        NORMAL, TUNNEL;
+    }
+
     private RepeaterForm form;
+    private final SignalSize signalSize;
     private SignalAccessory accessory = new SignalAccessory();
 
     private static final List<SignalAccessory.Type> validAccesoryTypes = List.of(SignalAccessory.Type.NONE, SignalAccessory.Type.FORECAST);
 
 
-    public PositionLightRepeaterSignalAppearance(RepeaterForm form) {
+    public PositionLightRepeaterSignalAppearance(RepeaterForm form, SignalSize size) {
         this.form = form;
+        this.signalSize = size;
     }
     
     public static PositionLightRepeaterSignalAppearance createDefault() {
-        return new PositionLightRepeaterSignalAppearance(RepeaterForm.SINGLE_DISC);
+        return new PositionLightRepeaterSignalAppearance(RepeaterForm.SINGLE_DISC, SignalSize.NORMAL);
     }
 
     @Override
     public ISignalAppearance copy() {
-        PositionLightRepeaterSignalAppearance newAppearance = new PositionLightRepeaterSignalAppearance(this.form);
+        PositionLightRepeaterSignalAppearance newAppearance = new PositionLightRepeaterSignalAppearance(this.form, this.signalSize);
         newAppearance.setAccessory(this.accessory.copy());
         return newAppearance;
     }
@@ -47,6 +56,7 @@ public class PositionLightRepeaterSignalAppearance implements ISignalAppearance 
     public void setForm(RepeaterForm form) { this.form = form; }
     public SignalAccessory getAccessory() {return accessory;}
     public void setAccessory(SignalAccessory accessory) {this.accessory = accessory;}
+    public SignalSize getSignalSize() { return this.signalSize; }
     public static List<SignalAccessory.Type> getValidAccesoryTypes() {
         return validAccesoryTypes;
     }
@@ -54,6 +64,7 @@ public class PositionLightRepeaterSignalAppearance implements ISignalAppearance 
     @Override
     public void writeNbt(CompoundTag tag) {
         tag.putString("Form", this.form.name());
+        tag.putString("SignalSize", this.signalSize.name());
 
         CompoundTag accessoryTag = new CompoundTag();
         this.accessory.writeNbt(accessoryTag);
@@ -64,7 +75,8 @@ public class PositionLightRepeaterSignalAppearance implements ISignalAppearance 
         PositionLightRepeaterSignalAppearance newAppearance;
         try {
             RepeaterForm form = RepeaterForm.valueOf(tag.getString("Form"));
-            newAppearance = new PositionLightRepeaterSignalAppearance(form);
+            SignalSize size = SignalSize.valueOf(tag.getString("SignalSize"));
+            newAppearance = new PositionLightRepeaterSignalAppearance(form, size);
         } catch (Exception e) {
             newAppearance = createDefault();
         }

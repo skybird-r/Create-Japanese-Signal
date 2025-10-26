@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+      "layer0": "create_jp_signal:item/signal_mast_with_signal"
+    }
+  }

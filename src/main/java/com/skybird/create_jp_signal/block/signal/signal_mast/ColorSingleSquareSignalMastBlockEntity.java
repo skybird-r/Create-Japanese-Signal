@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 public class ColorSingleSquareSignalMastBlockEntity extends BaseSignalMastBlockEntity {
 
     public ColorSingleSquareSignalMastBlockEntity(BlockPos pPos, BlockState pState) {
-        super(AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get(), pPos, pState, AllSignalTypes.COLOR_LIGHT_SIGNAL);
+        super(AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get(), pPos, pState, AllSignalTypes.COLOR_LIGHT_SIGNAL);
 
         ISignalAppearance appearance = new ColorLightSignalAppearance(ColorLightSignalAppearance.HeadType.THREE_LAMP, ColorLightSignalAppearance.BackplateType.SQUARE, false);
         

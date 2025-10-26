@@ -38,20 +38,20 @@ public class RemapHandler {
             }
         }
         
-        for (MissingMappingsEvent.Mapping<Item> mapping : event.getMappings(ForgeRegistries.Keys.ITEMS, JpSignals.MODID)) {
-            ResourceLocation oldId = mapping.getKey();
+        // for (MissingMappingsEvent.Mapping<Item> mapping : event.getMappings(ForgeRegistries.Keys.ITEMS, JpSignals.MODID)) {
+        //     ResourceLocation oldId = mapping.getKey();
 
-            if (oldId.getPath().equals("color_signle_round_signal")) {
+        //     if (oldId.getPath().equals("color_signle_round_signal")) {
                 
-                System.out.println("Remapping old item: " + oldId);
+        //         System.out.println("Remapping old item: " + oldId);
                 
-                mapping.remap(AllBlocks.COLOR_SINGLE_ROUND_SIGNAL_MAST_ITEM.get());
-            }
+        //         mapping.remap(AllBlocks.COLOR_SINGLE_ROUND_SIGNAL_MAST_ITEM.get());
+        //     }
 
-            if (oldId.getPath().equals("repeater_signle_signal_mast")) {
-                System.out.println("Remapping old item: " + oldId);
-                mapping.remap(AllBlocks.REPEATER_SINGLE_SIGNAL_MAST_ITEM.get()); 
-            }
-        }
+        //     if (oldId.getPath().equals("repeater_signle_signal_mast")) {
+        //         System.out.println("Remapping old item: " + oldId);
+        //         mapping.remap(AllBlocks.REPEATER_SINGLE_SIGNAL_MAST_ITEM.get()); 
+        //     }
+        // }
     }
 }

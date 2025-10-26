@@ -94,6 +94,8 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
                 finalAspect = State.G_5B;
             } else if (finalAspect == State.GG_6) {
                 finalAspect = State.G_6;
+            } else if (finalAspect == State.HIGH_SPEED_R2) {
+                finalAspect = State.PROCEED_R2;
             }
         }
 

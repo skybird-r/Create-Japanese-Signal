@@ -6,7 +6,9 @@ import com.skybird.create_jp_signal.block.signal.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleRoundSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleSquareSignalMastBlockEntity;
+import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleTunnelSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleSignalMastBlockEntity;
+import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleTunnelSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlockEntity;
 
@@ -53,10 +55,20 @@ public class AllBlockEntities {
         BLOCK_ENTITIES.register("color_single_square_signal_mast_entity", () ->
             BlockEntityType.Builder.<ColorSingleSquareSignalMastBlockEntity>of(ColorSingleSquareSignalMastBlockEntity::new, AllBlocks.COLOR_SINGLE_SQUARE_SIGNAL_MAST.get())
                     .build(null));
+
+    public static final RegistryObject<BlockEntityType<ColorSingleTunnelSignalMastBlockEntity>> COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY =
+        BLOCK_ENTITIES.register("color_single_tunnel_signal_mast_entity", () ->
+            BlockEntityType.Builder.<ColorSingleTunnelSignalMastBlockEntity>of(ColorSingleTunnelSignalMastBlockEntity::new, AllBlocks.COLOR_SINGLE_TUNNEL_SIGNAL_MAST.get())
+                    .build(null));
     
     public static final RegistryObject<BlockEntityType<RepeaterSingleSignalMastBlockEntity>> REPEATER_SINGLE_SIGNAL_MAST_ENTITY =
         BLOCK_ENTITIES.register("repeater_single_signal_mast_entity", () ->
             BlockEntityType.Builder.<RepeaterSingleSignalMastBlockEntity>of(RepeaterSingleSignalMastBlockEntity::new, AllBlocks.REPEATER_SINGLE_SIGNAL_MAST.get())
+                    .build(null));
+                    
+    public static final RegistryObject<BlockEntityType<RepeaterSingleTunnelSignalMastBlockEntity>> REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY =
+        BLOCK_ENTITIES.register("repeater_single_tunnel_signal_mast_entity", () ->
+            BlockEntityType.Builder.<RepeaterSingleTunnelSignalMastBlockEntity>of(RepeaterSingleTunnelSignalMastBlockEntity::new, AllBlocks.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST.get())
                     .build(null));
 
     public static final RegistryObject<BlockEntityType<ShuntSingleSignalMastBlockEntity>> SHUNT_SINGLE_SIGNAL_MAST_ENTITY =

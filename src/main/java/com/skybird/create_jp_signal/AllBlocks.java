@@ -6,7 +6,9 @@ import com.skybird.create_jp_signal.block.signal.SignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleRoundSignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleSquareSignalMastBlock;
+import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleTunnelSignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleSignalMastBlock;
+import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleTunnelSignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlock;
 
@@ -49,23 +51,33 @@ public class AllBlocks {
 
     public static final RegistryObject<Block> COLOR_SINGLE_ROUND_SIGNAL_MAST = BLOCKS.register("color_single_round_signal_mast",
         () -> new ColorSingleRoundSignalMastBlock(BlockBehaviour.Properties.of()));
-    public static final RegistryObject<Item> COLOR_SINGLE_ROUND_SIGNAL_MAST_ITEM = ITEMS.register("color_single_round_signal_mast",
-        () -> new BlockItem(COLOR_SINGLE_ROUND_SIGNAL_MAST.get(), new Item.Properties()));
+    // public static final RegistryObject<Item> COLOR_SINGLE_ROUND_SIGNAL_MAST_ITEM = ITEMS.register("color_single_round_signal_mast",
+    //     () -> new BlockItem(COLOR_SINGLE_ROUND_SIGNAL_MAST.get(), new Item.Properties()));
 
     public static final RegistryObject<Block> COLOR_SINGLE_SQUARE_SIGNAL_MAST = BLOCKS.register("color_single_square_signal_mast",
         () -> new ColorSingleSquareSignalMastBlock(BlockBehaviour.Properties.of()));
-    public static final RegistryObject<Item> COLOR_SINGLE_SQUARE_SIGNAL_MAST_ITEM = ITEMS.register("color_single_square_signal_mast",
-        () -> new BlockItem(COLOR_SINGLE_SQUARE_SIGNAL_MAST.get(), new Item.Properties()));
+    // public static final RegistryObject<Item> COLOR_SINGLE_SQUARE_SIGNAL_MAST_ITEM = ITEMS.register("color_single_square_signal_mast",
+    //     () -> new BlockItem(COLOR_SINGLE_SQUARE_SIGNAL_MAST.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> COLOR_SINGLE_TUNNEL_SIGNAL_MAST = BLOCKS.register("color_single_tunnel_signal_mast",
+        () -> new ColorSingleTunnelSignalMastBlock(BlockBehaviour.Properties.of()));
+    // public static final RegistryObject<Item> COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ITEM = ITEMS.register("color_single_tunnel_signal_mast",
+    //     () -> new BlockItem(COLOR_SINGLE_TUNNEL_SIGNAL_MAST.get(), new Item.Properties()));
     
     public static final RegistryObject<Block> REPEATER_SINGLE_SIGNAL_MAST = BLOCKS.register("repeater_single_signal_mast",
         () -> new RepeaterSingleSignalMastBlock(BlockBehaviour.Properties.of()));
-    public static final RegistryObject<Item> REPEATER_SINGLE_SIGNAL_MAST_ITEM = ITEMS.register("repeater_single_signal_mast",
-        () -> new BlockItem(REPEATER_SINGLE_SIGNAL_MAST.get(), new Item.Properties()));
+    // public static final RegistryObject<Item> REPEATER_SINGLE_SIGNAL_MAST_ITEM = ITEMS.register("repeater_single_signal_mast",
+    //     () -> new BlockItem(REPEATER_SINGLE_SIGNAL_MAST.get(), new Item.Properties()));
 
+    public static final RegistryObject<Block> REPEATER_SINGLE_TUNNEL_SIGNAL_MAST = BLOCKS.register("repeater_single_tunnel_signal_mast",
+        () -> new RepeaterSingleTunnelSignalMastBlock(BlockBehaviour.Properties.of()));
+    // public static final RegistryObject<Item> REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ITEM = ITEMS.register("repeater_single_tunnel_signal_mast",
+    //     () -> new BlockItem(REPEATER_SINGLE_TUNNEL_SIGNAL_MAST.get(), new Item.Properties()));
+    
     public static final RegistryObject<Block> SHUNT_SINGLE_SIGNAL_MAST = BLOCKS.register("shunt_single_signal_mast",
         () -> new ShuntSingleSignalMastBlock(BlockBehaviour.Properties.of()));
-    public static final RegistryObject<Item> SHUNT_SINGLE_SIGNAL_MAST_ITEM = ITEMS.register("shunt_single_signal_mast",
-        () -> new BlockItem(SHUNT_SINGLE_SIGNAL_MAST.get(), new Item.Properties()));
+    // public static final RegistryObject<Item> SHUNT_SINGLE_SIGNAL_MAST_ITEM = ITEMS.register("shunt_single_signal_mast",
+    //     () -> new BlockItem(SHUNT_SINGLE_SIGNAL_MAST.get(), new Item.Properties()));
 
         
 }

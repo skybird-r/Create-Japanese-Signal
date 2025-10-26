@@ -1,0 +1,19 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "create_jp_signal:block/control_box"
+        },
+        "facing=south": {
+            "model": "create_jp_signal:block/control_box",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "create_jp_signal:block/control_box",
+            "y": 270
+        },
+        "facing=east": {
+            "model": "create_jp_signal:block/control_box",
+            "y": 90
+        }
+    }
+}

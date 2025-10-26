@@ -9,6 +9,7 @@ import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance.RepeaterForm;
+import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance.SignalSize;
 import com.skybird.create_jp_signal.block.signal.signal_type.AllSignalTypes;
 
 import net.minecraft.core.BlockPos;
@@ -20,7 +21,7 @@ public class RepeaterSingleSignalMastBlockEntity extends BaseSignalMastBlockEnti
     public RepeaterSingleSignalMastBlockEntity(BlockPos pPos, BlockState pState) {
         super(AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get(), pPos, pState, AllSignalTypes.POSITION_LIGHT_REPEATER_SIGNAL);
 
-        ISignalAppearance appearance = new PositionLightRepeaterSignalAppearance(RepeaterForm.SINGLE_DISC);
+        ISignalAppearance appearance = new PositionLightRepeaterSignalAppearance(RepeaterForm.SINGLE_DISC, SignalSize.NORMAL);
         
         this.signalHeads.put(AttachmentSlot.PRIMARY, new SignalHead(UUID.randomUUID(), appearance.copy(), null));
     }

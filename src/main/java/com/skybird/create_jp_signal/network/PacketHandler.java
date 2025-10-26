@@ -43,6 +43,11 @@ public class PacketHandler {
             SignalLinkPacket::decode,
             SignalLinkPacket::handle
         );
+        CHANNEL.registerMessage(id++, SelectSignalMastPacket.class,
+            SelectSignalMastPacket::encode,
+            SelectSignalMastPacket::decode,
+            SelectSignalMastPacket::handle
+        );
     }
 
     public static void sendToServer(Object msg) {

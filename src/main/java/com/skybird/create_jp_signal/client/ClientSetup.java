@@ -43,7 +43,15 @@ public class ClientSetup {
                 BaseSignalBlockEntityRenderer::new
             );
             BlockEntityRenderers.register(
+                AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), 
+                BaseSignalBlockEntityRenderer::new
+            );
+            BlockEntityRenderers.register(
                 AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get(), 
+                BaseSignalBlockEntityRenderer::new
+            );
+            BlockEntityRenderers.register(
+                AllBlockEntities.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
             BlockEntityRenderers.register(
@@ -69,20 +77,24 @@ public class ClientSetup {
         event.register(new ResourceLocation(JpSignals.MODID, "block/lampbox/lampbox_5x5"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/lampbox/lampbox_4x4"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/lampbox/lampbox_3x3"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/lampbox/lampbox_2x2"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/backplate_middle"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/backplate_bottom_square"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/backplate_bottom_round"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_indicator_casing"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_indicator_shunt_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_indicator_departure_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/route_forecast_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/repeater_signal_casing"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/repeater_signal_upper_casing"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/repeater_signal_tunnel_casing"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/repeater_signal_tunnel_upper_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/shunt_2_signal_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_casing/shunt_3_signal_casing"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_coupler"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_pipe"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/signal_joint"));
 
-        
 
         
     }

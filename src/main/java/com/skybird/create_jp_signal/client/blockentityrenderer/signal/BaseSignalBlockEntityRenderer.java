@@ -42,45 +42,45 @@ public class BaseSignalBlockEntityRenderer implements BlockEntityRenderer<BaseSi
         }
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-        pPoseStack.pushPose();
-
-        if (be instanceof BaseSignalMastBlockEntity mast) {
-            BlockState blockState = mast.getBlockState();
-            int rotation = blockState.getValue(BaseSignalMastBlock.ROTATION);
-            int xPos = blockState.getValue(BaseSignalMastBlock.X_POS);
-            int zPos = blockState.getValue(BaseSignalMastBlock.Z_POS);
-
-            pPoseStack.translate((float)xPos / 16F, 0, (float)zPos / 16F);
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - (rotation * 22.5F)));
+        {
             pPoseStack.pushPose();
-            
-            {
-                blockRenderer.getModelRenderer().tesselateWithAO(
-                    be.getLevel(), ModelRegistry.signalMast, blockState, be.getBlockPos(), pPoseStack,
-                    pBufferSource.getBuffer(RenderType.cutout()), false, be.getLevel().getRandom(),
-                    pPackedLight, pPackedOverlay
-                );
-            }
 
-            pPoseStack.popPose();
-        }
+            if (be instanceof BaseSignalMastBlockEntity mast) {
+                BlockState blockState = mast.getBlockState();
+                int rotation = mast.getRotation();
+                int xPos = mast.getXPos();
+                int zPos = mast.getZPos();
 
-        ISignalHeadRenderer headRenderer = signalType.getRenderer();
+                int cappedRotation = (rotation + 2) % 4 - 2;
 
-        for (Map.Entry<AttachmentSlot, SignalHead> entry : heads.entrySet()) {
-            pPoseStack.pushPose();
-            {
-
-                Vec3 offset = be.getHeadOffset(entry.getKey());
-                //pPoseStack.translate(offset.x, offset.y, offset.z);
-                Pair<Double, Double> rotation = be.getHeadRotation(entry.getKey());
+                pPoseStack.translate((float)xPos / 16F, 0, (float)zPos / 16F);
                 
-                headRenderer.render(pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, entry.getValue(), be, pPackedLight, pPackedOverlay, offset, rotation);
+                {
+                    pPoseStack.pushPose();
+                    pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - (rotation * 22.5F)));
+                    pPoseStack.translate(-0.5, 0, -0.5);
+                    blockRenderer.getModelRenderer().tesselateWithAO(
+                        be.getLevel(), ModelRegistry.signalMast, blockState, be.getBlockPos(), pPoseStack,
+                        pBufferSource.getBuffer(RenderType.cutout()), false, be.getLevel().getRandom(),
+                        pPackedLight, pPackedOverlay
+                    );
+                    pPoseStack.popPose();
+                }
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - (rotation * 22.5F)));
             }
+
+            ISignalHeadRenderer headRenderer = signalType.getRenderer();
+
+            for (Map.Entry<AttachmentSlot, SignalHead> entry : heads.entrySet()) {
+                pPoseStack.pushPose();
+                Vec3 offset = be.getHeadOffset(entry.getKey());
+                Pair<Double, Double> rotation = be.getHeadRotation(entry.getKey());
+                headRenderer.render(pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, entry.getValue(), be, pPackedLight, pPackedOverlay, offset, rotation);
+                pPoseStack.popPose();
+            }
+            
             pPoseStack.popPose();
         }
-        
-        pPoseStack.popPose();
     }
 }
     

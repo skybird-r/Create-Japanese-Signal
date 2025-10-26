@@ -1,5 +1,7 @@
 package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 
+import java.time.format.SignStyle;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -8,6 +10,8 @@ import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppe
 import com.skybird.create_jp_signal.block.signal.SignalAccessory;
 import com.skybird.create_jp_signal.block.signal.SignalAspect;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
+import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance.RepeaterForm;
+import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance.SignalSize;
 import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.client.ModelRegistry;
 
@@ -33,9 +37,9 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
 
 
         // --- 描画処理 ---
-        poseStack.pushPose();
+        
         {
-            
+            poseStack.pushPose();
             ModelBlockRenderer modelRenderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
             BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
             
@@ -43,103 +47,319 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
             poseStack.translate(offset.x, offset.y, offset.z);
             double x = offset.x, z = offset.z;
             double distance = Math.sqrt(x * x + z * z);
-
-            poseStack.pushPose();
-            {
-                
-                for (boolean top : Iterate.trueAndFalse) {
+            if (appearance.getSignalSize() == SignalSize.NORMAL) {
+                {
                     poseStack.pushPose();
-                    if (top) poseStack.translate(0, 1, 0);
-                    poseStack.translate(-x, 0, -z);
-                    blockRenderer.getModelRenderer().tesselateWithAO(
-                        blockEntity.getLevel(), ModelRegistry.mastCoupler, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                        bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                        packedLight, packedOverlay
-                    );
-                    poseStack.pushPose();
-                    poseStack.mulPose(Axis.YP.rotation((float)Math.atan2(x,z)));
-                    poseStack.scale(1, 1, (float)distance * 16);
-                    
-                    blockRenderer.getModelRenderer().tesselateWithAO(
-                        blockEntity.getLevel(), ModelRegistry.mastPipe, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                        bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                        packedLight, packedOverlay
-                    );
-                    poseStack.popPose();
-                    poseStack.translate(x, 0, z);
-                    blockRenderer.getModelRenderer().tesselateWithAO(
-                        blockEntity.getLevel(), ModelRegistry.signalJoint, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                        bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                        packedLight, packedOverlay
-                    );
-                    poseStack.popPose();
-                }
-            }
-            poseStack.popPose();
-
-            poseStack.pushPose();
-            poseStack.translate(0, 2.0/16, 0);
-            blockRenderer.getModelRenderer().tesselateWithAO(
-                blockEntity.getLevel(), ModelRegistry.repeaterSignalCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                packedLight, packedOverlay
-            );
-
-            double xList[] = {5.0/16, 3.5/16, 0};
-            double yList[] = {0, 3.5/16, 5.0/16};
-            for (int i = -1; i < 3; i++) {
-                poseStack.pushPose();
-                LampColor color;
-                poseStack.translate(0, 5.5/16, 0);
-                if (i == -1) {
-                    color = LampColor.WHITE;
-                } else {
-                    color = currentAspect.getLampColor(i);
-                }
-                
-                for (boolean first : Iterate.trueAndFalse) {
-                    poseStack.pushPose();
-                    if (i == -1) {
-                        if (first) {
-                            poseStack.popPose();
-                            continue;
-                        }
-                    } else if (first) {
-                        poseStack.translate(xList[i], yList[i], 0);
-                    } else {
-                        poseStack.translate(-xList[i], -yList[i], 0);
-                    }
-
-                    {
+                    for (boolean top : Iterate.trueAndFalse) {
+                        poseStack.pushPose();
+                        if (top) poseStack.translate(0, 1, 0);
+                        poseStack.translate(-x-0.5, -0.5, -z-0.5);
                         blockRenderer.getModelRenderer().tesselateWithAO(
-                            blockEntity.getLevel(), ModelRegistry.lampBox3, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            blockEntity.getLevel(), ModelRegistry.mastCoupler, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
                             bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
                             packedLight, packedOverlay
-                        ); 
-                        poseStack.translate(0, 0.25/16, 1.75/16);
-                        poseStack.scale(2.5f, 2.5f, 2.5f);
-                        modelRenderer.renderModel(
-                            poseStack.last(),
-                            bufferSource.getBuffer(RenderType.solid()),
-                            blockEntity.getBlockState(),
-                            ModelRegistry.light,
-                            color.getRed(), color.getGreen(), color.getBlue(),
-                            LightTexture.FULL_BRIGHT,
-                            overlay
                         );
-                            
+                        poseStack.pushPose();
+                        poseStack.translate(0.5, 0.5, 0.5);
+                        poseStack.mulPose(Axis.YP.rotation((float)Math.atan2(x,z)));
+                        poseStack.translate(-0.5, -0.5, 0);
+                        poseStack.scale(1, 1, (float)distance * 16);
+                        
+                        blockRenderer.getModelRenderer().tesselateWithAO(
+                            blockEntity.getLevel(), ModelRegistry.mastPipe, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                            packedLight, packedOverlay
+                        );
+                        poseStack.popPose();
+                        poseStack.translate(x, 0, z);
+                        blockRenderer.getModelRenderer().tesselateWithAO(
+                            blockEntity.getLevel(), ModelRegistry.signalJoint, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                            packedLight, packedOverlay
+                        );
+                        poseStack.popPose();
                     }
                     poseStack.popPose();
-                    
                 }
-                poseStack.popPose();
+                {
+                    poseStack.pushPose();
+                    poseStack.translate(0, 2.0/16, 0);
+                    {
+                        poseStack.pushPose();
+                        poseStack.translate(-0.5, -1.0/16, -0.5);
+                        blockRenderer.getModelRenderer().tesselateWithAO(
+                            blockEntity.getLevel(), ModelRegistry.repeaterSignalCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                            packedLight, packedOverlay
+                        );
+                        poseStack.popPose();
+                    }
+                    double xList[] = {5.0/16, 3.5/16, 0};
+                    double yList[] = {0, 3.5/16, 5.0/16};
+                    for (int i = -1; i < 3; i++) {
+                        poseStack.pushPose();
+                        LampColor color;
+                        poseStack.translate(0, 5.5/16, 0);
+                        if (i == -1) {
+                            color = LampColor.WHITE;
+                        } else {
+                            color = currentAspect.getLampColor(i);
+                        }
+                        
+                        for (boolean first : Iterate.trueAndFalse) {
+                            poseStack.pushPose();
+                            if (i == -1) {
+                                if (first) {
+                                    poseStack.popPose();
+                                    continue;
+                                }
+                            } else if (first) {
+                                poseStack.translate(xList[i], yList[i], 0);
+                            } else {
+                                poseStack.translate(-xList[i], -yList[i], 0);
+                            }
+
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(-0.5, -0.5, -0.5);
+                                blockRenderer.getModelRenderer().tesselateWithAO(
+                                    blockEntity.getLevel(), ModelRegistry.lampBox3, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                    bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                    packedLight, packedOverlay
+                                );
+                                poseStack.popPose();
+                            }
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(0, 0.25/16, 1.75/16);
+                                poseStack.scale(2.5f, 2.5f, 2.5f);
+                                modelRenderer.renderModel(
+                                    poseStack.last(),
+                                    bufferSource.getBuffer(RenderType.cutout()),
+                                    blockEntity.getBlockState(),
+                                    ModelRegistry.light,
+                                    color.getRed(), color.getGreen(), color.getBlue(),
+                                    LightTexture.FULL_BRIGHT,
+                                    overlay
+                                );
+                                poseStack.popPose();
+                            }
+                            poseStack.popPose();
+                            
+                        }
+                        poseStack.popPose();
+                    }
+                    poseStack.popPose();
+                }
+
+                if (appearance.getForm() == RepeaterForm.DOUBLE_DISC && currentAspect.getLampCount() >= 3) {
+                    poseStack.pushPose();
+                    poseStack.translate(0, 1.25, 0);
+                    {
+                        poseStack.pushPose();
+                        for (boolean top : Iterate.trueAndFalse) {
+                            poseStack.pushPose();
+                            if (top) poseStack.translate(0, 1, 0);
+                            poseStack.translate(-x-0.5, -0.5, -z-0.5);
+                            blockRenderer.getModelRenderer().tesselateWithAO(
+                                blockEntity.getLevel(), ModelRegistry.mastCoupler, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                packedLight, packedOverlay
+                            );
+                            poseStack.pushPose();
+                            poseStack.translate(0.5, 0.5, 0.5);
+                            poseStack.mulPose(Axis.YP.rotation((float)Math.atan2(x,z)));
+                            poseStack.translate(-0.5, -0.5, 0);
+                            poseStack.scale(1, 1, (float)distance * 16);
+                            
+                            blockRenderer.getModelRenderer().tesselateWithAO(
+                                blockEntity.getLevel(), ModelRegistry.mastPipe, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                packedLight, packedOverlay
+                            );
+                            poseStack.popPose();
+                            poseStack.translate(x, 0, z);
+                            blockRenderer.getModelRenderer().tesselateWithAO(
+                                blockEntity.getLevel(), ModelRegistry.signalJoint, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                packedLight, packedOverlay
+                            );
+                            poseStack.popPose();
+                        }
+                        poseStack.popPose();
+                    }
+                    {
+                        poseStack.pushPose();
+                        poseStack.translate(0, 2.0/16, 0);
+                        {
+                            poseStack.pushPose();
+                            poseStack.translate(-0.5, -1.0/16, -0.5);
+                            blockRenderer.getModelRenderer().tesselateWithAO(
+                                blockEntity.getLevel(), ModelRegistry.repeaterSignalUpperCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                packedLight, packedOverlay
+                            );
+                            poseStack.popPose();
+                        }
+                        poseStack.translate(0, 0.5/16, 0);
+                        LampColor color = currentAspect.getLampColor(3);
+                        for (int i = 0; i < 3; i++) {
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(-0.5, -0.5, -0.5);
+                                blockRenderer.getModelRenderer().tesselateWithAO(
+                                    blockEntity.getLevel(), ModelRegistry.lampBox3, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                    bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                    packedLight, packedOverlay
+                                );
+                                poseStack.popPose();
+                            }
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(0, 0.25/16, 1.75/16);
+                                poseStack.scale(2.5f, 2.5f, 2.5f);
+                                modelRenderer.renderModel(
+                                    poseStack.last(),
+                                    bufferSource.getBuffer(RenderType.cutout()),
+                                    blockEntity.getBlockState(),
+                                    ModelRegistry.light,
+                                    color.getRed(), color.getGreen(), color.getBlue(),
+                                    LightTexture.FULL_BRIGHT,
+                                    overlay
+                                );
+                                poseStack.popPose();
+                            }
+                            poseStack.translate(0, 5.0/16, 0);
+                        }
+                        poseStack.popPose();
+                    }
+                    poseStack.popPose();
+                }
+            } else if (appearance.getSignalSize() == SignalSize.TUNNEL) {
+                {
+                    poseStack.pushPose();
+                    {
+                        poseStack.pushPose();
+                        poseStack.translate(-0.5, -1.0/16, -0.5);
+                        blockRenderer.getModelRenderer().tesselateWithAO(
+                            blockEntity.getLevel(), ModelRegistry.repeaterSignalTunnelCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                            packedLight, packedOverlay
+                        );
+                        poseStack.popPose();
+                    }
+                    double xList[] = {3.0/16, 2.0/16, 0};
+                    double yList[] = {0, 2.0/16, 3.0/16};
+                    for (int i = -1; i < 3; i++) {
+                        poseStack.pushPose();
+                        LampColor color;
+                        poseStack.translate(0, 3.0/16, 0);
+                        if (i == -1) {
+                            color = LampColor.WHITE;
+                        } else {
+                            color = currentAspect.getLampColor(i);
+                        }
+                        
+                        for (boolean first : Iterate.trueAndFalse) {
+                            poseStack.pushPose();
+                            if (i == -1) {
+                                if (first) {
+                                    poseStack.popPose();
+                                    continue;
+                                }
+                            } else if (first) {
+                                poseStack.translate(xList[i], yList[i], 0);
+                            } else {
+                                poseStack.translate(-xList[i], -yList[i], 0);
+                            }
+
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(-0.5, -0.5, -0.5);
+                                blockRenderer.getModelRenderer().tesselateWithAO(
+                                    blockEntity.getLevel(), ModelRegistry.lampBox2, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                    bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                    packedLight, packedOverlay
+                                );
+                                poseStack.popPose();
+                            }
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(0, 0.25/16, 1.75/16);
+                                poseStack.scale(1.5f, 1.5f, 1.5f);
+                                modelRenderer.renderModel(
+                                    poseStack.last(),
+                                    bufferSource.getBuffer(RenderType.cutout()),
+                                    blockEntity.getBlockState(),
+                                    ModelRegistry.light,
+                                    color.getRed(), color.getGreen(), color.getBlue(),
+                                    LightTexture.FULL_BRIGHT,
+                                    overlay
+                                );
+                                poseStack.popPose();
+                            }
+                            poseStack.popPose();
+                            
+                        }
+                        poseStack.popPose();
+                    }
+                    poseStack.popPose();
+                }
+
+                if (appearance.getForm() == RepeaterForm.DOUBLE_DISC && currentAspect.getLampCount() >= 3) {
+                    poseStack.pushPose();
+                    poseStack.translate(0, 12.0/16, 0);
+                    {
+                        poseStack.pushPose();
+                        {
+                            poseStack.pushPose();
+                            poseStack.translate(-0.5, -1.0/16, -0.5);
+                            blockRenderer.getModelRenderer().tesselateWithAO(
+                                blockEntity.getLevel(), ModelRegistry.repeaterSignalTunnelUpperCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                packedLight, packedOverlay
+                            );
+                            poseStack.popPose();
+                        }
+                        LampColor color = currentAspect.getLampColor(3);
+                        for (int i = 0; i < 3; i++) {
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(-0.5, -0.5, -0.5);
+                                blockRenderer.getModelRenderer().tesselateWithAO(
+                                    blockEntity.getLevel(), ModelRegistry.lampBox2, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                    bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                    packedLight, packedOverlay
+                                );
+                                poseStack.popPose();
+                            }
+                            {
+                                poseStack.pushPose();
+                                poseStack.translate(0, 0.25/16, 1.75/16);
+                                poseStack.scale(1.5f, 1.5f, 1.5f);
+                                modelRenderer.renderModel(
+                                    poseStack.last(),
+                                    bufferSource.getBuffer(RenderType.cutout()),
+                                    blockEntity.getBlockState(),
+                                    ModelRegistry.light,
+                                    color.getRed(), color.getGreen(), color.getBlue(),
+                                    LightTexture.FULL_BRIGHT,
+                                    overlay
+                                );
+                                poseStack.popPose();
+                            }
+                            poseStack.translate(0, 3.0/16, 0);
+                        }
+                        poseStack.popPose();
+                    }
+                    poseStack.popPose();
+                }
             }
-            poseStack.popPose();
-            
             // Accessory
 
-            poseStack.pushPose();
+            
             {
+                poseStack.pushPose();
                 SignalAccessory.Type accessory = appearance.getAccessory().getType();
                 SignalAccessory.Route route = headData.getCurrentRoute();
 
@@ -149,7 +369,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
                     {   
                         //連結部
                         poseStack.pushPose();
-                        poseStack.translate(-x, -2.0/16, -z);
+                        poseStack.translate(-x-0.5, -2.0/16-0.5, -z-0.5);
                         blockRenderer.getModelRenderer().tesselateWithAO(
                             blockEntity.getLevel(), ModelRegistry.mastCoupler, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
                             bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
@@ -157,7 +377,9 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
                         );
                         {
                             poseStack.pushPose();
+                            poseStack.translate(0.5, 0.5, 0.5);
                             poseStack.mulPose(Axis.YP.rotation((float)Math.atan2(x,z)));
+                            poseStack.translate(-0.5, -0.5, 0);
                             poseStack.scale(1, 1, (float)distance * 16);
                             
                             blockRenderer.getModelRenderer().tesselateWithAO(
@@ -170,22 +392,32 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
                         poseStack.popPose();
                     }
                     //本体
-                    blockRenderer.getModelRenderer().tesselateWithAO(
-                        blockEntity.getLevel(), ModelRegistry.routeForecastCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                        bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                        packedLight, packedOverlay
-                    );
+                    {
+                        poseStack.pushPose();
+                        poseStack.translate(-0.5, -0.5, -0.5);
+                        blockRenderer.getModelRenderer().tesselateWithAO(
+                            blockEntity.getLevel(), ModelRegistry.routeForecastCasing, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                            packedLight, packedOverlay
+                        );
+                        poseStack.popPose();
+                    }
                     for (boolean isRight : Iterate.trueAndFalse) {
                         poseStack.pushPose();
                         poseStack.translate((isRight ? 7.0f/16 : -7.0f/16), 2.0f/16, 0);
                         SignalAspect.LampColor color = SignalAspect.LampColor.OFF;
                         if (route == SignalAccessory.Route.RIGHT && isRight || route == SignalAccessory.Route.LEFT && !isRight) color = SignalAspect.LampColor.WHITE;
                         if (route == SignalAccessory.Route.CENTER) color = SignalAspect.LampColor.WHITE;
-                        blockRenderer.getModelRenderer().tesselateWithAO(
-                            blockEntity.getLevel(), ModelRegistry.lampBox4, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                            bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                            packedLight, packedOverlay
-                        );
+                        {
+                            poseStack.pushPose();
+                            poseStack.translate(-0.5, -0.5, -0.5);
+                            blockRenderer.getModelRenderer().tesselateWithAO(
+                                blockEntity.getLevel(), ModelRegistry.lampBox4, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                                bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                                packedLight, packedOverlay
+                            );
+                            poseStack.popPose();
+                        }
                         
                         {
                             poseStack.pushPose(); 
@@ -193,7 +425,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
                             poseStack.scale(3.5f, 3.5f, 3.5f);
                             modelRenderer.renderModel(
                                 poseStack.last(),
-                                bufferSource.getBuffer(RenderType.solid()),
+                                bufferSource.getBuffer(RenderType.cutout()),
                                 blockEntity.getBlockState(),
                                 ModelRegistry.light,
                                 color.getRed(), color.getGreen(), color.getBlue(),
@@ -205,9 +437,11 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
                         poseStack.popPose();
                     }
                 }
+                poseStack.popPose();
             }
+            
             poseStack.popPose();
         }
-        poseStack.popPose();
+        
     }
 }

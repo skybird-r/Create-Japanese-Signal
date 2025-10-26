@@ -1,3 +1,13 @@
 {
-    "itemGroup.jpsignal" : "Create Japanese Signals"
+    "block.create_jp_signal.color_single_round_signal_mast": "Color Round Signal Mast",
+    "block.create_jp_signal.color_single_square_signal_mast": "Color Square Signal Mast",
+    "block.create_jp_signal.color_single_tunnel_signal_mast": "Color Tunnel Signal Mast",
+    "block.create_jp_signal.repeater_single_signal_mast": "Repeater Signal Mast",
+    "block.create_jp_signal.repeater_single_tunnel_signal_mast": "Repeater Tunnel Signal Mast",
+    "block.create_jp_signal.shunt_single_signal_mast": "Shunt Signal Mast",
+    "itemGroup.jpsignal" : "Create Japanese Signals",
+    "tooltip.create_jp_signal.selected_signal": "Selected: %s",
+    "tooltip.create_jp_signal.selected_signal_default": "Selected: Default",
+    "tooltip.create_jp_signal.signal_tool.instructions": "Hold [Shift] for details",
+    "tooltip.create_jp_signal.signal_tool.shift_instructions": "Shift + Left Click Air to select signal type."
 }

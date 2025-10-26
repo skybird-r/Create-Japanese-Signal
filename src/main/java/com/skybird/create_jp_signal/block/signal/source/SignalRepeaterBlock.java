@@ -31,7 +31,7 @@ public class SignalRepeaterBlock extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         // Observerと同様に、プレイヤーが見ている方向の「奥側」を向くようにする
         // そのため、プレイヤーの視線とは逆向きを向くように設定する
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
     }
 
     @Override

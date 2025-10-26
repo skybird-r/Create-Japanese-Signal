@@ -30,8 +30,6 @@ public class SignalMastBlockEntityRenderer implements BlockEntityRenderer<Signal
         return net.minecraft.client.Minecraft.getInstance().options.getEffectiveRenderDistance() * 16;
     }
 
-    
-    //private static final ResourceLocation SIGNALMAST_TEXTURE = new ResourceLocation(JpSignals.MODID, "textures/block/signalmast");
 
     @Override
     public void render(SignalMastBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
@@ -50,18 +48,25 @@ public class SignalMastBlockEntityRenderer implements BlockEntityRenderer<Signal
         int zPos = blockState.getValue(SignalMastBlock.Z_POS);
 
         pPoseStack.translate((float)xPos / 16F, 0, (float)zPos / 16F);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - (rotation * 22.5F)));
+        
         pPoseStack.pushPose();
         
+        int cappedRotation = (rotation + 2) % 4 - 2;
+        
         {
+            pPoseStack.pushPose();
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - (rotation * 22.5F)));
+            pPoseStack.translate(-0.5, 0, -0.5);
             blockRenderer.getModelRenderer().tesselateWithAO(
                 pBlockEntity.getLevel(), ModelRegistry.signalMast, blockState, pBlockEntity.getBlockPos(), pPoseStack,
                 pBufferSource.getBuffer(RenderType.cutout()), false, pBlockEntity.getLevel().getRandom(),
                 pPackedLight, pPackedOverlay
             );
+            pPoseStack.popPose();
         }
 
         pPoseStack.popPose();
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - (rotation * 22.5F)));
 
         if (signalType == null || heads.isEmpty()) {
             pPoseStack.popPose();

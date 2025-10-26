@@ -8,6 +8,7 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.BaseSignalMastBlock
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -22,6 +23,10 @@ public abstract class BaseSignalBlock extends BaseEntityBlock implements IWrench
         super(properties.noOcclusion());
     }
 
+    @Override
+    public boolean propagatesSkylightDown(BlockState pState, BlockGetter pReader, BlockPos pPos) {
+        return true;
+    }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {

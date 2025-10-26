@@ -12,7 +12,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +32,7 @@ public class SignalConfiguratorItem extends Item {
         super(pProperties);
     }
 
+
     @Override
     public InteractionResult useOn(@Nonnull UseOnContext pContext) {
         Level level = pContext.getLevel();
@@ -39,6 +42,11 @@ public class SignalConfiguratorItem extends Item {
 
         if (level.isClientSide || player == null) return InteractionResult.SUCCESS;
 
+        if (player.isShiftKeyDown()) {
+            clearLinkData(stack, player, null);
+            clearLinkData(stack, player, "リンクモードを中断しました。");
+            return InteractionResult.SUCCESS;
+        }
         // --- シフト右クリックの処理 (変更なし) ---
         // if (player.isShiftKeyDown()) {
         //     clearLinkData(stack, player, "リンクモードを中断しました。");
@@ -79,15 +87,6 @@ public class SignalConfiguratorItem extends Item {
                     buf.writeBlockPos(firstPos);
                 });
                 clearLinkData(stack, player, null);
-            } else if (secondBe instanceof BaseSignalBlockEntity signal) {
-                NetworkHooks.openScreen((ServerPlayer) player, signal.getLinkMenuProvider(firstPos), buf -> {
-                    // 1番目に「信号柱」の座標を書き込む
-                    buf.writeBlockPos(signal.getBlockPos());
-                    // 2番目に「制御盤」の座標を書き込む
-                    buf.writeBlockPos(firstPos);
-                });
-                clearLinkData(stack, player, null);
-
             } else if (secondBe instanceof ISignalIndexSource) {
                 controlBox.linkToIndexSource(clickedPos);
                 player.displayClientMessage(Component.literal("Indexブロックを紐付けました。"), true);
