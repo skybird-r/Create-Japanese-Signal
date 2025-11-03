@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
+import com.skybird.create_jp_signal.JpSignals;
+import com.skybird.create_jp_signal.util.Lang;
+
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -35,7 +37,7 @@ public class OperationTypeInstruction extends ScheduleInstruction {
 
     @Override
     public ResourceLocation getId() {
-        return Create.asResource("operation_type"); 
+        return JpSignals.asResource("operation_type"); 
     }
 
     @Override
@@ -51,7 +53,7 @@ public class OperationTypeInstruction extends ScheduleInstruction {
     @Override
     public List<Component> getTitleAs(String type) {
         return ImmutableList.of(Lang
-            .translateDirect("schedule." + type + "." + getId().getPath() + ".summary",
+            .translatable("schedule." + type + "." + getId().getPath() + ".summary",
                 formatted().withStyle(ChatFormatting.WHITE))
             .withStyle(ChatFormatting.GOLD));
     }
@@ -66,7 +68,7 @@ public class OperationTypeInstruction extends ScheduleInstruction {
 
         builder.addSelectionScrollInput(0, 100, (si, l) -> {
             si.forOptions(options);
-            si.titled(Component.translatable("schedule.operation.select"));
+            si.titled(Lang.translatable("schedule.instruction.operation_type.name"));
         }, "Operation");
     }
 
@@ -80,8 +82,7 @@ public class OperationTypeInstruction extends ScheduleInstruction {
 
     @Override
     public List<Component> getSecondLineTooltip(int slot) {
-        return ImmutableList.of(Component.translatable("schedule.operation.tooltip.0"),
-            Component.translatable("schedule.operation.tooltip.1")
-                .withStyle(ChatFormatting.GRAY));
+        return ImmutableList.of(Component.translatable("schedule.instruction.operation_type.tooltip.0"),
+            Component.translatable("schedule.instruction.operation_type.tooltip.1").withStyle(ChatFormatting.GRAY));
     }
 }

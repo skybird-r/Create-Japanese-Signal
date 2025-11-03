@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface ISignalType {
     ResourceLocation getId();
-    String getDisplayName();
     int getMaxAttachmentsPerMast();
     boolean isCompatibleWith(ISignalType otherType);
     ISignalHeadRenderer getRenderer();

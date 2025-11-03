@@ -29,6 +29,8 @@ public abstract class TrainMixin implements ITrain {
     
     @Unique public Map<UUID, Pair<SignalBoundary, Boolean>> activeReservations;
     @Unique public OperationType operationType;
+    @Unique public double minimumReservationDistance;
+    @Unique public int tickWaitBeforeDeparture;
 
     @Inject(
         method = "<init>",
@@ -37,6 +39,8 @@ public abstract class TrainMixin implements ITrain {
     private void create_jp_signal_onConstructorEnd(CallbackInfo ci) {
         this.activeReservations = new HashMap<>();
         this.operationType = OperationType.TRAIN;
+        this.minimumReservationDistance = 500;
+        this.tickWaitBeforeDeparture = 40;
     }
 
     @Inject(
@@ -80,6 +84,7 @@ public abstract class TrainMixin implements ITrain {
         CompoundTag tag = cir.getReturnValue();
         if (tag == null) return;
         tag.putString("OperationType", operationType.name());
+        tag.putDouble("MinimumReservationDistance", minimumReservationDistance);
     }
 
     @Inject(
@@ -101,6 +106,12 @@ public abstract class TrainMixin implements ITrain {
             } catch (IllegalArgumentException e) {
             }
         }
+        if (tag.contains("MinimumReservationDistance")) {
+            try {
+                ((ITrain)train).setMinimumReservationDistance(tag.getDouble("MinimumReservationDistance"));
+            } catch (IllegalArgumentException e) {
+            }
+        }
     }
 
     public OperationType getOperationType() {
@@ -109,6 +120,22 @@ public abstract class TrainMixin implements ITrain {
 
     public void setOperationType(OperationType type) {
         this.operationType = type;
+    }
+
+    public double getMinimumReservationDistance() {
+        return minimumReservationDistance;
+    }
+
+    public void setMinimumReservationDistance(double minimumReservationDistance) {
+        this.minimumReservationDistance = minimumReservationDistance;
+    }
+
+    public int getTickWaitBeforeDeparture() {
+        return tickWaitBeforeDeparture;
+    }
+    
+    public void setTickWaitBeforeDeparture(int tickWaitBeforeDeparture) {
+        this.tickWaitBeforeDeparture = tickWaitBeforeDeparture;
     }
 
     public Map<UUID, Pair<SignalBoundary, Boolean>> getActiveReservations() {

@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "create_jp_signal:block/signal_3light" },
-    "facing=east":  { "model": "create_jp_signal:block/signal_3light" },
-    "facing=south": { "model": "create_jp_signal:block/signal_3light" },
-    "facing=west":  { "model": "create_jp_signal:block/signal_3light" }
-  }
-}

@@ -11,45 +11,45 @@ public class ColorLightSignalAppearance implements ISignalAppearance {
 
     // 信号機の形状タイプ
     public enum HeadType {
-        TWO_LAMP_YR("2灯式(YR)", 2, List.of(SignalAspect.State.Y_2YR, SignalAspect.State.R_2YR)),
-        TWO_LAMP_GR("2灯式(GR)", 2, List.of(SignalAspect.State.G_2GR, SignalAspect.State.R_2GR)),
-        TWO_LAMP_GY("2灯式(GY)", 2, List.of(SignalAspect.State.G_2GY, SignalAspect.State.Y_2GY)),
-        THREE_LAMP("3灯式", 3, List.of(SignalAspect.State.G_3, SignalAspect.State.Y_3, SignalAspect.State.R_3)),
-        FOUR_LAMP_A("4灯式A", 4, List.of(SignalAspect.State.G_4A, SignalAspect.State.Y_4A, SignalAspect.State.YY_4A, SignalAspect.State.R_4A)),
-        FOUR_LAMP_B("4灯式B", 4, List.of(SignalAspect.State.G_4B, SignalAspect.State.YGF_4B, SignalAspect.State.YG_4B, SignalAspect.State.Y_4B, SignalAspect.State.R_4B)),
-        FIVE_LAMP_A("5灯式A", 5, List.of(SignalAspect.State.G_5A, SignalAspect.State.YGF_5A, SignalAspect.State.YG_5A, SignalAspect.State.Y_5A, SignalAspect.State.YY_5A, SignalAspect.State.R_5A)),
-        FIVE_LAMP_B("5灯式B", 5, List.of(SignalAspect.State.GG_5B, SignalAspect.State.G_5B, SignalAspect.State.Y_5B, SignalAspect.State.R_5B)),
-        SIX_LAMP("6灯式", 6, List.of(SignalAspect.State.GG_6, SignalAspect.State.G_6, SignalAspect.State.YGF_6, SignalAspect.State.YG_6, SignalAspect.State.Y_6, SignalAspect.State.R_6));
+        TWO_LAMP_YR("2YR", 2, List.of(SignalAspect.State.Y_2YR, SignalAspect.State.R_2YR)),
+        TWO_LAMP_GR("2GR", 2, List.of(SignalAspect.State.G_2GR, SignalAspect.State.R_2GR)),
+        TWO_LAMP_GY("2GY", 2, List.of(SignalAspect.State.G_2GY, SignalAspect.State.Y_2GY)),
+        THREE_LAMP("3", 3, List.of(SignalAspect.State.G_3, SignalAspect.State.Y_3, SignalAspect.State.R_3)),
+        FOUR_LAMP_A("4A", 4, List.of(SignalAspect.State.G_4A, SignalAspect.State.Y_4A, SignalAspect.State.YY_4A, SignalAspect.State.R_4A)),
+        FOUR_LAMP_B("4B", 4, List.of(SignalAspect.State.G_4B, SignalAspect.State.YGF_4B, SignalAspect.State.YG_4B, SignalAspect.State.Y_4B, SignalAspect.State.R_4B)),
+        FIVE_LAMP_A("5A", 5, List.of(SignalAspect.State.G_5A, SignalAspect.State.YGF_5A, SignalAspect.State.YG_5A, SignalAspect.State.Y_5A, SignalAspect.State.YY_5A, SignalAspect.State.R_5A)),
+        FIVE_LAMP_B("5B", 5, List.of(SignalAspect.State.GG_5B, SignalAspect.State.G_5B, SignalAspect.State.Y_5B, SignalAspect.State.R_5B)),
+        SIX_LAMP("6", 6, List.of(SignalAspect.State.GG_6, SignalAspect.State.G_6, SignalAspect.State.YGF_6, SignalAspect.State.YG_6, SignalAspect.State.Y_6, SignalAspect.State.R_6));
         
 
-        private final String displayName;
+        private final String translationKey;
         private final int lampCount;
         private final List<SignalAspect.State> validStates;
 
-        HeadType(String name, int count, List<SignalAspect.State> states) {
-            this.displayName = name;
+        HeadType(String key, int count, List<SignalAspect.State> states) {
+            this.translationKey = key;
             this.lampCount = count;
             this.validStates = states;
         }
 
         public int getLampCount() { return lampCount; }
         public List<SignalAspect.State> getValidStates() { return validStates; }
-        public String getDisplayName() { return displayName; }
+        public String getTranslationKey() { return "signal.color.type." + translationKey; }
     }
 
     public enum BackplateType {
-        ROUND("丸"),
-        SQUARE("角"),
-        NONE("なし");
+        ROUND("round"),
+        SQUARE("square"),
+        NONE("none");
     
-        private final String displayName;
+        private final String translationKey;
     
-        BackplateType(String displayName) {
-            this.displayName = displayName;
+        BackplateType(String key) {
+            this.translationKey = key;
         }
     
-        public String getDisplayName() {
-            return this.displayName;
+        public String getTranslationKey() {
+            return "signal.color.backplate_type." + translationKey;
         }
     }
 

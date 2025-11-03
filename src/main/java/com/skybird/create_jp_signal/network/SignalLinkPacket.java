@@ -2,6 +2,7 @@ package com.skybird.create_jp_signal.network;
 
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
+import com.skybird.create_jp_signal.util.Lang;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -48,9 +49,9 @@ public class SignalLinkPacket {
                 boolean success = controlBox.linkToHead(signal, packet.headIdToClaim);
             
                 if (success) {
-                    player.displayClientMessage(Component.literal("信号機に紐付け完了。"), true);
+                    player.displayClientMessage(Lang.translatable("network.signal_link.success"), true);
                 } else {
-                    player.displayClientMessage(Component.literal("エラー: 紐付けに失敗しました。"), true);
+                    player.displayClientMessage(Lang.translatable("network.signal_link.fail"), true);
                 }
             }
         });

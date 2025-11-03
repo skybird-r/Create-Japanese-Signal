@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      " I ",
+      "ATA",
+      "RAR"
+    ],
+    "key": {
+      "I": { "item": "minecraft:redstone_torch" },
+      "T": { "item": "create:railway_casing" },
+      "A": { "item": "create:andesite_alloy" },
+      "R": { "item": "minecraft:redstone" }
+    },
+    "result": {
+      "item": "create_jp_signal:signal_configurator",
+      "count": 1
+    }
+  }

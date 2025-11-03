@@ -1,8 +1,6 @@
 package com.skybird.create_jp_signal;
 
-import com.skybird.create_jp_signal.block.Signal3LBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
-import com.skybird.create_jp_signal.block.signal.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleRoundSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleSquareSignalMastBlockEntity;
@@ -10,6 +8,7 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleTunnelSi
 import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleTunnelSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMastBlockEntity;
+import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -21,10 +20,10 @@ public class AllBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, JpSignals.MODID);
 
-    public static final RegistryObject<BlockEntityType<Signal3LBlockEntity>> SIGNAL_3L_ENTITY =
-        BLOCK_ENTITIES.register("signal_3l_entity", () ->
-                BlockEntityType.Builder.<Signal3LBlockEntity>of(Signal3LBlockEntity::new, AllBlocks.SIGNAL_3LIGHT.get()) // <Signal3LBlockEntity> を追加、vscodeがerror表示する
-                        .build(null));
+    // public static final RegistryObject<BlockEntityType<Signal3LBlockEntity>> SIGNAL_3L_ENTITY =
+    //     BLOCK_ENTITIES.register("signal_3l_entity", () ->
+    //             BlockEntityType.Builder.<Signal3LBlockEntity>of(Signal3LBlockEntity::new, AllBlocks.SIGNAL_3LIGHT.get()) // <Signal3LBlockEntity> を追加、vscodeがerror表示する
+    //                     .build(null));
 
     public static final RegistryObject<BlockEntityType<ControlBoxBlockEntity>> CONTROL_BOX_ENTITY =
         BLOCK_ENTITIES.register("control_box_entity", () ->
@@ -65,7 +64,7 @@ public class AllBlockEntities {
         BLOCK_ENTITIES.register("repeater_single_signal_mast_entity", () ->
             BlockEntityType.Builder.<RepeaterSingleSignalMastBlockEntity>of(RepeaterSingleSignalMastBlockEntity::new, AllBlocks.REPEATER_SINGLE_SIGNAL_MAST.get())
                     .build(null));
-                    
+
     public static final RegistryObject<BlockEntityType<RepeaterSingleTunnelSignalMastBlockEntity>> REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY =
         BLOCK_ENTITIES.register("repeater_single_tunnel_signal_mast_entity", () ->
             BlockEntityType.Builder.<RepeaterSingleTunnelSignalMastBlockEntity>of(RepeaterSingleTunnelSignalMastBlockEntity::new, AllBlocks.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST.get())

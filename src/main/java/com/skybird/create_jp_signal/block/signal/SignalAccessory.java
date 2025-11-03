@@ -8,37 +8,37 @@ public class SignalAccessory {
     
     public enum Route {
 
-        NONE("なし"),
-        CENTER("中央"),
-        LEFT("左"),
-        RIGHT("右");
+        NONE("none"),
+        CENTER("center"),
+        LEFT("left"),
+        RIGHT("right");
 
-        private final String displayName;
+        private final String translationKey;
 
-        Route(String name) {
-            this.displayName = name;
+        Route(String key) {
+            this.translationKey = key;
         };
 
-        public String getDisplayName() {
-            return displayName;
+        public String getTranslationKey() {
+            return "signal.accesory.route." + translationKey;
         }
     }
 
     public enum Type {
-        NONE("なし"),
-        FORECAST("進路予告機"),
-        INDICATOR_HOME("場内用進路表示機"),
-        INDICATOR_DEPARTURE("出発用進路表示機"),
-        INDICATOR_SHUNT("入換用進路表示器");
+        NONE("none"),
+        FORECAST("forecast"),
+        INDICATOR_HOME("indicator_home"),
+        INDICATOR_DEPARTURE("indicator_departure"),
+        INDICATOR_SHUNT("indicator_shunt");
 
-        private String displayName;
+        private String translationKey;
 
-        Type(String name) {
-            this.displayName = name;
+        Type(String key) {
+            this.translationKey = key;
         }
 
-        public String getDisplayName() {
-            return displayName;
+        public String getTranslationKey() {
+            return "signal.accesory.type." + translationKey;
         }
     }
 

@@ -16,6 +16,8 @@ import com.skybird.create_jp_signal.menu.ControlBoxMenu;
 import com.skybird.create_jp_signal.network.PacketHandler;
 import com.skybird.create_jp_signal.network.UnlinkIndexPacket;
 import com.skybird.create_jp_signal.network.UpdateControlBoxDataPacket;
+import com.skybird.create_jp_signal.util.Lang;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -83,7 +85,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
         int y = (this.height - this.imageHeight) / 2;
 
         if (!this.menu.blockEntity.isLinked() || this.appearance == null) {
-            addRenderableWidget(Button.builder(Component.literal("信号柱に紐付けてください"), b -> this.onClose())
+            addRenderableWidget(Button.builder(Lang.translatable("gui.control_box.instruction"), b -> this.onClose())
                 .bounds(this.width / 2 - 100, this.height / 2 - 10, 200, 20).build());
             return;
         }
@@ -91,9 +93,9 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
         // 上部
         int topY = y + 5;
         if (this.appearance instanceof ColorLightSignalAppearance clAppearance) {
-            addRenderableWidget(new DropdownWidget<>(x + 5, topY, 120, 16,
+            addRenderableWidget(new DropdownWidget<>(x + 5, topY, 100, 16,
                 Arrays.asList(ColorLightSignalAppearance.HeadType.values()),
-                (ht) -> Component.literal("タイプ: " + ht.getDisplayName()),
+                (ht) -> Lang.translatable("gui.control_box.signal_type", Lang.translatable(ht.getTranslationKey())),
                 (newHeadType) -> {
                     if (clAppearance.getHeadType() == newHeadType) return;
                     
@@ -114,12 +116,12 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
                 }
             )).setCurrentOption(clAppearance.getHeadType());
 
-            this.repeaterCheckbox = new Checkbox(x + 135, topY - 2 , 20, 20, Component.literal("紫灯"), clAppearance.isRepeater());
+            this.repeaterCheckbox = new Checkbox(x + 115, topY - 2 , 20, 20, Lang.translatable("gui.control_box.purple_lamp"), clAppearance.isRepeater());
             addRenderableWidget(this.repeaterCheckbox);
 
             addRenderableWidget(new DropdownWidget<>(x + 195, topY, 120, 16,
                 clAppearance.getValidAccesoryTypes(),
-                (ap) -> Component.literal("附属機: " + ap.getDisplayName()),
+                (ap) -> Lang.translatable("gui.control_box.accessory", Lang.translatable(ap.getTranslationKey())),
                 (newType) -> {
                     if (clAppearance.getAccessory().getType() == newType) return;
                     clAppearance.getAccessory().setType(newType);
@@ -129,7 +131,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
         } else if (this.appearance instanceof PositionLightRepeaterSignalAppearance plrAppearance) {
             addRenderableWidget(new DropdownWidget<>(x + 10, topY, 100, 16,
                 Arrays.asList(PositionLightRepeaterSignalAppearance.RepeaterForm.values()),
-                (ht) -> Component.literal("タイプ: " + ht.getDisplayName()),
+                (ht) -> Lang.translatable("gui.control_box.signal_type", Lang.translatable(ht.getTranslationKey())),
                 (newForm) -> {
                     if (plrAppearance.getForm() == newForm) return;
                     
@@ -152,7 +154,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
 
             addRenderableWidget(new DropdownWidget<>(x + 195, topY, 120, 16,
                 plrAppearance.getValidAccesoryTypes(),
-                (ap) -> Component.literal("附属機: " + ap.getDisplayName()),
+                (ap) -> Lang.translatable("gui.control_box.accessory", Lang.translatable(ap.getTranslationKey())),
                 (newType) -> {
                     if (plrAppearance.getAccessory().getType() == newType) return;
                     plrAppearance.getAccessory().setType(newType);
@@ -162,7 +164,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
         } else if (this.appearance instanceof PositionLightShuntSignalAppearance plsAppearance) {
             addRenderableWidget(new DropdownWidget<>(x + 10, topY, 100, 16,
                 Arrays.asList(PositionLightShuntSignalAppearance.ShuntType.values()),
-                (ht) -> Component.literal("タイプ: " + ht.getDisplayName()),
+                (ht) -> Lang.translatable("gui.control_box.signal_type", Lang.translatable(ht.getTranslationKey())),
                 (newType) -> {
                     if (plsAppearance.getType() == newType) return;
                     
@@ -185,7 +187,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
 
             addRenderableWidget(new DropdownWidget<>(x + 195, topY, 120, 16,
                 plsAppearance.getValidAccesoryTypes(),
-                (ap) -> Component.literal("附属機: " + ap.getDisplayName()),
+                (ap) -> Lang.translatable("gui.control_box.accessory", Lang.translatable(ap.getTranslationKey())),
                 (newType) -> {
                     if (plsAppearance.getAccessory().getType() == newType) return;
                     plsAppearance.getAccessory().setType(newType);
@@ -236,7 +238,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
                 );
                 this.addRenderableWidget(this.ruleListWidget);
             
-                addRenderableWidget(Button.builder(Component.literal("+ ルールを追加"), (btn) -> {
+                addRenderableWidget(Button.builder(Lang.translatable("gui.control_box.add_rule"), (btn) -> {
                     selectedMapping.addRule(selectedMapping.getRules().size(), validStates.get(0));
                     this.init();
                 }).bounds(x + 185, y + 180, 130, 16).build());
@@ -244,7 +246,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
         }
     
         // 下部：保存/キャンセル
-        addRenderableWidget(Button.builder(Component.literal("保存"), (btn) -> {
+        addRenderableWidget(Button.builder(Lang.translatable("gui.control_box.save"), (btn) -> {
             if (this.appearance instanceof ColorLightSignalAppearance clAppearance) {
                 clAppearance.setRepeater(this.repeaterCheckbox.selected());
             }
@@ -262,7 +264,7 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
             ));
             this.onClose();
         }).bounds(x + 175, y + 200, 120, 16).build());
-        addRenderableWidget(Button.builder(Component.literal("キャンセル"), (btn) -> this.onClose())
+        addRenderableWidget(Button.builder(Lang.translatable("gui.control_box.cancel"), (btn) -> this.onClose())
             .bounds(x + 25, y + 200, 120, 16).build());
     }
 
@@ -311,9 +313,9 @@ public class ControlBoxScreen extends AbstractContainerScreen<ControlBoxMenu> {
         super.render(gg, pMouseX, pMouseY, pPartialTick);
         
         //gg.drawCenteredString(this.font, this.title, this.width / 2, y + 7, 0x404040);
-        gg.drawString(this.font, "入力元", x + 10, y + 25, 0xFFFFFF, false);
+        gg.drawString(this.font, Lang.translatable("block_entity.control_box.source_list"), x + 10, y + 25, 0xFFFFFF, false);
         if (this.selectedIndexPos != null) {
-            gg.drawString(this.font, "選択中:" + this.selectedIndexPos.toShortString(), x + 80, y + 25, 0xFFFFFF, false);
+            gg.drawString(this.font, Lang.translatable("block_entity.control_box.selected", this.selectedIndexPos.toShortString()), x + 80, y + 25, 0xFFFFFF, false);
         }
 
         this.renderTooltip(gg, pMouseX, pMouseY);

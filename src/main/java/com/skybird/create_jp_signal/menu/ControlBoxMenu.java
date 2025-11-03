@@ -6,10 +6,10 @@ import javax.annotation.Nonnull;
 
 import com.skybird.create_jp_signal.AllBlocks;
 import com.skybird.create_jp_signal.AllMenuTypes;
+import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
-import com.skybird.create_jp_signal.block.signal.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_type.AllSignalTypes;
 
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ public class ControlBoxMenu extends AbstractContainerMenu {
             BlockPos signalPos = blockEntity.getLinkedSignalPos();
             UUID headId = blockEntity.getLinkedHeadId();
 
-            if (level.isLoaded(signalPos) && level.getBlockEntity(signalPos) instanceof SignalMastBlockEntity signal) {
+            if (level.isLoaded(signalPos) && level.getBlockEntity(signalPos) instanceof BaseSignalBlockEntity signal) {
                 SignalHead head = signal.getSignalHeads().values().stream()
                     .filter(h -> h.getUniqueId().equals(headId))
                     .findFirst().orElse(null);

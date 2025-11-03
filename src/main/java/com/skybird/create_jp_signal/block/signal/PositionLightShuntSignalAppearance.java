@@ -2,28 +2,26 @@ package com.skybird.create_jp_signal.block.signal;
 
 import java.util.List;
 
-import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance.RepeaterForm;
-
 import net.minecraft.nbt.CompoundTag;
 
 public class PositionLightShuntSignalAppearance implements ISignalAppearance {
 
     public enum ShuntType {
-        TWO_WHITE("2位式白", List.of(SignalAspect.State.STOP_S2, SignalAspect.State.PROCEED_S2)),
-        TWO_RED("2位式赤", List.of(SignalAspect.State.STOP_S2R, SignalAspect.State.PROCEED_S2R)),
-        THREE_WHITE("3位式白", List.of(SignalAspect.State.STOP_S3, SignalAspect.State.CAUTION_S3, SignalAspect.State.PROCEED_S3)),
-        THREE_RED("3位式赤", List.of(SignalAspect.State.STOP_S3R, SignalAspect.State.CAUTION_S3R, SignalAspect.State.PROCEED_S3R));
+        TWO_WHITE("2W", List.of(SignalAspect.State.STOP_S2, SignalAspect.State.PROCEED_S2)),
+        TWO_RED("2R", List.of(SignalAspect.State.STOP_S2R, SignalAspect.State.PROCEED_S2R)),
+        THREE_WHITE("3W", List.of(SignalAspect.State.STOP_S3, SignalAspect.State.CAUTION_S3, SignalAspect.State.PROCEED_S3)),
+        THREE_RED("3R", List.of(SignalAspect.State.STOP_S3R, SignalAspect.State.CAUTION_S3R, SignalAspect.State.PROCEED_S3R));
 
-        private final String displayName;
+        private final String translationKey;
         private final List<SignalAspect.State> validStates;
 
-        ShuntType (String name, List<SignalAspect.State> states) {
-            this.displayName = name;
+        ShuntType (String key, List<SignalAspect.State> states) {
+            this.translationKey = key;
             this.validStates = states;
         }
 
         public List<SignalAspect.State> getValidStates() { return validStates; }
-        public String getDisplayName() { return displayName; }
+        public String getTranslationKey() { return "signal.shunt.type." + translationKey; }
     }
 
     private ShuntType shuntType;
@@ -34,8 +32,6 @@ public class PositionLightShuntSignalAppearance implements ISignalAppearance {
     public PositionLightShuntSignalAppearance(ShuntType type) {
         this.shuntType = type;
     }
-
-
 
     public ShuntType getType() { return shuntType; }
     public void setType(ShuntType type) { this.shuntType = type; }

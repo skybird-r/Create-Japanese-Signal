@@ -9,9 +9,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, JpSignals.MODID);
 
-    public static final RegistryObject<CreativeModeTab> JP_SIGNAL_TAB = TABS.register("jpsignal",
+    public static final RegistryObject<CreativeModeTab> JP_SIGNAL_TAB = TABS.register(JpSignals.MODID,
         () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.jpsignal"))
+            .title(Component.translatable("itemGroup."+JpSignals.MODID))
             .displayItems((param, output) -> {
                 // AllItems.ITEMS に登録されている全てのアイテムを自動的にタブに追加する
                 AllItems.ITEMS.getEntries().stream()
@@ -23,7 +23,8 @@ public class AllCreativeTabs {
                     .map(RegistryObject::get)
                     .forEach(output::accept);
             })
-            .build());
+            .build()
+        );
 
     /*
     public static final RegistryObject<CreativeModeTab> JP_SIGNAL_TAB = TABS.register("jpsignal",

@@ -1,6 +1,8 @@
 package com.skybird.create_jp_signal.client.gui.widget;
 
 import com.skybird.create_jp_signal.block.signal.SignalAspect;
+import com.skybird.create_jp_signal.util.Lang;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -29,7 +31,7 @@ public class AspectRuleEntry extends AbstractWidget implements ContainerEventHan
         this.indexBox = new EditBox(Minecraft.getInstance().font, x, y, 25, 16, Component.empty());
         this.indexBox.setValue(String.valueOf(index));
         this.aspectDropdown = new DropdownWidget<>(x + 30, y, 79, 16,
-            validAspects, (state) -> Component.literal(state.getDisplayName()), (state) -> {});
+            validAspects, (state) -> Lang.translatable(state.getTranslationKey()), (state) -> {});
         this.aspectDropdown.setCurrentOption(aspect);
         // ボタンが押されたら、自分自身(this)を onDelete コールバックに渡す
         this.deleteButton = Button.builder(Component.literal("X"), (btn) -> onDelete.accept(this))

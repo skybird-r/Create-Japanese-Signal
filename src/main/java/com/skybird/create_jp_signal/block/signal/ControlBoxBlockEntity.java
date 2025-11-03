@@ -8,6 +8,8 @@ import com.skybird.create_jp_signal.block.signal.signal_type.AllSignalTypes;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
 import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 import com.skybird.create_jp_signal.menu.ControlBoxMenu;
+import com.skybird.create_jp_signal.util.Lang;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -229,7 +231,7 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
     
-    @Override public Component getDisplayName() { return Component.literal("信号制御盤"); }
+    @Override public Component getDisplayName() { return Lang.translatable("block_entity.control_box.name"); }
 
     @Override
     protected void saveAdditional(@Nonnull CompoundTag tag) {

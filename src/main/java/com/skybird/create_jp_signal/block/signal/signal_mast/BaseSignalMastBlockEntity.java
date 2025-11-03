@@ -50,11 +50,6 @@ public abstract class BaseSignalMastBlockEntity extends BaseSignalBlockEntity {
         setChanged(); // 変更をワールドに通知
     }
     
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-        setChanged();
-    }
-    
     // 5. 当たり判定やレンダリングで使うためのゲッターを追加
     public int getXPos() { return xPos; }
     public int getZPos() { return zPos; }

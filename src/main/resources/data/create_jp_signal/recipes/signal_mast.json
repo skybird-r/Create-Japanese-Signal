@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:stonecutting",
+    "ingredient": {
+        "item": "minecraft:cobblestone"
+    },
+    "result": "create_jp_signal:signal_mast",
+    "count": 4
+}

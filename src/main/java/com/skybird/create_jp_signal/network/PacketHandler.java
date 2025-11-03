@@ -18,16 +18,16 @@ public class PacketHandler {
     public static void init() {
         int id = 0;
         
-        CHANNEL.registerMessage(id++, FinalizeLinkPacket.class,
-            FinalizeLinkPacket::encode,
-            FinalizeLinkPacket::decode,
-            FinalizeLinkPacket::handle
-        );
-        CHANNEL.registerMessage(id++, ConfigureMastPacket.class,
-            ConfigureMastPacket::encode,
-            ConfigureMastPacket::decode,
-            ConfigureMastPacket::handle
-        );
+        // CHANNEL.registerMessage(id++, FinalizeLinkPacket.class,
+        //     FinalizeLinkPacket::encode,
+        //     FinalizeLinkPacket::decode,
+        //     FinalizeLinkPacket::handle
+        // );
+        // CHANNEL.registerMessage(id++, ConfigureMastPacket.class,
+        //     ConfigureMastPacket::encode,
+        //     ConfigureMastPacket::decode,
+        //     ConfigureMastPacket::handle
+        // );
         CHANNEL.registerMessage(id++, UpdateControlBoxDataPacket.class,
             UpdateControlBoxDataPacket::encode,
             UpdateControlBoxDataPacket::decode,

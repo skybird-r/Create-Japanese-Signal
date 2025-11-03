@@ -2,6 +2,8 @@ package com.skybird.create_jp_signal.client.gui.widget;
 
 import com.skybird.create_jp_signal.block.signal.AspectMapping;
 import com.skybird.create_jp_signal.block.signal.SignalAccessory;
+import com.skybird.create_jp_signal.util.Lang;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -36,7 +38,7 @@ public class SourceListEntry extends AbstractWidget implements ContainerEventHan
 
         this.routeDropdown = new DropdownWidget<>(105, 0, 40, 16,
                 Arrays.asList(SignalAccessory.Route.values()),
-                (ht) -> Component.literal(ht.getDisplayName()),
+                (ht) -> Lang.translatable(ht.getTranslationKey()),
                 (newRoute) -> {
                     if (mapping.getRoute() == newRoute) return;
                     mapping.setRoute(newRoute);

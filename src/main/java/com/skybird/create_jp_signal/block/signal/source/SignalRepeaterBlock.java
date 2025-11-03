@@ -1,12 +1,18 @@
 package com.skybird.create_jp_signal.block.signal.source;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.skybird.create_jp_signal.AllBlocks;
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ISignalIndexSource;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -17,8 +23,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
 
-public class SignalRepeaterBlock extends BaseEntityBlock {
+public class SignalRepeaterBlock extends BaseEntityBlock implements IWrenchable {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
@@ -42,6 +49,12 @@ public class SignalRepeaterBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
+        // YourItems.YOUR_ITEM.get() の部分を、ドロップさせたいアイテムに書き換えてください。
+        return Collections.singletonList(new ItemStack(AllBlocks.SIGNAL_REPEATER_ITEM.get()));
     }
     
     @Nullable

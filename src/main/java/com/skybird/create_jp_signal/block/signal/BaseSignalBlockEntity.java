@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Pair;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
 import com.skybird.create_jp_signal.menu.SignalLinkMenu;
+import com.skybird.create_jp_signal.util.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -162,7 +163,7 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
         return new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return Component.literal("信号機スロット選択");
+                return Lang.translatable("block_entity.base_signal.menu");
             }
 
             @Nullable

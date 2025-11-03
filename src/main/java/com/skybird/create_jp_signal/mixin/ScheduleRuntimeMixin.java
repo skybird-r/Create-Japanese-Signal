@@ -14,6 +14,7 @@ import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
+import com.skybird.create_jp_signal.create.train.schedule.MinimumReservationDistanceInstruction;
 import com.skybird.create_jp_signal.create.train.schedule.OperationTypeInstruction;
 
 @Mixin(value = ScheduleRuntime.class, remap = false)
@@ -37,6 +38,12 @@ public abstract class ScheduleRuntimeMixin {
     ) {
         if (instruction instanceof OperationTypeInstruction operation) {
 			((ITrain)train).setOperationType(operation.getOperationType());
+			state = State.PRE_TRANSIT;
+			currentEntry++;
+			cir.setReturnValue(null);
+		}
+        if (instruction instanceof MinimumReservationDistanceInstruction reservationInstruction) {
+			((ITrain)train).setMinimumReservationDistance(reservationInstruction.getMinimumReservationDistance());
 			state = State.PRE_TRANSIT;
 			currentEntry++;
 			cir.setReturnValue(null);

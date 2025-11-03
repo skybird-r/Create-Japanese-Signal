@@ -5,6 +5,7 @@ import com.skybird.create_jp_signal.network.PacketHandler;
 
 import org.slf4j.Logger;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -27,5 +28,9 @@ public class JpSignals {
         PacketHandler.init();
 
     }
+
+    public static ResourceLocation asResource(String path) {
+		return new ResourceLocation(MODID, path);
+	}
 
 }

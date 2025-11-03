@@ -1,6 +1,7 @@
 package com.skybird.create_jp_signal.create.train.schedule;
 
 import com.skybird.create_jp_signal.JpSignals;
+import com.skybird.create_jp_signal.util.Lang;
 
 import net.minecraft.network.chat.Component;
 
@@ -14,6 +15,6 @@ public enum OperationType {
     }
 
     public Component getDisplayName() {
-        return Component.translatable(JpSignals.MODID + ".schedule.operation" + translationKey);//Lang.translateDirect("schedule.instruction.operation_type." + this.translationKey);
+        return Lang.translatable("schedule.instruction.operation_type." + this.translationKey);
     }
 }

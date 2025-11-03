@@ -22,44 +22,44 @@ public class SignalAspect {
     public enum Aspect {
 
         // 共通
-        ALL(-1, "全点灯"),
-        OFF(-1, "消灯"),
+        ALL(-1, "common.all"),
+        OFF(-1, "common.off"),
 
         // 色灯式
-        R(0, "停止"),
-        YY(1, "警戒"),
-        Y(2, "注意"),
-        YG(3, "減速"),
-        YGF(4, "抑速"),
-        G(5, "進行"),
-        GG(6, "高速進行"),
+        R(0, "color.R"),
+        YY(1, "color.YY"),
+        Y(2, "color.Y"),
+        YG(3, "color.YG"),
+        YGF(4, "color.YGF"),
+        G(5, "color.G"),
+        GG(6, "color.GG"),
 
         // 灯列式入換信号
-        S_STOP(0, "停止"),
-        S_CAUTION(1, "注意"),
-        S_PROCEED(2, "進行"),
+        S_STOP(0, "shunt.stop"),
+        S_CAUTION(1, "shunt.caution"),
+        S_PROCEED(2, "shunt.proceed"),
 
         // 灯列式中継信号
-        R_STOP(0, "停止"),
-        R_RESTRICTED(1, "制限"),
-        R_PROCEED(2, "進行"),
-        R_HIGH_SPEED_PROCEED(3, "高速進行");
+        R_STOP(0, "repeater.stop"),
+        R_RESTRICTED(1, "repeater.restricted"),
+        R_PROCEED(2, "repeater.proceed"),
+        R_HIGH_SPEED_PROCEED(3, "repeater.high_speed_proceed");
 
 
-        Aspect(int index, String name) {
+        Aspect(int index, String key) {
             this.aspectIndex = index;
-            this.displayName = name;
+            this.translationKey = key;
         };
 
         private final int aspectIndex;
-        private final String displayName;
+        private final String translationKey;
 
         public int getAspectIndex() {
             return aspectIndex;
         }
 
-        public String getDisplayName() {
-            return displayName;
+        public String getTranslationKey() {
+            return "signal.signal_aspect.aspect." + translationKey;
         }
 
     } 
@@ -207,8 +207,8 @@ public class SignalAspect {
             return aspect;
         }
 
-        public String getDisplayName() {
-            return this.aspect.getDisplayName();
+        public String getTranslationKey() {
+            return this.aspect.getTranslationKey();
         }
 
         public int getAspectIndex() {

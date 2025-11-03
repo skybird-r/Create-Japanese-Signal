@@ -7,6 +7,7 @@ import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.menu.SignalLinkMenu;
 import com.skybird.create_jp_signal.network.PacketHandler;
 import com.skybird.create_jp_signal.network.SignalLinkPacket;
+import com.skybird.create_jp_signal.util.Lang;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -31,9 +32,10 @@ public class SignalLinkScreen extends AbstractContainerScreen<SignalLinkMenu> {
 
         for (Map.Entry<AttachmentSlot, SignalHead> entry : heads.entrySet()) {
             SignalHead head = entry.getValue();
+            Component alreadyLinked = head.getControllerPos() == null ? Component.literal("") : Lang.translatable("gui.signal_link.already_linked");
             
             Button button = Button.builder(
-                Component.literal(entry.getKey().name() + " の信号機に接続" + (head.getControllerPos() == null ? "" : "(接続中)")),
+                Lang.translatable("gui.signal_link.link_button", entry.getKey().name()).append(alreadyLinked),
                 (btn) -> {
                     PacketHandler.sendToServer(new SignalLinkPacket(
                         this.menu.controlBoxPos,

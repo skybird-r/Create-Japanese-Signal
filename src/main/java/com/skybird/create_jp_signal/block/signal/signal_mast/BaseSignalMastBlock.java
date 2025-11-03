@@ -36,8 +36,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class BaseSignalMastBlock extends BaseSignalBlock {
 
-    public static final BooleanProperty WALL_MOUNTED = BooleanProperty.create("wall_mounted");
-    public static final DirectionProperty ATTACH_FACE = HorizontalDirectionalBlock.FACING;
+    // public static final BooleanProperty WALL_MOUNTED = BooleanProperty.create("wall_mounted");
+    // public static final DirectionProperty ATTACH_FACE = HorizontalDirectionalBlock.FACING;
 
     public BaseSignalMastBlock(Properties properties) {
         super(
@@ -46,9 +46,9 @@ public abstract class BaseSignalMastBlock extends BaseSignalBlock {
             .destroyTime(1.5F)
             .explosionResistance(6.0F)
         );
-        this.registerDefaultState(this.stateDefinition.any()
-            .setValue(WALL_MOUNTED, false)
-            .setValue(ATTACH_FACE, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any());
+            // .setValue(WALL_MOUNTED, false)
+            // .setValue(ATTACH_FACE, Direction.NORTH));
     }
 
     @Override
@@ -59,7 +59,7 @@ public abstract class BaseSignalMastBlock extends BaseSignalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WALL_MOUNTED, ATTACH_FACE);
+        // builder.add(WALL_MOUNTED, ATTACH_FACE);
     }
 
     @Override
@@ -78,9 +78,9 @@ public abstract class BaseSignalMastBlock extends BaseSignalBlock {
             attachFace = clickFace;
         }
         
-        return this.defaultBlockState()
-            .setValue(WALL_MOUNTED, wallMounted)
-            .setValue(ATTACH_FACE, attachFace);
+        return this.defaultBlockState();
+            // .setValue(WALL_MOUNTED, wallMounted)
+            // .setValue(ATTACH_FACE, attachFace);
     }
 
     @Override

@@ -3,11 +3,9 @@ package com.skybird.create_jp_signal.client;
 import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.AllMenuTypes;
 import com.skybird.create_jp_signal.JpSignals;
-import com.skybird.create_jp_signal.client.blockentityrenderer.Signal3LBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.gui.ControlBoxScreen;
-import com.skybird.create_jp_signal.client.gui.MastConfigScreen;
 import com.skybird.create_jp_signal.client.gui.SignalLinkScreen;
 
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -26,10 +24,10 @@ public class ClientSetup {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             // Signal3LBlockEntityが描画されるときに、Signal3LBlockEntityRendererを使うように登録
-            BlockEntityRenderers.register(
-                AllBlockEntities.SIGNAL_3L_ENTITY.get(),
-                Signal3LBlockEntityRenderer::new
-            );
+            // BlockEntityRenderers.register(
+            //     AllBlockEntities.SIGNAL_3L_ENTITY.get(),
+            //     Signal3LBlockEntityRenderer::new
+            // );
             BlockEntityRenderers.register(
                 AllBlockEntities.SIGNAL_MAST_ENTITY.get(), 
                 SignalMastBlockEntityRenderer::new
@@ -60,7 +58,7 @@ public class ClientSetup {
             );
 
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
-            MenuScreens.register(AllMenuTypes.MAST_CONFIG_MENU.get(), MastConfigScreen::new);
+            // MenuScreens.register(AllMenuTypes.MAST_CONFIG_MENU.get(), MastConfigScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);
         });
     }

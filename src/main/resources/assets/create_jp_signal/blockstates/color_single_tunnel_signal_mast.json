@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "create_jp_signal:block/signal_mast" }
+    }
+}

@@ -3,6 +3,8 @@ package com.skybird.create_jp_signal.item;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
 import com.skybird.create_jp_signal.block.signal.ISignalIndexSource;
+import com.skybird.create_jp_signal.util.Lang;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -32,7 +34,6 @@ public class SignalConfiguratorItem extends Item {
         super(pProperties);
     }
 
-
     @Override
     public InteractionResult useOn(@Nonnull UseOnContext pContext) {
         Level level = pContext.getLevel();
@@ -43,24 +44,10 @@ public class SignalConfiguratorItem extends Item {
         if (level.isClientSide || player == null) return InteractionResult.SUCCESS;
 
         if (player.isShiftKeyDown()) {
-            clearLinkData(stack, player, null);
-            clearLinkData(stack, player, "リンクモードを中断しました。");
+            clearLinkData(stack, player);
+            player.displayClientMessage(Lang.translatable("item.signal_configurator.link_cancel"), true);
             return InteractionResult.SUCCESS;
         }
-        // --- シフト右クリックの処理 (変更なし) ---
-        // if (player.isShiftKeyDown()) {
-        //     clearLinkData(stack, player, "リンクモードを中断しました。");
-        //     BlockEntity be = level.getBlockEntity(clickedPos);
-        //     if (be instanceof BaseSignalBlockEntity signal) {
-        //         NetworkHooks.openScreen((ServerPlayer) player, signal, clickedPos);
-        //     } else if (be instanceof ControlBoxBlockEntity controlBox) {
-        //         if (controlBox.isLinked()) {
-        //             controlBox.resetLink();
-        //             player.displayClientMessage(Component.literal("信号機とのリンクを解除しました。"), true);
-        //         }
-        //     }
-        //     return InteractionResult.SUCCESS;
-        // }
 
         //右クリック
         BlockPos firstPos = getPos(stack);
@@ -73,8 +60,8 @@ public class SignalConfiguratorItem extends Item {
             
             BlockEntity firstBe = level.getBlockEntity(firstPos);
             if (!(firstBe instanceof ControlBoxBlockEntity controlBox)) {
-                player.displayClientMessage(Component.literal("記憶していた制御盤が見つかりません！"), true);
-                clearLinkData(stack, player, null);
+                player.displayClientMessage(Lang.translatable("item.signal_configurator.control_box_not_found"), true);
+                clearLinkData(stack, player);
                 return InteractionResult.FAIL;
             }
             BlockEntity secondBe = level.getBlockEntity(clickedPos);
@@ -86,13 +73,13 @@ public class SignalConfiguratorItem extends Item {
                     // 2番目に「制御盤」の座標を書き込む
                     buf.writeBlockPos(firstPos);
                 });
-                clearLinkData(stack, player, null);
+                clearLinkData(stack, player);
             } else if (secondBe instanceof ISignalIndexSource) {
                 controlBox.linkToIndexSource(clickedPos);
-                player.displayClientMessage(Component.literal("Indexブロックを紐付けました。"), true);
-                clearLinkData(stack, player, null);
+                player.displayClientMessage(Lang.translatable("item.signal_configurator.index_link"), true);
+                clearLinkData(stack, player);
             } else {
-                player.displayClientMessage(Component.literal("対象のブロックではありません。リンクモードを維持します。"), true);
+                player.displayClientMessage(Lang.translatable("item.signal_configurator.not_target"), true);
             }
         }
         return InteractionResult.SUCCESS;
@@ -103,7 +90,7 @@ public class SignalConfiguratorItem extends Item {
     public void appendHoverText(@Nonnull ItemStack pStack, @Nullable Level pLevel, @Nonnull List<Component> pTooltip, @Nonnull TooltipFlag pFlag) {
         BlockPos pos = getPos(pStack);
         if (pos != null) {
-            pTooltip.add(Component.literal("紐付け元選択中: " + pos.toShortString()));
+            pTooltip.add(Lang.translatable("item.signal_configurator.selected", pos.toShortString()));
         }
     }
 
@@ -112,13 +99,10 @@ public class SignalConfiguratorItem extends Item {
         stack.getOrCreateTag().put(TAG_FIRST_POS, NbtUtils.writeBlockPos(pos));
     }
 
-    private static void clearLinkData(ItemStack stack, Player player, @Nullable String message) {
+    private static void clearLinkData(ItemStack stack, Player player) {
         CompoundTag tag = stack.getTag();
         if (stack.hasTag() && tag != null && tag.contains(TAG_FIRST_POS)) {
             tag.remove(TAG_FIRST_POS);
-            if (message != null) {
-                player.displayClientMessage(Component.literal(message), true);
-            }
         }
     }
     

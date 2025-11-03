@@ -1,27 +1,16 @@
-package com.skybird.create_jp_signal.item;
+package com.skybird.create_jp_signal.block.signal.signal_mast;
 
-import java.util.List;
+import com.skybird.create_jp_signal.AllBlocks;
 
-import javax.annotation.Nullable;
-
-// BaseSignalMastBlock をインポートしておく
-import com.skybird.create_jp_signal.block.signal.signal_mast.BaseSignalMastBlock;
-// BaseSignalMastBlockEntity をインポートしておく
-import com.skybird.create_jp_signal.block.signal.signal_mast.BaseSignalMastBlockEntity;
-import com.skybird.create_jp_signal.util.Lang;
-
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -31,46 +20,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class SignalMastWithSignalItem extends Item {
+public class SignalMastBlockItem extends BlockItem {
 
-    public SignalMastWithSignalItem(Properties pProperties) {
-        super(pProperties);
+    public SignalMastBlockItem(Block block, Properties properties) {
+        super(block, properties);
     }
-
-    // Shift + 右クリックでGUIを開くなどの処理は use メソッドに書く (今回は省略)
-    // @Override
-    // public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) { ... }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-
-        CompoundTag nbt = pStack.getTag();
-        Component selectedBlockName;
-        if (nbt != null && nbt.contains("SelectedBlockType")) {
-            String blockId = nbt.getString("SelectedBlockType");
-            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
-            if (block != null) {
-                selectedBlockName = block.getName().withStyle(ChatFormatting.AQUA);
-            } else {
-                selectedBlockName = Lang.translatable("item.signal_item.none").withStyle(ChatFormatting.AQUA);
-            }
-        } else {
-            selectedBlockName = Lang.translatable("item.signal_item.none").withStyle(ChatFormatting.AQUA);
-        }
-
-        pTooltipComponents.add(Lang.translatable("item.signal_item.selected_signal", selectedBlockName)
-                .withStyle(ChatFormatting.GRAY));
-
-        // 操作方法のヒントを追加
-        pTooltipComponents.add(Lang.translatable("item.signal_item.open_gui_instruction", 
-                Component.keybind("key.sneak"), 
-                Component.keybind("key.attack"))
-            .withStyle(ChatFormatting.GRAY));
-    }
-
-
-    // ブロックへの右クリックで設置処理を行う
+    
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
@@ -90,25 +45,12 @@ public class SignalMastWithSignalItem extends Item {
         if (!level.getBlockState(placePos).canBeReplaced(new BlockPlaceContext(context))) {
             return InteractionResult.FAIL;
         }
-        
-        // 1. アイテムのNBTから、設置するブロックのIDを取得する
-        CompoundTag nbt = stack.getOrCreateTag();
-        String blockIdStr = nbt.getString("SelectedBlockType");
-        if (blockIdStr.isEmpty()) {
-            // NBTがなければデフォルトのブロックIDを設定する（例）
-            blockIdStr = "create_jp_signal:color_single_round_signal_mast"; 
-        }
-
-        Block blockToPlace = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockIdStr));
-        if (blockToPlace == null || !(blockToPlace instanceof BaseSignalMastBlock)) {
-            return InteractionResult.FAIL; // 設置するブロックが見つからない
-        }
 
         // 2. ブロックを設置
-        BlockState placementState = blockToPlace.getStateForPlacement(new BlockPlaceContext(context));
+        BlockState placementState = AllBlocks.SIGNAL_MAST.get().getStateForPlacement(new BlockPlaceContext(context));
         if (level.setBlock(placePos, placementState, 3)) {
             BlockEntity be = level.getBlockEntity(placePos);
-            if (be instanceof BaseSignalMastBlockEntity mastBE) {
+            if (be instanceof SignalMastBlockEntity mastBE) {
                 
                 // 3. クリック位置から xPos と zPos を計算 (元のロジックをここに持ってくる)
                 Vec3 clickLocation = context.getClickLocation();
@@ -157,4 +99,5 @@ public class SignalMastWithSignalItem extends Item {
         if (value < (2.0 / 3.0)) return 8;
         return 13;
     }
+
 }

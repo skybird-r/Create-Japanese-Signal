@@ -42,6 +42,8 @@ public abstract class NavigationMixin {
     @Shadow public double distanceToDestination;
     @Shadow public Pair<UUID, Boolean> waitingForSignal;
     @Shadow private Map<UUID, Pair<SignalBoundary, Boolean>> waitingForChainedGroups;
+    @Shadow public int ticksWaitingForSignal;
+    @Shadow public double distanceToSignal;
     
     @Unique private Integer ticksWaitingBuffer;
     @Unique public Pair<SignalBoundary, Boolean> chainEndEntrySignal = null;
@@ -61,7 +63,7 @@ public abstract class NavigationMixin {
         method = "tick",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/util/Mth;clamp(DDD)D",
+            target = "Lnet/minecraft/util/Mth;clamp(DDD)D", // Lnet/minecraft/util/Mth;clamp(DDD)D = Lnet/minecraft/util/Mth;m_14008_(DDD)D
             ordinal = 0
         )
     )
@@ -69,7 +71,9 @@ public abstract class NavigationMixin {
         // value = brakingDistanceNoFlicker
         // min   = preDepartureLookAhead
         // max   = this.distanceToDestination
-        return Mth.clamp(value + Math.abs(this.train.speed) * 20 * 5 + 30, min, max);
+        // return Mth.clamp(value + Math.abs(this.train.speed) * 20 * 5 + 30, min, max);
+        double reservationDistance = Math.max(value, ((ITrain)train).getMinimumReservationDistance());
+        return Mth.clamp(reservationDistance, min, max);
     }
 
     @ModifyVariable(
@@ -176,7 +180,6 @@ public abstract class NavigationMixin {
                     
                 }
             });
-            
         }
     }
 
@@ -188,10 +191,23 @@ public abstract class NavigationMixin {
             target = "Lcom/simibubi/create/content/trains/entity/Navigation;waitingForSignal:Lcom/simibubi/create/foundation/utility/Pair;",
             ordinal = 7
         ),
-        cancellable = true
+        cancellable = true,
+        locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void create_jp_signal_addDepartureBuffer(Level level, CallbackInfo ci) {
-        if (this.ticksWaitingBuffer != null && this.ticksWaitingBuffer < 30) {
+    private void create_jp_signal_addDepartureBuffer(
+        Level level,
+        CallbackInfo ci,
+        double acceleration,
+        double brakingDistance,
+        double speedMod,
+        double preDepartureLookAhead
+    ) {
+        if (this.ticksWaitingBuffer != null && this.ticksWaitingBuffer < ((ITrain)train).getTickWaitBeforeDeparture()) {
+            if (waitingForSignal != null && distanceToSignal < preDepartureLookAhead) {
+				ticksWaitingForSignal++;
+				ci.cancel();
+                return;
+			}
             this.ticksWaitingBuffer++;
             ci.cancel();
             return;

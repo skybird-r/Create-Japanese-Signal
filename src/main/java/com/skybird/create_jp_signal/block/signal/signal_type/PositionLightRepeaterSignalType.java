@@ -16,7 +16,6 @@ public class PositionLightRepeaterSignalType implements ISignalType {
     public static final ResourceLocation ID = new ResourceLocation(JpSignals.MODID, "position_light_repeater_signal");
 
     @Override public ResourceLocation getId() { return ID; }
-    @Override public String getDisplayName() { return "灯列式中継信号機"; }
     @Override public int getMaxAttachmentsPerMast() { return 1; }
 
     @Override

@@ -16,7 +16,6 @@ public class ColorLightSignalType implements ISignalType {
     public static final ResourceLocation ID = new ResourceLocation(JpSignals.MODID, "color_light_signal");
 
     @Override public ResourceLocation getId() { return ID; }
-    @Override public String getDisplayName() { return "色灯式信号機"; }
     @Override public int getMaxAttachmentsPerMast() { return 2; }
 
     @Override

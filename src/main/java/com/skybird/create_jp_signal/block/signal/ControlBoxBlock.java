@@ -1,8 +1,14 @@
 package com.skybird.create_jp_signal.block.signal;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.skybird.create_jp_signal.AllBlockEntities;
+import com.skybird.create_jp_signal.AllBlocks;
 import com.skybird.create_jp_signal.AllItems;
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
+
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -24,10 +31,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-public class ControlBoxBlock extends BaseEntityBlock {
+public class ControlBoxBlock extends BaseEntityBlock implements IWrenchable {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
@@ -54,9 +62,12 @@ public class ControlBoxBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        // Observerと同様に、プレイヤーが見ている方向の「奥側」を向くようにする
-        // そのため、プレイヤーの視線とは逆向きを向くように設定する
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
+        return Collections.singletonList(new ItemStack(AllBlocks.CONTROL_BOX_ITEM.get()));
     }
 
     @Override

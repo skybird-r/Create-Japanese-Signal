@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.skybird.create_jp_signal.AllBlocks;
-import com.skybird.create_jp_signal.menu.MastLinkMenu;
 import com.skybird.create_jp_signal.network.PacketHandler;
 import com.skybird.create_jp_signal.network.SelectSignalMastPacket;
+import com.skybird.create_jp_signal.util.Lang;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -28,7 +28,7 @@ public class SelectSignalMastScreen extends Screen {
     );
 
     public SelectSignalMastScreen() {
-        super(Component.translatable("gui.create_jp_signal.select_signal_mast.title"));
+        super(Lang.translatable("gui.select_signal_mast.title"));
     }
 
     @Override

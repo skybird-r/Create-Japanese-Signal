@@ -11,4 +11,8 @@ public interface ITrain {
     public Map<UUID, Pair<SignalBoundary, Boolean>> getActiveReservations();
     public OperationType getOperationType();
     public void setOperationType(OperationType type);
+    public double getMinimumReservationDistance();
+    public void setMinimumReservationDistance(double minimumReservationDistance);
+    public int getTickWaitBeforeDeparture();
+    public void setTickWaitBeforeDeparture(int tickWaitBeforeDeparture);
 }
