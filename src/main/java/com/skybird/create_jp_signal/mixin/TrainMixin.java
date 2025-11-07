@@ -24,7 +24,7 @@ import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 
 import net.minecraft.nbt.CompoundTag;
 
-@Mixin(Train.class)
+@Mixin(value = Train.class, remap = false)
 public abstract class TrainMixin implements ITrain {
     
     @Unique public Map<UUID, Pair<SignalBoundary, Boolean>> activeReservations;

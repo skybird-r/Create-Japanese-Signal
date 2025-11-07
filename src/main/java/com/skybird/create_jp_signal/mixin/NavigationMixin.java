@@ -64,7 +64,8 @@ public abstract class NavigationMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/util/Mth;clamp(DDD)D", // Lnet/minecraft/util/Mth;clamp(DDD)D = Lnet/minecraft/util/Mth;m_14008_(DDD)D
-            ordinal = 0
+            ordinal = 0,
+            remap = true
         )
     )
     private double create_jp_signal_redirectScanDistanceCalculation(double value, double min, double max) {

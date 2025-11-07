@@ -11,7 +11,7 @@ import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalEdgeGroup;
 
-@Mixin(SignalEdgeGroup.class)
+@Mixin(value = SignalEdgeGroup.class, remap = false)
 public abstract class SignalEdgeGroupMixin implements ISignalEdgeGroup {
 
     @Shadow public Set<Train> trains;

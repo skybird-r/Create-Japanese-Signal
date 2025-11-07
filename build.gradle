@@ -2,10 +2,13 @@ buildscript {
     repositories {
         maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
         mavenCentral()
+        // maven {
+        //     url = 'https://repo.spongepowered.org/repository/maven-public'
+        // }
     }
     dependencies {
         // MixinGradleプラグインをclasspathに追加
-        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
+        // classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
     }
 }
 
@@ -15,6 +18,7 @@ plugins {
     id 'maven-publish'
     // id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'net.minecraftforge.gradle' version '6.0.6'
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
 java {
@@ -24,7 +28,7 @@ java {
     }
 }
 
-apply plugin: 'org.spongepowered.mixin'
+// apply plugin: 'org.spongepowered.mixin'
 
 version = mod_version
 group = mod_group_id
@@ -180,7 +184,7 @@ dependencies {
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
     
-    // annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
     // annotationProcessor "org.projectlombok:lombok:1.18.32"
     // runtimeOnly fg.deobf("curse.maven:embeddium-908741:5630140")
 
