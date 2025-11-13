@@ -2,6 +2,7 @@ package com.skybird.create_jp_signal;
 
 import com.skybird.create_jp_signal.menu.ControlBoxMenu;
 import com.skybird.create_jp_signal.menu.SignalLinkMenu;
+import com.skybird.create_jp_signal.menu.SpeedLimitMenu;
 
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -23,4 +24,7 @@ public class AllMenuTypes {
 
     public static final RegistryObject<MenuType<SignalLinkMenu>> SIGNAL_LINK_MENU =
         MENUS.register("signal_link_menu", () -> IForgeMenuType.create(SignalLinkMenu::new));
+
+    public static final RegistryObject<MenuType<SpeedLimitMenu>> SPEED_LIMIT_MENU =
+        MENUS.register("speed_limit_menu", () -> IForgeMenuType.create(SpeedLimitMenu::new));
 }

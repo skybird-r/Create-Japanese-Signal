@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "create_jp_signal:block/speed_limit" }
+  }
+}

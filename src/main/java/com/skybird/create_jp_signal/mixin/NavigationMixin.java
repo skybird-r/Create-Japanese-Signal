@@ -1,5 +1,7 @@
 package com.skybird.create_jp_signal.mixin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,8 +29,10 @@ import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
+import com.skybird.create_jp_signal.create.mixin_interface.INavigation;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalBoundary;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
+import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -36,8 +40,8 @@ import net.minecraft.world.level.Level;
 
 
 @Mixin(value = Navigation.class, remap = false)
-public abstract class NavigationMixin {
-    
+public abstract class NavigationMixin implements INavigation {
+
     @Shadow Train train;
     @Shadow public double distanceToDestination;
     @Shadow public Pair<UUID, Boolean> waitingForSignal;
@@ -48,14 +52,27 @@ public abstract class NavigationMixin {
     @Unique private Integer ticksWaitingBuffer;
     @Unique public Pair<SignalBoundary, Boolean> chainEndEntrySignal = null;
 
-    
+    @Unique public List<Pair<Double, MutableDouble>> activeSpeedLimits = new ArrayList<>();
+    @Unique public List<Pair<Double, Double>> upcomingSpeedLimits = new ArrayList<>();
 
+    @Override
+    public List<Pair<Double, MutableDouble>> getActiveSpeedLimits() {
+        return activeSpeedLimits;
+    }
 
     // preDepartureLookAhead
 
     @ModifyConstant(method = "tick", constant = @Constant(doubleValue = 4.5))
     private double create_jp_signal_changePreDepartureLookAhead(double originalValue) {
         return 20.0;
+    }
+
+    @Inject(
+        method = "tick",
+        at = @At("HEAD")
+    )
+    private void create_jp_signal_onTickHead(Level level, CallbackInfo ci) {
+        this.upcomingSpeedLimits.clear();
     }
 
     //scanDistance
@@ -96,6 +113,38 @@ public abstract class NavigationMixin {
         return scanDistance;
     }
 
+    @Inject(
+        method = "lambda$tick$0",
+        at = @At(
+            value = "FIELD",
+            target = "Lcom/simibubi/create/content/trains/entity/Navigation;destination:Lcom/simibubi/create/content/trains/station/GlobalStation;",
+            shift = At.Shift.BEFORE
+        ),
+        cancellable = true,
+        locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void create_jp_signal_onScoutFindEdgePoint(
+        MutableObject<Pair<UUID, Boolean>> trackingCrossSignal,
+        double scanDistance,
+        MutableDouble crossSignalDistanceTracker,
+        double brakingDistanceNoFlicker,
+        Double distance,
+        Pair<TrackEdgePoint, Couple<TrackNode>> couple,
+        CallbackInfoReturnable<Boolean> cir,
+        boolean crossSignalTracked,
+        Couple<TrackNode> nodes,
+        TrackEdgePoint boundary
+    ) {
+        if (boundary instanceof SpeedLimitBoundary speedLimit) {
+            boolean correctDirection = speedLimit.isPrimary(nodes.getSecond()); 
+            
+            if (correctDirection) {
+                double limit = speedLimit.getSpeedLimit() / 72; // km/h => m/tick
+                this.upcomingSpeedLimits.add(Pair.of(distance, limit));
+            }
+            cir.setReturnValue(false); 
+        }
+    }
     
     @Inject(
         method = "lambda$tick$0",
@@ -216,6 +265,57 @@ public abstract class NavigationMixin {
         this.ticksWaitingBuffer = null;
     }
 
+    @Inject(
+        method = "tick",
+        at = @At(
+            value = "FIELD",
+            target = "Lcom/simibubi/create/content/trains/entity/Train;targetSpeed:D",
+            opcode = org.objectweb.asm.Opcodes.PUTFIELD,
+            shift = At.Shift.AFTER
+        ),
+        locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void create_jp_signal_onTargetSpeedCalculated(
+        Level level, CallbackInfo ci,
+        double acceleration,
+        double brakingDistance,
+        double speedMod,
+        double preDepartureLookAhead,
+        double distanceToNextCurve,
+        double topSpeed,
+        double turnTopSpeed,
+        double targetDistance,
+        double targetSpeed
+    ) {
+        double speedLimitTarget = topSpeed * speedMod;
+        double currentSpeed = Math.abs(this.train.speed);
+
+        for (Pair<Double, MutableDouble> activeLimit : activeSpeedLimits) {
+            double limit = activeLimit.getFirst() * speedMod;
+            if (Math.abs(limit) < Math.abs(speedLimitTarget)) {
+                speedLimitTarget = limit;
+            }
+        }
+
+        for (Pair<Double, Double> upcomingLimit : upcomingSpeedLimits) {
+            double distanceToLimit = upcomingLimit.getFirst();
+            double limitSpeed = upcomingLimit.getSecond();
+
+            if (currentSpeed > limitSpeed) {
+                double requiredBrakingDistance = (currentSpeed * currentSpeed - limitSpeed * limitSpeed) / (2 * acceleration);
+                if (distanceToLimit <= requiredBrakingDistance) {
+                    if (Math.abs(limitSpeed * speedMod) < Math.abs(speedLimitTarget)) {
+                        speedLimitTarget = limitSpeed * speedMod;
+                    }
+                }
+            }
+        }
+
+        if (Math.abs(speedLimitTarget) < Math.abs(this.train.targetSpeed)) {
+            this.train.targetSpeed = speedLimitTarget;
+        }
+    }
+
     
     @Inject(
         method = "reserveChain", // 本当はlambda$reserveChain$2に突っ込みたいがstaticなのでむり
@@ -261,6 +361,7 @@ public abstract class NavigationMixin {
     )
     private void create_jp_signal_onCancelNavigationEnd(CallbackInfo ci) {
         ((ITrain)train).getActiveReservations().clear();
+        this.activeSpeedLimits.clear();
     }
 
     @Inject(

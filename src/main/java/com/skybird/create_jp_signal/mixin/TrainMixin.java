@@ -1,32 +1,45 @@
 package com.skybird.create_jp_signal.mixin;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.mutable.MutableDouble;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.simibubi.create.content.trains.entity.Navigation;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
+import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
+import com.skybird.create_jp_signal.create.mixin_interface.INavigation;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
 import com.skybird.create_jp_signal.create.train.schedule.OperationType;
+import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 
 import net.minecraft.nbt.CompoundTag;
 
 @Mixin(value = Train.class, remap = false)
 public abstract class TrainMixin implements ITrain {
     
+    @Shadow public Navigation navigation;
+    @Shadow public abstract int getTotalLength();
+
     @Unique public Map<UUID, Pair<SignalBoundary, Boolean>> activeReservations;
     @Unique public OperationType operationType;
     @Unique public double minimumReservationDistance;
@@ -44,6 +57,47 @@ public abstract class TrainMixin implements ITrain {
     }
 
     @Inject(
+        method = "updateNavigationTarget",
+        at = @At("HEAD")
+    )
+    private void create_jp_signal_onUpdateNavigationTarget(double distance, CallbackInfo ci) {
+        if (((INavigation)this.navigation).getActiveSpeedLimits() == null) return; // 安全チェック
+        
+        double distanceTraveled = Math.abs(distance);
+        for (Iterator<Pair<Double, MutableDouble>> iterator = ((INavigation)this.navigation).getActiveSpeedLimits().iterator(); iterator.hasNext();) {
+            Pair<Double, MutableDouble> limit = iterator.next();
+            limit.getSecond().subtract(distanceTraveled);
+            if (limit.getSecond().getValue() <= 0) {
+                iterator.remove(); // 制限区間を抜けたので削除
+            }
+        }
+    }
+
+    @Inject(
+        method = "lambda$frontSignalListener$6",
+        at = @At("HEAD"),
+        locals = LocalCapture.CAPTURE_FAILHARD,
+        cancellable = true
+    )
+    private void create_jp_signal_onFrontSignalListener(
+        Double distance, Pair<TrackEdgePoint, Couple<TrackNode>> couple, 
+        CallbackInfoReturnable<Boolean> cir
+    ) {
+        if (couple.getFirst() instanceof SpeedLimitBoundary speedLimit) {
+            boolean correctDirection = speedLimit.isPrimary(couple.getSecond().getSecond());
+            if (correctDirection) {
+                double distanceToEndOfLimit = speedLimit.getLimitDistance() + this.getTotalLength();
+
+                ((INavigation)this.navigation).getActiveSpeedLimits().add(Pair.of(
+                    speedLimit.getSpeedLimit() / 72, // km/h -> m/tick
+                    new MutableDouble(distanceToEndOfLimit)
+                ));
+            }
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(
         method = "occupy",
         at = @At("HEAD")
     )
@@ -57,6 +111,7 @@ public abstract class TrainMixin implements ITrain {
     )
     private void create_jp_signal_onArriveAtHead(GlobalStation station, CallbackInfo ci) {
         activeReservations.clear();
+        ((INavigation)this.navigation).getActiveSpeedLimits().clear();
     }
 
     @Inject(

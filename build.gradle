@@ -148,7 +148,7 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
-
+    mavenCentral()
     maven {
         name = 'tterrag maven'
         url = 'https://maven.tterrag.com/'
@@ -167,7 +167,7 @@ repositories {
     }
     mavenLocal()
     maven { url = 'https://maven.minecraftforge.net' }
-    mavenCentral()
+    
 }
 
 dependencies {
@@ -196,6 +196,8 @@ dependencies {
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     
+
+
 
     // compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     // implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {

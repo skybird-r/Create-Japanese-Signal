@@ -5,8 +5,10 @@ import com.skybird.create_jp_signal.AllMenuTypes;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.track.SpeedLimitRenderer;
 import com.skybird.create_jp_signal.client.gui.ControlBoxScreen;
 import com.skybird.create_jp_signal.client.gui.SignalLinkScreen;
+import com.skybird.create_jp_signal.client.gui.SpeedLimitScreen;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -56,10 +58,15 @@ public class ClientSetup {
                 AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            BlockEntityRenderers.register(
+                AllBlockEntities.SPEED_LIMIT_ENTITY.get(), 
+                SpeedLimitRenderer::new
+            );
 
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
             // MenuScreens.register(AllMenuTypes.MAST_CONFIG_MENU.get(), MastConfigScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);
+            MenuScreens.register(AllMenuTypes.SPEED_LIMIT_MENU.get(), SpeedLimitScreen::new);
         });
     }
 
@@ -92,6 +99,7 @@ public class ClientSetup {
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_coupler"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_pipe"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/signal_joint"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/track_overlay/speed_limit_marker"));
 
 
         

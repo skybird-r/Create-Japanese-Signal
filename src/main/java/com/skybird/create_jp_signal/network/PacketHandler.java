@@ -48,6 +48,11 @@ public class PacketHandler {
             SelectSignalMastPacket::decode,
             SelectSignalMastPacket::handle
         );
+        CHANNEL.registerMessage(id++, SetSpeedLimitPacket.class, 
+            SetSpeedLimitPacket::encode, 
+            SetSpeedLimitPacket::decode, 
+            SetSpeedLimitPacket::handle
+        );
     }
 
     public static void sendToServer(Object msg) {

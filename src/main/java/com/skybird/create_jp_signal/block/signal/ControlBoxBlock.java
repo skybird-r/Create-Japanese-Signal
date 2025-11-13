@@ -40,7 +40,12 @@ public class ControlBoxBlock extends BaseEntityBlock implements IWrenchable {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public ControlBoxBlock(Properties properties) {
-        super(properties);
+        super(
+            properties
+            .noOcclusion()
+            .destroyTime(1.5F)
+            .explosionResistance(6.0F)
+        );
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 

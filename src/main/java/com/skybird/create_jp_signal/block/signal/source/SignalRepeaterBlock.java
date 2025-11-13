@@ -30,7 +30,12 @@ public class SignalRepeaterBlock extends BaseEntityBlock implements IWrenchable 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     public SignalRepeaterBlock(Properties properties) {
-        super(properties);
+        super(
+            properties
+            .noOcclusion()
+            .destroyTime(1.5F)
+            .explosionResistance(6.0F)
+        );
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 

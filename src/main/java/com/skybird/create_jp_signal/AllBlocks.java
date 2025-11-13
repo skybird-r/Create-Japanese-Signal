@@ -11,6 +11,8 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMa
 import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockItem;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlock;
+import com.skybird.create_jp_signal.block.track.SpeedLimitBlock;
+import com.skybird.create_jp_signal.block.track.SpeedLimitBlockItem;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -78,6 +80,11 @@ public class AllBlocks {
         () -> new ShuntSingleSignalMastBlock(BlockBehaviour.Properties.of()));
     // public static final RegistryObject<Item> SHUNT_SINGLE_SIGNAL_MAST_ITEM = ITEMS.register("shunt_single_signal_mast",
     //     () -> new BlockItem(SHUNT_SINGLE_SIGNAL_MAST.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> SPEED_LIMIT = BLOCKS.register("speed_limit",
+        () -> new SpeedLimitBlock(BlockBehaviour.Properties.of()));
+    public static final RegistryObject<Item> SPEED_LIMIT_ITEM = ITEMS.register("speed_limit",
+        () -> new SpeedLimitBlockItem(SPEED_LIMIT.get(), new Item.Properties()));
 
         
 }

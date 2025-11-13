@@ -3,6 +3,8 @@ package com.skybird.create_jp_signal;
 import com.mojang.logging.LogUtils;
 import com.skybird.create_jp_signal.network.PacketHandler;
 
+import javax.annotation.Nonnull;
+
 import org.slf4j.Logger;
 
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +31,7 @@ public class JpSignals {
 
     }
 
-    public static ResourceLocation asResource(String path) {
+    public static ResourceLocation asResource(@Nonnull String path) {
 		return new ResourceLocation(MODID, path);
 	}
 
