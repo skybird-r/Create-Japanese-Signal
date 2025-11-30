@@ -89,6 +89,16 @@ public class PositionLightRepeaterSignalAppearance implements ISignalAppearance 
         return newAppearance;
     }
 
+    @Override
+    public boolean hasSameStaticParts(ISignalAppearance appearance) {
+        if (appearance instanceof PositionLightRepeaterSignalAppearance ap) {
+            return (this.accessory.getType() == ap.accessory.getType()
+                && this.signalSize == ap.signalSize
+                && this.form == ap.form);
+        }
+        return false;
+    }
+
 
     @Override
     public String getTypeId() { return "position_light_repeater_signal"; }

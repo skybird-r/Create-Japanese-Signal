@@ -6,8 +6,8 @@ public class SignalAspect {
 
     public enum LampColor {
         OFF(0, 0, 0),
-        RED(1.0f, 0.2f, 0.3f),
-        YELLOW(1.0f, 0.8f, 0.0f),
+        RED(1.0f, 0.25f, 0.35f),
+        YELLOW(1.0f, 0.75f, 0.0f),
         GREEN(0.0f, 1.0f, 0.7f),
         PURPLE(0.8f, 0.2f, 1.0f),
         WHITE(1.0f, 1.0f, 0.8f);
@@ -17,6 +17,10 @@ public class SignalAspect {
         public float getRed() { return r; }
         public float getGreen() { return g; }
         public float getBlue() { return b; }
+
+        public byte getByteRed() { return (byte)(r * 255); }
+        public byte getByteGreen() { return (byte)(g * 255); }
+        public byte getByteBlue() { return (byte)(b * 255); }
     }
 
     public enum Aspect {
@@ -190,6 +194,13 @@ public class SignalAspect {
 
         public LampColor getLampColor(int index) {
             if (index < 0 || index >= this.lampColors.length) {
+                return LampColor.OFF;
+            }
+            return this.lampColors[index];
+        }
+
+        public LampColor getLampColor(int index, long gameTime) {
+            if (index < 0 || index >= this.lampColors.length || !isLit(gameTime)) {
                 return LampColor.OFF;
             }
             return this.lampColors[index];

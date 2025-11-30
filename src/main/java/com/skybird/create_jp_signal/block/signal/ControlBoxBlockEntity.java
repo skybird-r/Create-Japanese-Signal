@@ -91,7 +91,7 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
                 }
             }
         }
-        if (finalReserverMaxSpeed <= 135.0 /* km/h */ / 72) {
+        if (finalReserverMaxSpeed <= 131 /* km/h */ / 72) {
             if (finalAspect == State.GG_5B) {
                 finalAspect = State.G_5B;
             } else if (finalAspect == State.GG_6) {

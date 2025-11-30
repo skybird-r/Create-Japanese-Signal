@@ -1,25 +1,18 @@
 {
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
-	"shadeQuads": false,
 	"textures": {
 		"0": "create_jp_signal:block/white_light",
 		"particle": "create_jp_signal:block/white_light",
 		"light": "create_jp_signal:block/white_light"
 	},
-	"emissive_ambient": true,
 	"elements": [
 		{
 			"from": [-0.5, 0, 0],
 			"to": [0.5, 1, 0],
 			"rotation": {"angle": 0, "axis": "y", "origin": [-0.5, 0, 0]},
 			"faces": {
-				"north": {"uv": [0, 0, 1, 1], "texture": "#0"},
-				"east": {"uv": [0, 0, 0, 1], "texture": "#0"},
-				"south": {"uv": [0, 1, 1, 2], "texture": "#0", "tintindex": 0},
-				"west": {"uv": [0, 0, 0, 1], "texture": "#0"},
-				"up": {"uv": [1, 0, 0, 0], "texture": "#0"},
-				"down": {"uv": [1, 0, 0, 0], "texture": "#0"}
+				"south": {"uv": [0, 1, 1, 2], "texture": "#0", "tintindex": 0}
 			}
 		}
 	]

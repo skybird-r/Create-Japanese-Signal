@@ -1,8 +1,11 @@
 package com.skybird.create_jp_signal.client;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.AllMenuTypes;
 import com.skybird.create_jp_signal.JpSignals;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.BaseSignalBlockEntityInstance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalHeadInstance;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.track.SpeedLimitRenderer;
@@ -38,6 +41,9 @@ public class ClientSetup {
                 AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new) // インスタンス生成ロジック
+                .apply();
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new

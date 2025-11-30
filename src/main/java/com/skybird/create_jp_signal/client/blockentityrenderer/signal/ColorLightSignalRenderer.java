@@ -3,9 +3,11 @@ package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 import java.util.Iterator;
 
 import com.ibm.icu.text.AlphabeticIndex.Bucket.LabelType;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.skybird.create_jp_signal.JpSignals;
@@ -16,6 +18,7 @@ import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.block.signal.SignalAccessory.Route;
 import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.client.ModelRegistry;
+import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -36,12 +39,71 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay, SignalHead headData, BlockEntity blockEntity , int packedLight, int packedOverlay, Vec3 offset, Pair<Double, Double> rotation) {
 
         if (!(headData.getAppearance() instanceof ColorLightSignalAppearance appearance)) {
-            return; // 間違った種類のデータが来たら描画しない
+            return;
         }
 
 
         SignalAspect.State currentAspect = headData.getCurrentAspect();
         long gameTime = Minecraft.getInstance().level.getGameTime();
+
+        // flywheel使用中
+        boolean flywheelActive = Backend.canUseInstancing(blockEntity.getLevel());
+        if (flywheelActive) {
+            poseStack.pushPose();
+
+            float lampHeight = switch (appearance.getSignalSize()) {
+                case NORMAL -> 5;
+                case TUNNEL -> 4;
+            };
+
+            poseStack.mulPose(Axis.YP.rotationDegrees((float)(double)rotation.getFirst()));
+            poseStack.translate(offset.x, offset.y, offset.z);
+
+            ModelBlockRenderer modelRenderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
+
+            poseStack.translate(0, 3.5/16, 0);
+
+            int totalLampCount = currentAspect.getLampCount() + (appearance.isRepeater() ? 1 : 0);
+            for (int i = 0; i < totalLampCount; i++) {
+                
+                SignalAspect.LampColor color;
+                if (appearance.isRepeater() && i == 0) {
+                    color = SignalAspect.LampColor.PURPLE;
+                } else {
+                    int aspectIndex = appearance.isRepeater() ? i - 1 : i;
+                    color = currentAspect.getLampColor(aspectIndex);
+                }
+                if (!currentAspect.isLit(gameTime)) color = LampColor.OFF;
+                
+                
+                
+                {
+                    poseStack.pushPose();   
+                    poseStack.translate(0, 0.25/16, 1.75/16);
+                    poseStack.scale(lampHeight - 0.5f, lampHeight - 0.5f, lampHeight - 0.5f);
+                    // こっちのが軽い
+                    modelRenderer.renderModel(
+                        poseStack.last(),
+                        bufferSource.getBuffer(RenderType.cutout()),
+                        blockEntity.getBlockState(),
+                        ModelRegistry.light,
+                        color.getRed(), color.getGreen(), color.getBlue(),
+                        LightTexture.FULL_BRIGHT,
+                        overlay
+                    );
+                    // VertexConsumer vb = bufferSource.getBuffer(RenderType.cutout());
+                    // CachedBufferer.partial(PartialModelRegistry.SIGNAL_LIGHT, blockEntity.getBlockState())
+                    //     .transform(poseStack)
+                    //     .color(color.getByteRed(), color.getByteGreen(), color.getByteBlue(), 255)
+                    //     .renderInto(new PoseStack(), vb);
+                    poseStack.popPose();    
+                }
+                
+                poseStack.translate(0, lampHeight/16, 0);
+            }
+            poseStack.popPose();
+            return;
+        }
 
 
         

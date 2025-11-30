@@ -9,6 +9,7 @@ import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
+import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance.SignalSize;
 import com.skybird.create_jp_signal.block.signal.signal_type.AllSignalTypes;
 
 import net.minecraft.core.BlockPos;
@@ -24,9 +25,10 @@ public class ColorSingleTunnelSignalMastBlockEntity extends BaseSignalMastBlockE
     public ColorSingleTunnelSignalMastBlockEntity(BlockPos pPos, BlockState pState) {
         super(AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), pPos, pState, AllSignalTypes.COLOR_LIGHT_SIGNAL);
 
-        ISignalAppearance appearance = new ColorLightSignalAppearance(ColorLightSignalAppearance.HeadType.THREE_LAMP, ColorLightSignalAppearance.BackplateType.NONE, false);
+        ISignalAppearance appearance = new ColorLightSignalAppearance(ColorLightSignalAppearance.HeadType.THREE_LAMP, ColorLightSignalAppearance.BackplateType.NONE, false, SignalSize.TUNNEL);
         
         this.signalHeads.put(AttachmentSlot.PRIMARY, new SignalHead(UUID.randomUUID(), appearance.copy(), null));
+
     }
     
     @Override
@@ -50,30 +52,19 @@ public class ColorSingleTunnelSignalMastBlockEntity extends BaseSignalMastBlockE
     public Vec3 getHeadOffset(AttachmentSlot slot) {
         int hStep = this.layout.globalHorizontalStep;
         int vStep = this.layout.verticalSteps.get(slot);
-        double x = 0, y = 0;
-        switch (hStep) {
-            case -2:
-                x = -3.0 / 16.0;
-                break;
-            case -1:
-                x = -1.0 / 16.0;
-                break;
-            case 0:
-                x = 0.0 / 16.0;
-                break;
-            case 1:
-                x = 1.0 / 16.0;
-                break;
-            case 2:
-                x = 3.0 / 16.0;
-                break;
-            default:
-                x = 0.0;
-                break;
-        }
-        if (vStep == 1) {
-            y = 0.5;
-        }
+        double x = switch (hStep) {
+            case -2 ->  -3.0 / 16.0;
+            case -1 ->  -1.0 / 16.0;
+            case 0  ->   0.0 / 16.0;
+            case 1  ->   1.0 / 16.0;
+            case 2  ->   2.0 / 16.0;
+            default ->   0.0;
+        };
+        double y = switch (vStep) {
+            case 0  -> 0.0;
+            case 1  -> 0.5;
+            default -> 0.0;
+        };
         return new Vec3(x, y, 3.0/16);
     }
 
@@ -81,4 +72,7 @@ public class ColorSingleTunnelSignalMastBlockEntity extends BaseSignalMastBlockE
     public Pair<Double, Double> getHeadRotation(AttachmentSlot slot) {
         return Pair.of(0.0, 0.0);
     }
+
+    @Override
+    public boolean hasMastCoupler() { return false; }
 }

@@ -34,7 +34,6 @@ public class SpeedLimitRenderer extends SmartBlockEntityRenderer<SpeedLimitBlock
 
     public SpeedLimitRenderer(Context context) {
         super(context);
-        //TODO Auto-generated constructor stub
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.skybird.create_jp_signal.block.signal;
 
 import java.util.List;
 
+import org.jline.terminal.Terminal.Signal;
+
 import com.skybird.create_jp_signal.JpSignals;
 
 import net.minecraft.nbt.CompoundTag;
@@ -53,26 +55,34 @@ public class ColorLightSignalAppearance implements ISignalAppearance {
         }
     }
 
+    public enum SignalSize {
+        NORMAL, TUNNEL;
+    }
+
     private HeadType headType;
     private BackplateType backplateType;
     private boolean isRepeater;
     private SignalAccessory accessory = new SignalAccessory();
 
+    private final SignalSize signalSize;
+    
+
     private static final List<SignalAccessory.Type> validAccesoryTypes = List.of(SignalAccessory.Type.NONE, SignalAccessory.Type.FORECAST, SignalAccessory.Type.INDICATOR_HOME, SignalAccessory.Type.INDICATOR_DEPARTURE);
 
-    public ColorLightSignalAppearance(HeadType headType, BackplateType backplateType, boolean isRepeater) {
+    public ColorLightSignalAppearance(HeadType headType, BackplateType backplateType, boolean isRepeater, SignalSize signalSize) {
         this.headType = headType;
         this.backplateType = backplateType;
         this.isRepeater = isRepeater;
+        this.signalSize = signalSize;
     }
 
     public static ColorLightSignalAppearance createDefault() {
-        return new ColorLightSignalAppearance(HeadType.THREE_LAMP, BackplateType.ROUND, false);
+        return new ColorLightSignalAppearance(HeadType.THREE_LAMP, BackplateType.ROUND, false, SignalSize.NORMAL);
     }
 
     @Override
     public ISignalAppearance copy() {
-        ColorLightSignalAppearance newAppearance = new ColorLightSignalAppearance(this.headType, this.backplateType, this.isRepeater);
+        ColorLightSignalAppearance newAppearance = new ColorLightSignalAppearance(this.headType, this.backplateType, this.isRepeater, this.signalSize);
         newAppearance.setAccessory(this.accessory.copy());
         return newAppearance;
     }
@@ -88,12 +98,14 @@ public class ColorLightSignalAppearance implements ISignalAppearance {
     public static List<SignalAccessory.Type> getValidAccesoryTypes() {
         return validAccesoryTypes;
     }
+    public SignalSize getSignalSize() { return this.signalSize; }
 
     @Override
     public void writeNbt(CompoundTag tag) {
         tag.putString("HeadType", this.headType.name());
         tag.putString("BackplateType", this.backplateType.name());
         tag.putBoolean("IsRepeater", this.isRepeater);
+        tag.putString("SignalSize", this.signalSize.name());
         CompoundTag accessoryTag = new CompoundTag();
         this.accessory.writeNbt(accessoryTag);
         tag.put("Accessory", accessoryTag);
@@ -101,11 +113,16 @@ public class ColorLightSignalAppearance implements ISignalAppearance {
 
     public static ColorLightSignalAppearance fromNbt(CompoundTag tag) {
         ColorLightSignalAppearance newAppearance;
+        SignalSize signalSize = SignalSize.NORMAL;
+        if (tag.contains("SignalSize")) {
+            signalSize = SignalSize.valueOf(tag.getString("SignalSize"));
+        }
+        
         try {
             HeadType headType = HeadType.valueOf(tag.getString("HeadType"));
             BackplateType backplateType = BackplateType.valueOf(tag.getString("BackplateType"));
             boolean isRepeater = tag.getBoolean("IsRepeater");
-            newAppearance = new ColorLightSignalAppearance(headType, backplateType, isRepeater);
+            newAppearance = new ColorLightSignalAppearance(headType, backplateType, isRepeater, signalSize);
         } catch (Exception e) {
             newAppearance = createDefault();
         }
@@ -116,6 +133,17 @@ public class ColorLightSignalAppearance implements ISignalAppearance {
         }
         
         return newAppearance;
+    }
+
+    @Override
+    public boolean hasSameStaticParts(ISignalAppearance appearance) {
+        if (appearance instanceof ColorLightSignalAppearance ap) {
+            return (this.accessory.getType() == ap.accessory.getType()
+                && this.isRepeater == ap.isRepeater
+                && this.headType == ap.headType
+                && this.backplateType == ap.backplateType);
+        }
+        return false;
     }
     
     @Override

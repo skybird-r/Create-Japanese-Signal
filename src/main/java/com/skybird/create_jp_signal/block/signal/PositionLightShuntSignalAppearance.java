@@ -83,4 +83,13 @@ public class PositionLightShuntSignalAppearance implements ISignalAppearance {
         return new PositionLightShuntSignalAppearance(ShuntType.TWO_WHITE);
     }
 
+    @Override
+    public boolean hasSameStaticParts(ISignalAppearance appearance) {
+        if (appearance instanceof PositionLightShuntSignalAppearance ap) {
+            return (this.accessory.getType() == ap.accessory.getType()
+                && this.shuntType == ap.shuntType);
+        }
+        return false;
+    }
+
 }

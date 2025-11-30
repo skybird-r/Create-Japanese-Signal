@@ -9,6 +9,7 @@ import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
+import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance.SignalSize;
 import com.skybird.create_jp_signal.block.signal.signal_type.AllSignalTypes;
 
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,7 @@ public class ColorSingleSquareSignalMastBlockEntity extends BaseSignalMastBlockE
     public ColorSingleSquareSignalMastBlockEntity(BlockPos pPos, BlockState pState) {
         super(AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get(), pPos, pState, AllSignalTypes.COLOR_LIGHT_SIGNAL);
 
-        ISignalAppearance appearance = new ColorLightSignalAppearance(ColorLightSignalAppearance.HeadType.THREE_LAMP, ColorLightSignalAppearance.BackplateType.SQUARE, false);
+        ISignalAppearance appearance = new ColorLightSignalAppearance(ColorLightSignalAppearance.HeadType.THREE_LAMP, ColorLightSignalAppearance.BackplateType.SQUARE, false, SignalSize.NORMAL);
         
         this.signalHeads.put(AttachmentSlot.PRIMARY, new SignalHead(UUID.randomUUID(), appearance.copy(), null));
     }
@@ -50,30 +51,19 @@ public class ColorSingleSquareSignalMastBlockEntity extends BaseSignalMastBlockE
     public Vec3 getHeadOffset(AttachmentSlot slot) {
         int hStep = this.layout.globalHorizontalStep;
         int vStep = this.layout.verticalSteps.get(slot);
-        double x = 0, y = 0;
-        switch (hStep) {
-            case -2:
-                x = -10.0 / 16.0;
-                break;
-            case -1:
-                x = -6.0 / 16.0;
-                break;
-            case 0:
-                x = 0.0 / 16.0;
-                break;
-            case 1:
-                x = 6.0 / 16.0;
-                break;
-            case 2:
-                x = 10.0 / 16.0;
-                break;
-            default:
-                x = 0.0;
-                break;
-        }
-        if (vStep == 1) {
-            y = 0.5;
-        }
+        double x = switch (hStep) {
+            case -2 -> -10.0 / 16.0;
+            case -1 ->  -6.0 / 16.0;
+            case 0  ->   0.0 / 16.0;
+            case 1  ->   6.0 / 16.0;
+            case 2  ->  10.0 / 16.0;
+            default ->   0.0;
+        };
+        double y = switch (vStep) {
+            case 0  -> 0.0;
+            case 1  -> 0.5;
+            default -> 0.0;
+        };
         return new Vec3(x, y, 6.0/16);
     }
 

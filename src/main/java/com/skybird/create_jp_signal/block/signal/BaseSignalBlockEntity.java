@@ -7,6 +7,8 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Pair;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
@@ -45,6 +47,8 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
             this.displayName = name;
         }
     }
+
+    public boolean clientVisualChanged = true;
 
     protected SignalLayout layout = new SignalLayout();
     protected final Map<AttachmentSlot, SignalHead> signalHeads = new EnumMap<>(AttachmentSlot.class);
@@ -113,11 +117,12 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
     }
 
     public void updateAspect(UUID headId, SignalAspect.State newAspect, SignalAccessory.Route newRoute) {
-        signalHeads.values().stream()
-            .filter(head -> head.getUniqueId().equals(headId))
-            .findFirst()
-            .ifPresent(head -> {
+        // boolean colorChangeOnly = true;
+        for (SignalHead head : signalHeads.values()) {
+            if (head.getUniqueId().equals(headId)) {
                 if (head.getCurrentAspect() != newAspect || head.getCurrentRoute() != newRoute) {
+                    // if (head.getCurrentAspect().getLampCount() != newAspect.getLampCount())
+                    //     colorChangeOnly = false;
                     head.setCurrentAspect(newAspect);
                     head.setCurrentRoute(newRoute);
                     this.setChanged();
@@ -125,7 +130,9 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
                         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
                     }
                 }
-            });
+                return;
+            }
+        }
     }
 
     public void updateSignalHeadAppearance(UUID headId, ISignalAppearance newAppearance) {
@@ -213,7 +220,7 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
                 AttachmentSlot slot = AttachmentSlot.valueOf(headTag.getString("Slot"));
                 SignalHead head = SignalHead.fromNbt(headTag);
                 this.signalHeads.put(slot, head);
-            } catch (IllegalArgumentException e) { /* 不正データは無視 */ }
+            } catch (IllegalArgumentException e) {}
         }
 
         if (tag.contains("Layout", CompoundTag.TAG_COMPOUND)) {
@@ -231,6 +238,14 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+        if (this.level != null && this.level.isClientSide) {
+            this.clientVisualChanged = true;
+        }
     }
 
 }

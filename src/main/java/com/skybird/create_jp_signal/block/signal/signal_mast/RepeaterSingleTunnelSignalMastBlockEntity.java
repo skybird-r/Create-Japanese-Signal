@@ -47,30 +47,19 @@ public class RepeaterSingleTunnelSignalMastBlockEntity extends BaseSignalMastBlo
     public Vec3 getHeadOffset(AttachmentSlot slot) {
         int hStep = this.layout.globalHorizontalStep;
         int vStep = this.layout.verticalSteps.get(slot);
-        double x = 0, y = 0;
-        switch (hStep) {
-            case -2:
-                x = -3.0 / 16.0;
-                break;
-            case -1:
-                x = -1.0 / 16.0;
-                break;
-            case 0:
-                x = 0.0 / 16.0;
-                break;
-            case 1:
-                x = 1.0 / 16.0;
-                break;
-            case 2:
-                x = 3.0 / 16.0;
-                break;
-            default:
-                x = 0.0;
-                break;
-        }
-        if (vStep == 1) {
-            y = 0.5;
-        }
+        double x = switch (hStep) {
+            case -2 ->  -3.0 / 16.0;
+            case -1 ->  -1.0 / 16.0;
+            case 0  ->   0.0 / 16.0;
+            case 1  ->   1.0 / 16.0;
+            case 2  ->   2.0 / 16.0;
+            default ->   0.0;
+        };
+        double y = switch (vStep) {
+            case 0  -> 0.0;
+            case 1  -> 0.5;
+            default -> 0.0;
+        };
         return new Vec3(x, y, 3.0/16);
     }
 
@@ -78,4 +67,7 @@ public class RepeaterSingleTunnelSignalMastBlockEntity extends BaseSignalMastBlo
     public Pair<Double, Double> getHeadRotation(AttachmentSlot slot) {
         return Pair.of(0.0, 0.0);
     }
+
+    @Override
+    public boolean hasMastCoupler() { return false; }
 }

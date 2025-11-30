@@ -1,6 +1,9 @@
 package com.skybird.create_jp_signal.block.signal;
 
-import org.apache.commons.compress.archivers.dump.DumpArchiveEntry.TYPE;
+import java.util.List;
+import java.util.Map;
+
+import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 
 import net.minecraft.nbt.CompoundTag;
 
@@ -25,36 +28,73 @@ public class SignalAccessory {
     }
 
     public enum Type {
-        NONE("none"),
-        FORECAST("forecast"),
-        INDICATOR_HOME("indicator_home"),
-        INDICATOR_DEPARTURE("indicator_departure"),
-        INDICATOR_SHUNT("indicator_shunt");
+        NONE("none", 0),
+        FORECAST("forecast", 2),
+        INDICATOR_HOME("indicator_home", 9),
+        INDICATOR_DEPARTURE("indicator_departure", 4),
+        INDICATOR_SHUNT("indicator_shunt", 4);
 
         private String translationKey;
+        private int lampCount;
 
-        Type(String key) {
+        Type(String key, int lampCount) {
             this.translationKey = key;
+            this.lampCount = lampCount;
         }
 
         public String getTranslationKey() {
             return "signal.accesory.type." + translationKey;
         }
+
+        public int getLampCount() {
+            return lampCount;
+        }
     }
+
+    public static List<LampColor> getLampColors(Type type, Route route) {
+        return switch (type) {
+            case FORECAST ->
+                switch (route) {
+                    case NONE   -> List.of(LampColor.OFF,   LampColor.OFF);
+                    case LEFT   -> List.of(LampColor.WHITE, LampColor.OFF);
+                    case CENTER -> List.of(LampColor.WHITE, LampColor.WHITE);
+                    case RIGHT  -> List.of(LampColor.OFF,   LampColor.WHITE);
+                };
+            case INDICATOR_HOME ->
+                switch (route) {
+                    case NONE   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF);
+                    case LEFT   -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                    case CENTER -> List.of(LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                    case RIGHT  -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                };
+            case INDICATOR_DEPARTURE ->
+                switch (route) {
+                    case NONE   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF);
+                    case LEFT   -> List.of(LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                    case CENTER -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF); // なし
+                    case RIGHT  -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.WHITE, LampColor.WHITE);
+                };
+            case INDICATOR_SHUNT ->
+                switch (route) {
+                    case NONE   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF);
+                    case LEFT   -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE);
+                    case CENTER -> List.of(LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.WHITE);
+                    case RIGHT  -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE);
+                };
+            case NONE -> List.of();
+        };
+    }
+
 
     private Type type = Type.NONE;
 
     public SignalAccessory() {
     }
 
-
-
-    
     public Type getType() {
         return type;
     }
 
-    
     public void setType(Type type) {
         this.type = type;
     }
@@ -82,7 +122,7 @@ public class SignalAccessory {
                 accessory.setType(Type.valueOf(tag.getString("Type")));
             }
         } catch (IllegalArgumentException e) {
-            // 不正なデータが書き込まれていた場合はデフォルト値のままにする
+            // 不正
         }
         return accessory;
     }

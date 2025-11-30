@@ -54,4 +54,6 @@ public abstract class BaseSignalMastBlockEntity extends BaseSignalBlockEntity {
     public int getXPos() { return xPos; }
     public int getZPos() { return zPos; }
     public int getRotation() { return rotation; }
+    
+    public boolean hasMastCoupler() { return true; }
 }

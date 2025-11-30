@@ -61,14 +61,14 @@ public abstract class TrainMixin implements ITrain {
         at = @At("HEAD")
     )
     private void create_jp_signal_onUpdateNavigationTarget(double distance, CallbackInfo ci) {
-        if (((INavigation)this.navigation).getActiveSpeedLimits() == null) return; // 安全チェック
+        if (((INavigation)this.navigation).getActiveSpeedLimits() == null) return;
         
         double distanceTraveled = Math.abs(distance);
         for (Iterator<Pair<Double, MutableDouble>> iterator = ((INavigation)this.navigation).getActiveSpeedLimits().iterator(); iterator.hasNext();) {
             Pair<Double, MutableDouble> limit = iterator.next();
             limit.getSecond().subtract(distanceTraveled);
             if (limit.getSecond().getValue() <= 0) {
-                iterator.remove(); // 制限区間を抜けたので削除
+                iterator.remove();
             }
         }
     }
