@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.ibm.icu.text.AlphabeticIndex.Bucket.LabelType;
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -49,41 +50,35 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
         // flywheel使用中
         boolean flywheelActive = Backend.canUseInstancing(blockEntity.getLevel());
         if (flywheelActive) {
-            poseStack.pushPose();
+            PoseStack ms = poseStack;
+            TransformStack msr = TransformStack.cast(ms);
+            ms.pushPose();
 
             float lampHeight = switch (appearance.getSignalSize()) {
                 case NORMAL -> 5;
                 case TUNNEL -> 4;
             };
-
-            poseStack.mulPose(Axis.YP.rotationDegrees((float)(double)rotation.getFirst()));
-            poseStack.translate(offset.x, offset.y, offset.z);
+            msr.multiply(Axis.YP.rotationDegrees((float)(double)rotation.getFirst())).translate(offset.x, offset.y, offset.z);
 
             ModelBlockRenderer modelRenderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
 
-            poseStack.translate(0, 3.5/16, 0);
-
-            int totalLampCount = currentAspect.getLampCount() + (appearance.isRepeater() ? 1 : 0);
-            for (int i = 0; i < totalLampCount; i++) {
-                
-                SignalAspect.LampColor color;
-                if (appearance.isRepeater() && i == 0) {
-                    color = SignalAspect.LampColor.PURPLE;
-                } else {
-                    int aspectIndex = appearance.isRepeater() ? i - 1 : i;
-                    color = currentAspect.getLampColor(aspectIndex);
-                }
-                if (!currentAspect.isLit(gameTime)) color = LampColor.OFF;
-                
-                
-                
-                {
-                    poseStack.pushPose();   
-                    poseStack.translate(0, 0.25/16, 1.75/16);
-                    poseStack.scale(lampHeight - 0.5f, lampHeight - 0.5f, lampHeight - 0.5f);
-                    // こっちのが軽い
+            {
+                ms.pushPose();
+                msr.translate(0, 3.75/16, 1.75/16).scale(lampHeight - 0.5f);
+                int totalLampCount = currentAspect.getLampCount() + (appearance.isRepeater() ? 1 : 0);
+                for (int i = 0; i < totalLampCount; i++) {
+                    LampColor color;
+                    if (appearance.isRepeater()) {
+                        if (i == 0) {
+                            color = LampColor.PURPLE;
+                        } else {
+                            color = currentAspect.getLampColor(i - 1, gameTime);
+                        }
+                    } else {
+                        color = currentAspect.getLampColor(i, gameTime);
+                    }
                     modelRenderer.renderModel(
-                        poseStack.last(),
+                        ms.last(),
                         bufferSource.getBuffer(RenderType.cutout()),
                         blockEntity.getBlockState(),
                         ModelRegistry.light,
@@ -91,17 +86,129 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
                         LightTexture.FULL_BRIGHT,
                         overlay
                     );
-                    // VertexConsumer vb = bufferSource.getBuffer(RenderType.cutout());
-                    // CachedBufferer.partial(PartialModelRegistry.SIGNAL_LIGHT, blockEntity.getBlockState())
-                    //     .transform(poseStack)
-                    //     .color(color.getByteRed(), color.getByteGreen(), color.getByteBlue(), 255)
-                    //     .renderInto(new PoseStack(), vb);
-                    poseStack.popPose();    
+                    msr.translate(0, lampHeight/16/(lampHeight-0.5), 0);
+                }
+                ms.popPose();
+            }
+
+            SignalAccessory.Type accessory = appearance.getAccessory().getType();
+            SignalAccessory.Route route = headData.getCurrentRoute();
+
+            switch (accessory) {
+                case FORECAST -> {
+                    ms.pushPose();
+                    Iterator<LampColor> colors = SignalAccessory.getLampColors(accessory, route).iterator();
+                    msr.translate(-7.0/16, (2.25-8.0)/16, 1.75/16).scale(3.5f);
+                    for (int i = 0; i < 2; i++) {
+                        LampColor color = colors.next();
+                        modelRenderer.renderModel(
+                            ms.last(),
+                            bufferSource.getBuffer(RenderType.cutout()),
+                            blockEntity.getBlockState(),
+                            ModelRegistry.light,
+                            color.getRed(), color.getGreen(), color.getBlue(),
+                            LightTexture.FULL_BRIGHT,
+                            overlay
+                        );
+                        msr.translate(14.0/16/3.5, 0, 0);
+                    }
+                    ms.popPose();
+                }
+                case INDICATOR_HOME -> {
+                    ms.pushPose();
+                    Iterator<LampColor> colors = SignalAccessory.getLampColors(accessory, route).iterator();
+                    msr.translate(-5.0/16, 0.75/16 - 1, 1.75/16).scale(2.5f);
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            LampColor color = colors.next();
+                            modelRenderer.renderModel(
+                                ms.last(),
+                                bufferSource.getBuffer(RenderType.cutout()),
+                                blockEntity.getBlockState(),
+                                ModelRegistry.light,
+                                color.getRed(), color.getGreen(), color.getBlue(),
+                                LightTexture.FULL_BRIGHT,
+                                overlay
+                            );
+                            msr.translate(5.0/16/2.5, 0, 0);
+                        }
+                        msr.translate(-5.0*3/16/2.5, 5.0/16/2.5, 0);
+                    }
+                    ms.popPose();
+                }
+                case INDICATOR_DEPARTURE -> {
+                    ms.pushPose();
+                    Iterator<LampColor> colors = SignalAccessory.getLampColors(accessory, route).iterator();
+                    msr.translate(0, (0.75 - 11.0)/16, 1.75/16).scale(2.5f);
+                    LampColor color = colors.next();
+                    modelRenderer.renderModel(
+                        ms.last(),
+                        bufferSource.getBuffer(RenderType.cutout()),
+                        blockEntity.getBlockState(),
+                        ModelRegistry.light,
+                        color.getRed(), color.getGreen(), color.getBlue(),
+                        LightTexture.FULL_BRIGHT,
+                        overlay
+                    );
+                    msr.translate(-5.0/16/2.5, 5.0/16/2.5, 0);
+                    for (int i = 0; i < 3; i++) {
+                        color = colors.next();
+                        modelRenderer.renderModel(
+                            ms.last(),
+                            bufferSource.getBuffer(RenderType.cutout()),
+                            blockEntity.getBlockState(),
+                            ModelRegistry.light,
+                            color.getRed(), color.getGreen(), color.getBlue(),
+                            LightTexture.FULL_BRIGHT,
+                            overlay
+                        );
+                        msr.translate(5.0/16/2.5, 0, 0);
+                    }
+                    ms.popPose();
+                }
+                case INDICATOR_SHUNT -> {
+                    ms.pushPose();
+                    Iterator<LampColor> colors = SignalAccessory.getLampColors(accessory, route).iterator();
+                    msr.translate(0, (0.5 - 8.0)/16, 1.75/16);
+                    {
+                        ms.pushPose();
+                        msr.translate(-3.75/16, 0, 0).scale(1.5f, 3f, 1f);
+                        for (int i = 0; i < 3; i++) {
+                            LampColor color = colors.next();
+                            modelRenderer.renderModel(
+                                ms.last(),
+                                bufferSource.getBuffer(RenderType.cutout()),
+                                blockEntity.getBlockState(),
+                                ModelRegistry.light,
+                                color.getRed(), color.getGreen(), color.getBlue(),
+                                LightTexture.FULL_BRIGHT,
+                                overlay
+                            );
+                            msr.translate(3.75/16/1.5, 0, 0);
+                        }
+                        ms.popPose();
+                    }
+                    {
+                        ms.pushPose();
+                        msr.translate(0, 3.5/16, 0).scale(9f, 1.5f, 1f);
+                        LampColor color = colors.next();
+                        modelRenderer.renderModel(
+                            ms.last(),
+                            bufferSource.getBuffer(RenderType.cutout()),
+                            blockEntity.getBlockState(),
+                            ModelRegistry.light,
+                            color.getRed(), color.getGreen(), color.getBlue(),
+                            LightTexture.FULL_BRIGHT,
+                            overlay
+                        );
+                        ms.popPose();
+                    }
+                    ms.popPose();
                 }
                 
-                poseStack.translate(0, lampHeight/16, 0);
             }
-            poseStack.popPose();
+
+            ms.popPose();
             return;
         }
 
@@ -365,16 +472,16 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
                         poseStack.translate(5.0/16*i, 0, 0);
                         for (int j = 0; j < 3; j++) {
                             if (j == 2 && (route == SignalAccessory.Route.LEFT || route == SignalAccessory.Route.RIGHT)) color = SignalAspect.LampColor.WHITE;
-                            {
-                                poseStack.pushPose();
-                                poseStack.translate(-0.5, -0.5, -0.5);
-                                blockRenderer.getModelRenderer().tesselateWithAO(
-                                    blockEntity.getLevel(), ModelRegistry.lampBox3, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
-                                    bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
-                                    packedLight, packedOverlay
-                                );
-                                poseStack.popPose();
-                            }
+                            // {
+                            //     poseStack.pushPose();
+                            //     poseStack.translate(-0.5, -0.5, -0.5);
+                            //     blockRenderer.getModelRenderer().tesselateWithAO(
+                            //         blockEntity.getLevel(), ModelRegistry.lampBox3, blockEntity.getBlockState(), blockEntity.getBlockPos(), poseStack,
+                            //         bufferSource.getBuffer(RenderType.cutout()), false, blockEntity.getLevel().getRandom(),
+                            //         packedLight, packedOverlay
+                            //     );
+                            //     poseStack.popPose();
+                            // }
                             
                             {
                                 poseStack.pushPose();

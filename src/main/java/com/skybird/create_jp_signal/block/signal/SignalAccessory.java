@@ -63,23 +63,23 @@ public class SignalAccessory {
             case INDICATOR_HOME ->
                 switch (route) {
                     case NONE   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF);
-                    case LEFT   -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
-                    case CENTER -> List.of(LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
-                    case RIGHT  -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                    case LEFT   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                    case CENTER -> List.of(LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF);
+                    case RIGHT  -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
                 };
             case INDICATOR_DEPARTURE ->
                 switch (route) {
                     case NONE   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF);
-                    case LEFT   -> List.of(LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.WHITE);
+                    case LEFT   -> List.of(LampColor.WHITE, LampColor.WHITE, LampColor.WHITE, LampColor.OFF);
                     case CENTER -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF); // なし
                     case RIGHT  -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.WHITE, LampColor.WHITE);
                 };
             case INDICATOR_SHUNT ->
                 switch (route) {
                     case NONE   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.OFF,   LampColor.OFF);
-                    case LEFT   -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE);
+                    case LEFT   -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE);
                     case CENTER -> List.of(LampColor.OFF,   LampColor.WHITE, LampColor.OFF,   LampColor.WHITE);
-                    case RIGHT  -> List.of(LampColor.OFF,   LampColor.OFF,   LampColor.WHITE, LampColor.WHITE);
+                    case RIGHT  -> List.of(LampColor.WHITE, LampColor.OFF,   LampColor.OFF,   LampColor.WHITE);
                 };
             case NONE -> List.of();
         };

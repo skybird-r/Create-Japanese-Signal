@@ -6,58 +6,34 @@ import java.util.List;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.BasicData;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Pair;
-import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
-import com.skybird.create_jp_signal.block.signal.SignalAspect;
-import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
-import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance.BackplateType;
-import com.skybird.create_jp_signal.client.CustomRenderTypes;
-import com.skybird.create_jp_signal.client.ModelRegistry;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class ColorLightSignalInstance extends SignalHeadInstance {
 
-    private final List<ModelData> lamps = new ArrayList<>();
     private final List<ModelData> staticParts = new ArrayList<>();
 
-    private Vec3 currentOffset = Vec3.ZERO;
-    private Pair<Double, Double> currentRotation = Pair.of(0.0, 0.0);
-
-    public ColorLightSignalInstance(MaterialManager materialManager, SignalHead headData) {
-        super(materialManager, headData);
+    public ColorLightSignalInstance(MaterialManager materialManager, SignalHead headData, BlockEntity be) {
+        super(materialManager, headData, be);
     }
 
-    @Override
-    public void init(SignalHead signalHead, PoseStack ms, BlockPos pos, Vec3 offset, Pair<Double, Double> rotation) {
-        // JpSignals.LOGGER.info("initializing color signal instance");
-        super.init(signalHead, ms, pos, offset, rotation);
+    public void initInternal(SignalHead signalHead, PoseStack ms, BlockPos pos, Vec3 offset, Pair<Double, Double> rotation) {
         if (!(this.signalHead.getAppearance() instanceof ColorLightSignalAppearance appearance)) 
             return;
-        if (!(signalHead.getAppearance() instanceof ColorLightSignalAppearance newAppearance))
-            return;
-        if (appearance.hasSameStaticParts(newAppearance) && this.currentOffset.equals(offset) && this.currentRotation.equals(rotation)) {
-            this.signalHead = signalHead;
-            return;
-        }
+        
         this.remove();
 
-        // JpSignals.LOGGER.info("processing");
-
-        this.currentOffset = offset;
-        this.currentRotation = rotation;
-        this.signalHead = signalHead;
+        
 
         TransformStack msr = TransformStack.cast(ms);
         {
@@ -104,7 +80,7 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
                 staticParts.add(backplateMiddle);
                 allModels.add(backplateMiddle);
 
-                // 4*4は多分バグる
+                // 4*4はbackplate多分バグる
                 {
                     ms.pushPose();
                     msr.unCentre();
@@ -122,94 +98,38 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
                 }
             }
 
-            // 2. ランプ
             {
                 ms.pushPose();
-                msr.translate(0, 3.5/16, 0);
+                msr.translate(0, 3.5/16, 0).unCentre();
                 for (int i = 0; i < totalLampCount; i++) {
                     ModelData box = materialManager.defaultCutout()
                         .material(Materials.TRANSFORMED)
-                        .getModel(PartialModelRegistry.LAMPBOX_5x5)
+                        .getModel(lampBox)
                         .createInstance();
                     staticParts.add(box);
                     allModels.add(box);
-
-                    // ModelData light = materialManager.defaultCutout()
-                    //     .material(Materials.TRANSFORMED)
-                    //     .getModel(PartialModelRegistry.SIGNAL_LIGHT)
-                    //     .createInstance();
-                    // lamps.add(light);
-                    // allModels.add(light);
-
-                    msr.unCentre();
                     box.setTransform(ms);
-                    msr.centre();
-                    // {
-                    //     ms.pushPose();
-                    //     msr.translate(0, 0.25/16, 1.75/16).scale((float)(lampHeight - 0.5));
-                    //     light.setTransform(ms);
-                    //     ms.popPose();
-                    // }
-                    msr.translate(0, 5.0/16, 0);
+                    msr.translate(0, lampHeight/16, 0);
                 }
-
+                mastCouplerPositions.add(new Vec3(offset.x, 1.5/16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                mastCouplerPositions.add(new Vec3(offset.x, (3.5 + lampHeight * totalLampCount) / 16.0 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                
                 ms.popPose();
             }
-            
             ms.popPose();
         }
         
     }
 
-    @Override
-    public void updateTransform(BlockPos pos, Vec3 offset, Pair<Double, Double> rotation) {
-        // 親から渡される pos は getInstancePosition() (相対座標) である前提
-        this.pos = pos;
-        this.currentOffset = offset;
-        this.currentRotation = rotation;
-    }
-
-    // 
+    // berにやらせる
     @Override
     public void beginFrame(BlockPos instancePos) {
-        // SignalAspect.State aspect = this.signalHead.getCurrentAspect();
-        // long gameTime = net.minecraft.client.Minecraft.getInstance().level.getGameTime();
-        // float lampSpacing = 4.0f / 16.0f;
-        // float yRot = currentRotation.getFirst().floatValue();
-
-        // // SchematicannonInstanceのようにPoseStackを使うと計算が安全です
-        // // PoseStack ms = new PoseStack();
-        // // TransformStack msr = TransformStack.cast(ms);
-
-        // for (int i = 0; i < lamps.size(); i++) {
-        //     ModelData lamp = lamps.get(i);
-        //     float yShift = i * lampSpacing;
-
-        //     // ★ここ重要: PoseStackの原点を getInstancePosition (this.pos) に合わせる
-        //     // ms.pushPose();
-        //     // msr.translate(instancePos); 
-            
-        //     // // オフセットと回転の適用
-        //     // msr.translate(currentOffset.x, currentOffset.y + yShift, currentOffset.z);
-        //     // msr.rotateCentered(Direction.UP, (float)Math.toRadians(yRot));
-        //     // msr.translate(0, 0, 0.1);
-
-        //     // 色とライト設定
-        //     SignalAspect.LampColor color = aspect.getLampColor(i, gameTime);
-
-        //     // ms.scale(4.5f, 4.5f, 4.5f);
-        //     lamp.setColor(color.getByteRed(), color.getByteGreen(), color.getByteBlue(), (byte)255)
-        //         .setBlockLight(15).setSkyLight(15);
-
-        //     // ★計算した行列を適用
-        //     // lamp.setTransform(ms);
-        //     // ms.popPose();
-        // }
+        super.beginFrame(instancePos);
     }
 
     @Override
     public void updateLight(Level level, BlockPos pos) {
-        this.pos = pos; // 念の為更新
+        super.updateLight(level, pos);
         staticParts.forEach(model -> model.updateLight(level, pos));
     }
 
@@ -218,13 +138,5 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
         super.remove();
         staticParts.forEach(ModelData::delete);
         staticParts.clear();
-        lamps.forEach(ModelData::delete);
-        lamps.clear();
-    }
-
-    @Override
-    public List<Vec3> getMastCouplerPosition() {
-        // TODO Auto-generated method stub
-        return super.getMastCouplerPosition();
     }
 }

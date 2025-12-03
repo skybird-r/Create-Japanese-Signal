@@ -6,6 +6,7 @@ import com.skybird.create_jp_signal.AllMenuTypes;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.client.blockentityinstance.signal.BaseSignalBlockEntityInstance;
 import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalHeadInstance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalMastBlockEntityInstance;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.track.SpeedLimitRenderer;
@@ -37,40 +38,65 @@ public class ClientSetup {
                 AllBlockEntities.SIGNAL_MAST_ENTITY.get(), 
                 SignalMastBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.SIGNAL_MAST_ENTITY.get())
+                .factory(SignalMastBlockEntityInstance::new)
+                .alwaysSkipRender()
+                .apply();
+
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
             InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get())
-                .factory(BaseSignalBlockEntityInstance::new) // インスタンス生成ロジック
+                .factory(BaseSignalBlockEntityInstance::new)
                 .apply();
+            
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .apply();
+            
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .apply();
+                
             BlockEntityRenderers.register(
                 AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .apply();
+
             BlockEntityRenderers.register(
                 AllBlockEntities.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .apply();
+
             BlockEntityRenderers.register(
                 AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
+            InstancedRenderRegistry.configure(AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .apply();
+
             BlockEntityRenderers.register(
                 AllBlockEntities.SPEED_LIMIT_ENTITY.get(), 
                 SpeedLimitRenderer::new
             );
 
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
-            // MenuScreens.register(AllMenuTypes.MAST_CONFIG_MENU.get(), MastConfigScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);
             MenuScreens.register(AllMenuTypes.SPEED_LIMIT_MENU.get(), SpeedLimitScreen::new);
         });
