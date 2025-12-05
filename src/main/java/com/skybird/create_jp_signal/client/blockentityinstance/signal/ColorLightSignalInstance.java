@@ -55,6 +55,10 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
                 case NORMAL -> 5;
                 case TUNNEL -> 4;
             };
+            double couplerOffset = switch (appearance.getSignalSize()) {
+                case NORMAL -> 2;
+                case TUNNEL -> 0;
+            };
 
             int totalLampCount = this.signalHead.getCurrentAspect().getLampCount() + (appearance.isRepeater() ? 1 : 0);
 
@@ -100,7 +104,7 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
 
             {
                 ms.pushPose();
-                msr.translate(0, 3.5/16, 0).unCentre();
+                msr.translate(0, (1.5 + couplerOffset)/16, 0).unCentre();
                 for (int i = 0; i < totalLampCount; i++) {
                     ModelData box = materialManager.defaultCutout()
                         .material(Materials.TRANSFORMED)
@@ -111,8 +115,8 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
                     box.setTransform(ms);
                     msr.translate(0, lampHeight/16, 0);
                 }
-                mastCouplerPositions.add(new Vec3(offset.x, 1.5/16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
-                mastCouplerPositions.add(new Vec3(offset.x, (3.5 + lampHeight * totalLampCount) / 16.0 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                mastCouplerPositions.add(new Vec3(offset.x, (1.5 + couplerOffset)/16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                mastCouplerPositions.add(new Vec3(offset.x, (1.5 + couplerOffset + lampHeight * totalLampCount) / 16.0 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
                 
                 ms.popPose();
             }
