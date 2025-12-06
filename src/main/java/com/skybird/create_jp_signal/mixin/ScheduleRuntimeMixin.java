@@ -31,10 +31,8 @@ public abstract class ScheduleRuntimeMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private void create_jp_signal_onStartCurrentInstructionEnd(
-        CallbackInfoReturnable<DiscoveredPath> cir
-
-    ) {
+    private void create_jp_signal_onStartCurrentInstructionEnd(CallbackInfoReturnable<DiscoveredPath> cir) {
+        
         ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 
