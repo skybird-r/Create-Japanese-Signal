@@ -47,7 +47,7 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
             PartialModel upperCasingModel;
             double modelHeight;
             double modelGap;
-            double mastCouplerOffset;
+            double caseOffset;
 
             switch (appearance.getSignalSize()) {
                 case NORMAL -> {
@@ -55,27 +55,27 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
                     upperCasingModel = PartialModelRegistry.REPEATER_SIGNAL_UPPER_CASING;
                     modelHeight = 14;
                     modelGap = 6;
-                    mastCouplerOffset = 2;
+                    caseOffset = 2;
                 }
                 case TUNNEL -> {
                     casingModel = PartialModelRegistry.REPEATER_SIGNAL_TUNNEL_CASING;
                     upperCasingModel = PartialModelRegistry.REPEATER_SIGNAL_TUNNEL_UPPER_CASING;
                     modelHeight = 8;
                     modelGap = 4;
-                    mastCouplerOffset = 0;
+                    caseOffset = 0;
                 }
                 default -> {
                     casingModel = PartialModelRegistry.REPEATER_SIGNAL_CASING;
                     upperCasingModel = PartialModelRegistry.REPEATER_SIGNAL_UPPER_CASING;
                     modelHeight = 14;
                     modelGap = 6;
-                    mastCouplerOffset = 2;
+                    caseOffset = 2;
                 }
             }
 
             {
                 ms.pushPose();
-                msr.translate(0, mastCouplerOffset/16, 0);
+                msr.translate(0, caseOffset/16, 0);
                 msr.translate(-0.5, -1.0/16, -0.5);
                 ModelData casing = materialManager.defaultCutout()
                     .material(Materials.TRANSFORMED)
@@ -85,8 +85,8 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
                 allModels.add(casing);
                 casing.setTransform(ms);
 
-                mastCouplerPositions.add(new Vec3(offset.x, (mastCouplerOffset - 2.0) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
-                mastCouplerPositions.add(new Vec3(offset.x, (mastCouplerOffset + modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                mastCouplerPositions.add(new Vec3(offset.x, (caseOffset - 2.0) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                mastCouplerPositions.add(new Vec3(offset.x, (caseOffset + modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
 
                 if (appearance.getForm() == RepeaterForm.DOUBLE_DISC) {
                     msr.translate(0, (modelHeight + modelGap)/16, 0);
@@ -97,8 +97,8 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
                     staticParts.add(upperCasing);
                     allModels.add(upperCasing);
                     upperCasing.setTransform(ms);
-                    mastCouplerPositions.add(new Vec3(offset.x, (mastCouplerOffset - 2.0 + modelGap + modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
-                    mastCouplerPositions.add(new Vec3(offset.x, (mastCouplerOffset + modelGap + 2 * modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                    mastCouplerPositions.add(new Vec3(offset.x, (caseOffset - 2.0 + modelGap + modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
+                    mastCouplerPositions.add(new Vec3(offset.x, (caseOffset + modelGap + 2 * modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
 
                 }
 

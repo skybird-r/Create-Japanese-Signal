@@ -58,8 +58,8 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
                 case NORMAL -> 5;
                 case TUNNEL -> 4;
             };
-            double couplerOffset = switch (appearance.getSignalSize()) {
-                case NORMAL -> 2;
+            double boxOffset = switch (appearance.getSignalSize()) {
+                case NORMAL -> 3.5;
                 case TUNNEL -> 0;
             };
             msr.multiply(Axis.YP.rotationDegrees((float)(double)rotation.getFirst())).translate(offset.x, offset.y, offset.z);
@@ -68,7 +68,7 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
 
             {
                 ms.pushPose();
-                msr.translate(0, (couplerOffset + 1.75)/16, 1.75/16).scale(lampHeight - 0.5f);
+                msr.translate(0, (boxOffset + 0.25)/16, 1.75/16).scale(lampHeight - 0.5f);
                 int totalLampCount = currentAspect.getLampCount() + (appearance.isRepeater() ? 1 : 0);
                 for (int i = 0; i < totalLampCount; i++) {
                     LampColor color;

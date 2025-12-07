@@ -28,25 +28,27 @@ public abstract class ScheduleRuntimeMixin {
     
     @Inject(
         method = "startCurrentInstruction",
-        at = @At("HEAD"),
-        cancellable = true
+        at = @At(
+            value = "FIELD",
+            target = "Lcom/simibubi/create/content/trains/schedule/ScheduleEntry;instruction:Lcom/simibubi/create/content/trains/schedule/destination/ScheduleInstruction;"
+        ),
+        locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void create_jp_signal_onStartCurrentInstructionEnd(CallbackInfoReturnable<DiscoveredPath> cir) {
+    private void create_jp_signal_onStartCurrentInstructionEnd(CallbackInfoReturnable<DiscoveredPath> cir, ScheduleEntry entry) {
         
-        ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 
         if (instruction instanceof OperationTypeInstruction operation) {
 			((ITrain)train).setOperationType(operation.getOperationType());
 			state = State.PRE_TRANSIT;
 			currentEntry++;
-			cir.setReturnValue(null);
+			//cir.setReturnValue(null);
 		}
         if (instruction instanceof MinimumReservationDistanceInstruction reservationInstruction) {
 			((ITrain)train).setMinimumReservationDistance(reservationInstruction.getMinimumReservationDistance());
 			state = State.PRE_TRANSIT;
 			currentEntry++;
-			cir.setReturnValue(null);
+			//cir.setReturnValue(null);
 		}
     }
 
