@@ -14,7 +14,8 @@
     "ScheduleMixin",
     "ScheduleRuntimeMixin",
     "TrackTargetingBlockItemMixin",
-    "TrackTargetingClientMixin"
+    "TrackTargetingClientMixin",
+    "ChangeThrottleInstructionMixin"
   ],
   "client": [
   ],
