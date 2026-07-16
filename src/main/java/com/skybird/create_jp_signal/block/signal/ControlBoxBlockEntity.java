@@ -86,7 +86,7 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
                 // Route設定
                 if (currentIndex <= 1 && be.appearance instanceof ColorLightSignalAppearance clAppearance && clAppearance.getAccessory().getType() == SignalAccessory.Type.FORECAST) {
                     // 入力が1以下かつ色灯かつ予告機なら、NONE
-                } else if (currentIndex > 0) {
+                } else if (currentAspectIndex > 0) {
                     finalRoute = entry.getValue().getRoute();
                 }
             }
