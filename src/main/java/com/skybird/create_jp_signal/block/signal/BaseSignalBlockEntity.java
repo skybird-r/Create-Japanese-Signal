@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.signal_type.ISignalType;
 import com.skybird.create_jp_signal.menu.SignalLinkMenu;
 import com.skybird.create_jp_signal.util.Lang;

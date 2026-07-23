@@ -27,8 +27,8 @@ import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.create.mixin_interface.INavigation;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalBoundary;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
@@ -210,7 +210,7 @@ public abstract class NavigationMixin implements INavigation {
         method = "tick",
         at = @At(
             value = "FIELD",
-            target = "Lcom/simibubi/create/content/trains/entity/Navigation;waitingForSignal:Lcom/simibubi/create/foundation/utility/Pair;",
+            target = "Lcom/simibubi/create/content/trains/entity/Navigation;waitingForSignal:Lnet/createmod/catnip/data/Pair;",
             ordinal = 6
         )
     )
@@ -238,7 +238,7 @@ public abstract class NavigationMixin implements INavigation {
         method = "tick",
         at = @At(
             value = "FIELD",
-            target = "Lcom/simibubi/create/content/trains/entity/Navigation;waitingForSignal:Lcom/simibubi/create/foundation/utility/Pair;",
+            target = "Lcom/simibubi/create/content/trains/entity/Navigation;waitingForSignal:Lnet/createmod/catnip/data/Pair;",
             ordinal = 7
         ),
         cancellable = true,

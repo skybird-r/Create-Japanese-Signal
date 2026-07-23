@@ -8,9 +8,9 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.BasicData;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.SignalAccessory;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
@@ -37,7 +37,7 @@ public class SignalAccessoryInstance {
         this.signalHead = signalHead;
         delete();
 
-        TransformStack msr = TransformStack.cast(ms);
+        TransformStack msr = TransformStack.of(ms);
         {
             ms.pushPose();
             msr.translate(0.5, 0, 0.5).rotateY(rotation.getFirst()).translate(offset);//.rotateX(rotation.getSecond());

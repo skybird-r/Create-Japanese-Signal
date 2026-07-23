@@ -2,7 +2,7 @@ package com.skybird.create_jp_signal.block.signal.signal_mast;
 
 import java.util.UUID;
 
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.block.signal.ISignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightShuntSignalAppearance.ShuntType;

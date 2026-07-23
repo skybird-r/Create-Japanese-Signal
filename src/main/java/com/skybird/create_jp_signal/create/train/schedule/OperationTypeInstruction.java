@@ -2,20 +2,27 @@ package com.skybird.create_jp_signal.create.train.schedule;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.JpSignals;
+import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
 import com.skybird.create_jp_signal.util.Lang;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -84,5 +91,14 @@ public class OperationTypeInstruction extends ScheduleInstruction {
     public List<Component> getSecondLineTooltip(int slot) {
         return ImmutableList.of(Component.translatable("schedule.instruction.operation_type.tooltip.0"),
             Component.translatable("schedule.instruction.operation_type.tooltip.1").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    @Nullable
+    public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
+        ((ITrain) runtime.train).setOperationType(getOperationType());
+        runtime.state = ScheduleRuntime.State.PRE_TRANSIT;
+        runtime.currentEntry++;
+        return null;
     }
 }

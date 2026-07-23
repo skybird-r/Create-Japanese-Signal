@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import com.simibubi.create.foundation.utility.Components;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 import com.skybird.create_jp_signal.menu.SpeedLimitMenu;
@@ -76,7 +75,7 @@ public class SpeedLimitScreen extends AbstractContainerScreen<SpeedLimitMenu> {
         speedLine.loadValues(data, this::addRenderableWidget, this::addRenderableOnly);
         distanceLine.loadValues(data, this::addRenderableWidget, this::addRenderableOnly);
 
-        addRenderableWidget(Button.builder(Components.translatable("gui.done"), btn -> this.onClose())
+        addRenderableWidget(Button.builder(Component.translatable("gui.done"), btn -> this.onClose())
             .bounds(x + 50, y + 70, 100, 20).build());
     }
 

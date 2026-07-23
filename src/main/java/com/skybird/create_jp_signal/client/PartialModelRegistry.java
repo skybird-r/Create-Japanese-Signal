@@ -2,7 +2,7 @@ package com.skybird.create_jp_signal.client;
 
 import javax.annotation.Nonnull;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.skybird.create_jp_signal.JpSignals;
 
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +41,6 @@ public class PartialModelRegistry {
     public static final PartialModel SIGNAL_JOINT = block("signal_parts/signal_joint");
 
     private static PartialModel block(@Nonnull String path) {
-        return new PartialModel(JpSignals.asResource("block/" + path));
+        return PartialModel.of(JpSignals.asResource("block/" + path));
     }
 }

@@ -2,8 +2,8 @@ package com.skybird.create_jp_signal.create.mixin_interface;
 
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 
 import net.minecraft.core.BlockPos;

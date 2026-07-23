@@ -2,13 +2,17 @@ package com.skybird.create_jp_signal.create.train.schedule;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.AllItems;
 import com.skybird.create_jp_signal.JpSignals;
+import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
 import com.skybird.create_jp_signal.util.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -16,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,7 +37,7 @@ public class MinimumReservationDistanceInstruction extends ScheduleInstruction {
 	}
 
 	private MutableComponent formatted() {
-		return Components.literal(String.valueOf(intData("Value")) + " m");
+		return Component.literal(String.valueOf(intData("Value")) + " m");
 	}
 
 	@Override
@@ -81,6 +86,18 @@ public class MinimumReservationDistanceInstruction extends ScheduleInstruction {
 	public List<Component> getSecondLineTooltip(int slot) {
 		return ImmutableList.of(Lang.translatable("schedule.instruction.minimum_reservation_distance.tooltip.0"),
 			Lang.translatable("schedule.instruction.minimum_reservation_distance.tooltip.1").withStyle(ChatFormatting.GRAY));
+	}
+
+	@Override
+	@Nullable
+	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
+		((ITrain) runtime.train)
+			.setMinimumReservationDistance(getMinimumReservationDistance());
+
+		runtime.state = ScheduleRuntime.State.PRE_TRANSIT;
+		runtime.currentEntry++;
+
+		return null;
 	}
     
 }

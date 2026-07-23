@@ -2,10 +2,11 @@ package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 
 import java.util.Map;
 
-import com.jozufozu.flywheel.backend.Backend;
+//disable_flywheel
+//import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity.AttachmentSlot;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
@@ -37,7 +38,10 @@ public class BaseSignalBlockEntityRenderer implements BlockEntityRenderer<BaseSi
             MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         
-        boolean flywheelActive = Backend.canUseInstancing(be.getLevel());
+        //disable_flywheel
+        //boolean flywheelActive = Backend.canUseInstancing(be.getLevel());
+        boolean flywheelActive = false;
+        
 
         ISignalType signalType = be.getSignalType();
         Map<AttachmentSlot, SignalHead> heads = be.getSignalHeads();

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.create.train.schedule.MinimumReservationDistanceInstruction;
 import com.skybird.create_jp_signal.create.train.schedule.OperationTypeInstruction;

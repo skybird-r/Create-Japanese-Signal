@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.trains.track.TrackTargetingClient;
-import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import com.skybird.create_jp_signal.create.train.track.AllEdgePointTypes;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;

@@ -1,7 +1,7 @@
 package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.level.block.entity.BlockEntity;

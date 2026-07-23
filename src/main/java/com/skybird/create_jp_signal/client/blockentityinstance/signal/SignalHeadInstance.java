@@ -6,7 +6,7 @@ import java.util.List;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.materials.BasicData;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleTunnelSignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleTunnelSignalMastBlockEntity;

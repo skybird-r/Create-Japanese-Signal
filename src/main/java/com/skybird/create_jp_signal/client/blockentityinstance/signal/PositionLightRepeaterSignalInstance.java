@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
@@ -38,7 +38,7 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
 
         
 
-        TransformStack msr = TransformStack.cast(ms);
+        TransformStack msr = TransformStack.of(ms);
         {
             ms.pushPose();
             msr.translate(0.5, 0, 0.5).rotateY(rotation.getFirst()).translate(offset).rotateX(rotation.getSecond());

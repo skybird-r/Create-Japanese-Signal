@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
 
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 
 public interface INavigation {
 

@@ -11,9 +11,9 @@ import com.simibubi.create.content.trains.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalBoundary;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalEdgeGroup;
 import com.skybird.create_jp_signal.create.train.schedule.OperationType;
@@ -101,7 +101,7 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
         method = "tickState",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/simibubi/create/foundation/utility/Couple;set(ZLjava/lang/Object;)V",
+            target = "Lnet/createmod/catnip/data/Couple;set(ZLjava/lang/Object;)V",
 			ordinal = 2,
 			shift = At.Shift.AFTER
         ),

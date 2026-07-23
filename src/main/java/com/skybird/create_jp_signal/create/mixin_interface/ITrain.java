@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.simibubi.create.content.trains.signal.SignalBoundary;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 
 public interface ITrain {

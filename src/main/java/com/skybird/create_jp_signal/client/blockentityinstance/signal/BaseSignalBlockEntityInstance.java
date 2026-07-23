@@ -13,10 +13,10 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity.AttachmentSlot;
@@ -52,7 +52,7 @@ public class BaseSignalBlockEntityInstance extends BlockEntityInstance<BaseSigna
         blockEntity.clientVisualChanged = false;
 
         PoseStack ms = new PoseStack();
-        TransformStack msr = TransformStack.cast(ms);
+        TransformStack msr = TransformStack.of(ms);
         msr.translate(getInstancePosition());
         
 

@@ -1,7 +1,7 @@
 package com.skybird.create_jp_signal.client.blockentityrenderer.track;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.trains.track.BezierConnection;
@@ -13,7 +13,7 @@ import com.simibubi.create.content.trains.track.TrackRenderer;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import net.createmod.catnip.render.CachedBuffers;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlockEntity;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;

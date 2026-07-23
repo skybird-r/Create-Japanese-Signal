@@ -6,9 +6,9 @@ import java.util.List;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class SignalMastCouplerInstance {
 
     public void init(Vec3 position, PoseStack ms, Vec3 offset, Pair<Double, Double> rotation) {
         delete();
-        TransformStack msr = TransformStack.cast(ms);
+        TransformStack msr = TransformStack.of(ms);
 
         ModelData mastCoupler = materialManager.defaultCutout()
             .material(Materials.TRANSFORMED)
