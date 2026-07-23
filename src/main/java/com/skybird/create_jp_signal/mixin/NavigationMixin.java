@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -76,22 +77,20 @@ public abstract class NavigationMixin implements INavigation {
     }
 
     //scanDistance
-    @Redirect(
-        method = "tick",
+    @ModifyArg(
+    method = "tick(Lnet/minecraft/world/level/Level;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/util/Mth;clamp(DDD)D", // Lnet/minecraft/util/Mth;clamp(DDD)D = Lnet/minecraft/util/Mth;m_14008_(DDD)D
-            ordinal = 0,
+            target = "Lnet/minecraft/util/Mth;clamp(DDD)D",
             remap = true
-        )
+        ),
+        index = 0
     )
-    private double create_jp_signal_redirectScanDistanceCalculation(double value, double min, double max) {
-        // value = brakingDistanceNoFlicker
-        // min   = preDepartureLookAhead
-        // max   = this.distanceToDestination
-        // return Mth.clamp(value + Math.abs(this.train.speed) * 20 * 5 + 30, min, max);
-        double reservationDistance = Math.max(value, ((ITrain)train).getMinimumReservationDistance());
-        return Mth.clamp(reservationDistance, min, max);
+    private double create_jp_signal_modifyScanDistanceInput(double brakingDistanceNoFlicker) {
+        return Math.max(
+            brakingDistanceNoFlicker,
+            ((ITrain) this.train).getMinimumReservationDistance()
+        );
     }
 
     @ModifyVariable(

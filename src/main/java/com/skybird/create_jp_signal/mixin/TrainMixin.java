@@ -33,6 +33,7 @@ import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 
 @Mixin(value = Train.class, remap = false)
 public abstract class TrainMixin implements ITrain {
@@ -60,7 +61,7 @@ public abstract class TrainMixin implements ITrain {
         method = "updateNavigationTarget",
         at = @At("HEAD")
     )
-    private void create_jp_signal_onUpdateNavigationTarget(double distance, CallbackInfo ci) {
+    private void create_jp_signal_onUpdateNavigationTarget(Level level, double distance, CallbackInfo ci) {
         if (((INavigation)this.navigation).getActiveSpeedLimits() == null) return;
         
         double distanceTraveled = Math.abs(distance);
