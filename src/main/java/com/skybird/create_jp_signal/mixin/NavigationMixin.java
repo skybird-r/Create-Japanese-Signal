@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Navigation;
 import com.simibubi.create.content.trains.entity.Train;
@@ -93,22 +92,6 @@ public abstract class NavigationMixin implements INavigation {
             brakingDistanceNoFlicker + trainExtension.getSignalStoppingDistance(),
             trainExtension.getMinimumReservationDistance()
         );
-    }
-
-    @ModifyExpressionValue(
-        method = "tick(Lnet/minecraft/world/level/Level;)V",
-        at = @At(
-            value = "FIELD",
-            target = "Lcom/simibubi/create/content/trains/entity/Navigation;distanceToSignal:D",
-            ordinal = 1
-        )
-    )
-    private double create_jp_signal_applySignalStoppingDistance(double distanceToSignal) {
-        double stoppingDistance = ((ITrain) this.train).getSignalStoppingDistance();
-        if (stoppingDistance <= 0) {
-            return distanceToSignal;
-        }
-        return Math.max(0, distanceToSignal - stoppingDistance);
     }
 
     @ModifyVariable(
@@ -312,6 +295,21 @@ public abstract class NavigationMixin implements INavigation {
         double targetDistance,
         double targetSpeed
     ) {
+        double signalStoppingDistance = ((ITrain) train).getSignalStoppingDistance();
+        if (waitingForSignal != null && signalStoppingDistance > 0) {
+            double distanceToStopPoint = distanceToSignal - signalStoppingDistance;
+
+            if (distanceToStopPoint <= 0) {
+                train.speed = 0;
+                train.targetSpeed = 0;
+                return;
+            }
+
+            if (distanceToStopPoint <= brakingDistance) {
+                train.targetSpeed = 0;
+            }
+        }
+
         double speedLimitTarget = topSpeed * speedMod;
         double currentSpeed = Math.abs(this.train.speed);
 
