@@ -18,6 +18,9 @@ import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.create.train.schedule.MinimumReservationDistanceInstruction;
 import com.skybird.create_jp_signal.create.train.schedule.OperationTypeInstruction;
+import com.skybird.create_jp_signal.create.train.schedule.SignalDepartureDelayCondition;
+import com.skybird.create_jp_signal.create.train.schedule.SignalStoppingDistanceInstruction;
+import com.skybird.create_jp_signal.create.train.schedule.TickWaitBeforeDepartureInstruction;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -40,5 +43,8 @@ public abstract class ScheduleMixin {
     private static void create_jp_signal_onStaticInit(CallbackInfo ci) {
         INSTRUCTION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "operation_type"), OperationTypeInstruction::new)); 
         INSTRUCTION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "minimum_reservation_distance"), MinimumReservationDistanceInstruction::new)); 
+        INSTRUCTION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "signal_stopping_distance"), SignalStoppingDistanceInstruction::new));
+        INSTRUCTION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "tick_wait_before_departure"), TickWaitBeforeDepartureInstruction::new));
+        CONDITION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "signal_departure_delay"), SignalDepartureDelayCondition::new));
     }
 }

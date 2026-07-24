@@ -90,5 +90,16 @@
     "create_jp_signal.schedule.instruction.minimum_reservation_distance.summary": "Reservation Distance: %s",
     "create_jp_signal.schedule.instruction.minimum_reservation_distance.name": "Minimum Reservation Distance",
     "create_jp_signal.schedule.instruction.minimum_reservation_distance.tooltip.0": "Minimum Reservation Distance",
-    "create_jp_signal.schedule.instruction.minimum_reservation_distance.tooltip.1": "reservation distance = min(this, braking distance)"
+    "create_jp_signal.schedule.instruction.minimum_reservation_distance.tooltip.1": "reservation distance = min(this, braking distance)",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance": "Change Signal Stopping Distance",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.summary": "Signal Stopping Distance: %s",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.name": "Signal Stopping Distance",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.tooltip.0": "Signal Stopping Distance",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.tooltip.1": "Sets how far before a red signal the train should stop",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure": "Change Signal Clearance Wait",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.summary": "Signal Clearance Wait: %s",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.name": "Signal Clearance Wait",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.tooltip.0": "Signal Clearance Wait",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.tooltip.1": "Sets how many ticks the signal must be clear before the train leaves a station",
+    "create_jp_signal.schedule.condition.signal_departure_delay": "Signal departure delay"
 }

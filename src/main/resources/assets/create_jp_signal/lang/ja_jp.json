@@ -90,5 +90,16 @@
     "create_jp_signal.schedule.instruction.minimum_reservation_distance.summary": "予約距離: %s",
     "create_jp_signal.schedule.instruction.minimum_reservation_distance.name": "最低予約距離",
     "create_jp_signal.schedule.instruction.minimum_reservation_distance.tooltip.0": "予約距離",
-    "create_jp_signal.schedule.instruction.minimum_reservation_distance.tooltip.1": "停止距離と最低予約距離のうち大きな方が予約距離となります"
+    "create_jp_signal.schedule.instruction.minimum_reservation_distance.tooltip.1": "停止距離と最低予約距離のうち大きな方が予約距離となります",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance": "赤信号手前停止距離変更",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.summary": "赤信号手前停止距離: %s",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.name": "赤信号手前停止距離",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.tooltip.0": "赤信号手前停止距離",
+    "create_jp_signal.schedule.instruction.signal_stopping_distance.tooltip.1": "赤信号から手前に確保する停止距離を設定します",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure": "信号開通後待機時間変更",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.summary": "信号開通後待機時間: %s",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.name": "信号開通後待機時間",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.tooltip.0": "信号開通後待機時間",
+    "create_jp_signal.schedule.instruction.tick_wait_before_departure.tooltip.1": "駅から発車する前に信号が開通している必要があるtick数を設定します",
+    "create_jp_signal.schedule.condition.signal_departure_delay": "信号開通待ち時間"
 }

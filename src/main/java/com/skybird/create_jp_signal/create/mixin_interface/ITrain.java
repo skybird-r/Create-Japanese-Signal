@@ -13,6 +13,10 @@ public interface ITrain {
     public void setOperationType(OperationType type);
     public double getMinimumReservationDistance();
     public void setMinimumReservationDistance(double minimumReservationDistance);
+    public double getSignalStoppingDistance();
+    public void setSignalStoppingDistance(double signalStoppingDistance);
     public int getTickWaitBeforeDeparture();
     public void setTickWaitBeforeDeparture(int tickWaitBeforeDeparture);
+    public long getSignalDepartureDelayEndTick();
+    public void setSignalDepartureDelayEndTick(long signalDepartureDelayEndTick);
 }

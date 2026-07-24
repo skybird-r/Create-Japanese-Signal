@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Navigation;
 import com.simibubi.create.content.trains.entity.Train;
@@ -87,10 +88,27 @@ public abstract class NavigationMixin implements INavigation {
         index = 0
     )
     private double create_jp_signal_modifyScanDistanceInput(double brakingDistanceNoFlicker) {
+        ITrain trainExtension = (ITrain) this.train;
         return Math.max(
-            brakingDistanceNoFlicker,
-            ((ITrain) this.train).getMinimumReservationDistance()
+            brakingDistanceNoFlicker + trainExtension.getSignalStoppingDistance(),
+            trainExtension.getMinimumReservationDistance()
         );
+    }
+
+    @ModifyExpressionValue(
+        method = "tick(Lnet/minecraft/world/level/Level;)V",
+        at = @At(
+            value = "FIELD",
+            target = "Lcom/simibubi/create/content/trains/entity/Navigation;distanceToSignal:D",
+            ordinal = 1
+        )
+    )
+    private double create_jp_signal_applySignalStoppingDistance(double distanceToSignal) {
+        double stoppingDistance = ((ITrain) this.train).getSignalStoppingDistance();
+        if (stoppingDistance <= 0) {
+            return distanceToSignal;
+        }
+        return Math.max(0, distanceToSignal - stoppingDistance);
     }
 
     @ModifyVariable(
@@ -251,17 +269,25 @@ public abstract class NavigationMixin implements INavigation {
         double speedMod,
         double preDepartureLookAhead
     ) {
-        if (this.ticksWaitingBuffer != null && this.ticksWaitingBuffer < ((ITrain)train).getTickWaitBeforeDeparture()) {
+        ITrain trainExtension = (ITrain) train;
+        if (this.ticksWaitingBuffer != null && this.ticksWaitingBuffer < trainExtension.getTickWaitBeforeDeparture()) {
             if (waitingForSignal != null && distanceToSignal < preDepartureLookAhead) {
-				ticksWaitingForSignal++;
-				ci.cancel();
+                ticksWaitingForSignal++;
+                ci.cancel();
                 return;
-			}
+            }
             this.ticksWaitingBuffer++;
             ci.cancel();
             return;
         }
+
+        if (level.getGameTime() < trainExtension.getSignalDepartureDelayEndTick()) {
+            ci.cancel();
+            return;
+        }
+
         this.ticksWaitingBuffer = null;
+        trainExtension.setSignalDepartureDelayEndTick(-1);
     }
 
     @Inject(
@@ -360,6 +386,7 @@ public abstract class NavigationMixin implements INavigation {
     )
     private void create_jp_signal_onCancelNavigationEnd(CallbackInfo ci) {
         ((ITrain)train).getActiveReservations().clear();
+        ((ITrain)train).setSignalDepartureDelayEndTick(-1);
         this.activeSpeedLimits.clear();
     }
 

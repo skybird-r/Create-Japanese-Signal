@@ -44,7 +44,9 @@ public abstract class TrainMixin implements ITrain {
     @Unique public Map<UUID, Pair<SignalBoundary, Boolean>> activeReservations;
     @Unique public OperationType operationType;
     @Unique public double minimumReservationDistance;
+    @Unique public double signalStoppingDistance;
     @Unique public int tickWaitBeforeDeparture;
+    @Unique public long signalDepartureDelayEndTick;
 
     @Inject(
         method = "<init>",
@@ -54,7 +56,9 @@ public abstract class TrainMixin implements ITrain {
         this.activeReservations = new HashMap<>();
         this.operationType = OperationType.TRAIN;
         this.minimumReservationDistance = 500;
+        this.signalStoppingDistance = 0;
         this.tickWaitBeforeDeparture = 40;
+        this.signalDepartureDelayEndTick = -1;
     }
 
     @Inject(
@@ -141,6 +145,9 @@ public abstract class TrainMixin implements ITrain {
         if (tag == null) return;
         tag.putString("OperationType", operationType.name());
         tag.putDouble("MinimumReservationDistance", minimumReservationDistance);
+        tag.putDouble("SignalStoppingDistance", signalStoppingDistance);
+        tag.putInt("TickWaitBeforeDeparture", tickWaitBeforeDeparture);
+        tag.putLong("SignalDepartureDelayEndTick", signalDepartureDelayEndTick);
     }
 
     @Inject(
@@ -168,6 +175,15 @@ public abstract class TrainMixin implements ITrain {
             } catch (IllegalArgumentException e) {
             }
         }
+        if (tag.contains("SignalStoppingDistance")) {
+            ((ITrain)train).setSignalStoppingDistance(tag.getDouble("SignalStoppingDistance"));
+        }
+        if (tag.contains("TickWaitBeforeDeparture")) {
+            ((ITrain)train).setTickWaitBeforeDeparture(tag.getInt("TickWaitBeforeDeparture"));
+        }
+        if (tag.contains("SignalDepartureDelayEndTick")) {
+            ((ITrain)train).setSignalDepartureDelayEndTick(tag.getLong("SignalDepartureDelayEndTick"));
+        }
     }
 
     public OperationType getOperationType() {
@@ -186,12 +202,28 @@ public abstract class TrainMixin implements ITrain {
         this.minimumReservationDistance = minimumReservationDistance;
     }
 
+    public double getSignalStoppingDistance() {
+        return signalStoppingDistance;
+    }
+
+    public void setSignalStoppingDistance(double signalStoppingDistance) {
+        this.signalStoppingDistance = Math.max(0, signalStoppingDistance);
+    }
+
     public int getTickWaitBeforeDeparture() {
         return tickWaitBeforeDeparture;
     }
     
     public void setTickWaitBeforeDeparture(int tickWaitBeforeDeparture) {
-        this.tickWaitBeforeDeparture = tickWaitBeforeDeparture;
+        this.tickWaitBeforeDeparture = Math.max(0, tickWaitBeforeDeparture);
+    }
+
+    public long getSignalDepartureDelayEndTick() {
+        return signalDepartureDelayEndTick;
+    }
+
+    public void setSignalDepartureDelayEndTick(long signalDepartureDelayEndTick) {
+        this.signalDepartureDelayEndTick = signalDepartureDelayEndTick;
     }
 
     public Map<UUID, Pair<SignalBoundary, Boolean>> getActiveReservations() {
