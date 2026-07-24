@@ -3,8 +3,7 @@ package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 import java.util.Iterator;
 
 import com.ibm.icu.text.AlphabeticIndex.Bucket.LabelType;
-//disable_flywheel
-//import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -48,8 +47,14 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
         SignalAspect.State currentAspect = headData.getCurrentAspect();
         long gameTime = Minecraft.getInstance().level.getGameTime();
 
-        // flywheel使用中
-        //disable_flywheel
+        if (VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
+            FlywheelSignalLightRenderer.renderColor(
+                poseStack, bufferSource, overlay, headData, blockEntity, offset, rotation, appearance
+            );
+            return;
+        }
+
+        // Flywheel 0.6 implementation retained below for reference.
         //boolean flywheelActive = Backend.canUseInstancing(blockEntity.getLevel());
         // if (flywheelActive) {
         //     PoseStack ms = poseStack;

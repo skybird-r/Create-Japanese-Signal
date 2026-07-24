@@ -3,12 +3,10 @@ package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalInstanceManager.SignalModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance;
@@ -23,9 +21,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
 
-    private final List<ModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> staticParts = new ArrayList<>();
 
-    public PositionLightRepeaterSignalInstance(MaterialManager materialManager, SignalHead signalHead, BlockEntity be) {
+    public PositionLightRepeaterSignalInstance(SignalInstanceManager materialManager, SignalHead signalHead, BlockEntity be) {
         super(materialManager, signalHead, be);
     }
     
@@ -38,10 +36,12 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
 
         
 
-        TransformStack msr = TransformStack.of(ms);
         {
             ms.pushPose();
-            msr.translate(0.5, 0, 0.5).rotateY(rotation.getFirst()).translate(offset).rotateX(rotation.getSecond());
+            ms.translate(0.5, 0, 0.5);
+            ms.mulPose(Axis.YP.rotationDegrees(rotation.getFirst().floatValue()));
+            ms.translate(offset.x, offset.y, offset.z);
+            ms.mulPose(Axis.XP.rotationDegrees(rotation.getSecond().floatValue()));
 
             PartialModel casingModel;
             PartialModel upperCasingModel;
@@ -75,12 +75,9 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
 
             {
                 ms.pushPose();
-                msr.translate(0, caseOffset/16, 0);
-                msr.translate(-0.5, -1.0/16, -0.5);
-                ModelData casing = materialManager.defaultCutout()
-                    .material(Materials.TRANSFORMED)
-                    .getModel(casingModel)
-                    .createInstance();
+                ms.translate(0, caseOffset/16, 0);
+                ms.translate(-0.5, -1.0/16, -0.5);
+                SignalModelData casing = materialManager.create(casingModel);
                 staticParts.add(casing);
                 allModels.add(casing);
                 casing.setTransform(ms);
@@ -89,11 +86,8 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
                 mastCouplerPositions.add(new Vec3(offset.x, (caseOffset + modelHeight) / 16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
 
                 if (appearance.getForm() == RepeaterForm.DOUBLE_DISC) {
-                    msr.translate(0, (modelHeight + modelGap)/16, 0);
-                    ModelData upperCasing = materialManager.defaultCutout()
-                        .material(Materials.TRANSFORMED)
-                        .getModel(upperCasingModel)
-                        .createInstance();
+                    ms.translate(0, (modelHeight + modelGap)/16, 0);
+                    SignalModelData upperCasing = materialManager.create(upperCasingModel);
                     staticParts.add(upperCasing);
                     allModels.add(upperCasing);
                     upperCasing.setTransform(ms);
@@ -124,7 +118,6 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
     @Override
     public void remove() {
         super.remove();
-        staticParts.forEach(ModelData::delete);
         staticParts.clear();
     }
     

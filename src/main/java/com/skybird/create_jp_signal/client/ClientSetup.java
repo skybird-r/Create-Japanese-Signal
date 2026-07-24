@@ -1,14 +1,11 @@
 package com.skybird.create_jp_signal.client;
 
-//disable_flywheel
-//import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
+import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
 import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.AllMenuTypes;
 import com.skybird.create_jp_signal.JpSignals;
-//disable_flywheel
-//import com.skybird.create_jp_signal.client.blockentityinstance.signal.BaseSignalBlockEntityInstance;
-//import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalHeadInstance;
-//import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalMastBlockEntityInstance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.BaseSignalBlockEntityInstance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalMastBlockEntityInstance;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.track.SpeedLimitRenderer;
@@ -40,65 +37,63 @@ public class ClientSetup {
                 AllBlockEntities.SIGNAL_MAST_ENTITY.get(), 
                 SignalMastBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.SIGNAL_MAST_ENTITY.get())
-            //    .factory(SignalMastBlockEntityInstance::new)
-            //    .alwaysSkipRender()
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.SIGNAL_MAST_ENTITY.get())
+                .factory(SignalMastBlockEntityInstance::new)
+                .apply();
 
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get())
-            //    .factory(BaseSignalBlockEntityInstance::new)
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.COLOR_SINGLE_ROUND_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .neverSkipVanillaRender()
+                .apply();
             
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get())
-            //    .factory(BaseSignalBlockEntityInstance::new)
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.COLOR_SINGLE_SQUARE_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .neverSkipVanillaRender()
+                .apply();
             
             BlockEntityRenderers.register(
                 AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get())
-            //    .factory(BaseSignalBlockEntityInstance::new)
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.COLOR_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .neverSkipVanillaRender()
+                .apply();
 
             BlockEntityRenderers.register(
                 AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get())
-            //    .factory(BaseSignalBlockEntityInstance::new)
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.REPEATER_SINGLE_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .neverSkipVanillaRender()
+                .apply();
 
             BlockEntityRenderers.register(
                 AllBlockEntities.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get())
-            //    .factory(BaseSignalBlockEntityInstance::new)
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.REPEATER_SINGLE_TUNNEL_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .neverSkipVanillaRender()
+                .apply();
 
             BlockEntityRenderers.register(
                 AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get(), 
                 BaseSignalBlockEntityRenderer::new
             );
-            //disable_flywheel
-            //InstancedRenderRegistry.configure(AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get())
-            //    .factory(BaseSignalBlockEntityInstance::new)
-            //    .apply();
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.SHUNT_SINGLE_SIGNAL_MAST_ENTITY.get())
+                .factory(BaseSignalBlockEntityInstance::new)
+                .neverSkipVanillaRender()
+                .apply();
 
             BlockEntityRenderers.register(
                 AllBlockEntities.SPEED_LIMIT_ENTITY.get(), 

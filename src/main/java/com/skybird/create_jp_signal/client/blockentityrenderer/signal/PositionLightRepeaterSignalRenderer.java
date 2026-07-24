@@ -4,9 +4,7 @@ import java.time.format.SignStyle;
 import java.util.Iterator;
 import java.util.List;
 
-import dev.engine_room.flywheel.api.backend.Backend;
-//disable_flywheel
-//import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -48,7 +46,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
         SignalAspect.State currentAspect = headData.getCurrentAspect();
         long gameTime = Minecraft.getInstance().level.getGameTime();
 
-        {
+        if (VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
             PoseStack ms = poseStack;
             TransformStack msr = TransformStack.of(ms);
             ms.pushPose();
@@ -224,11 +222,9 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
                 
             }
             ms.popPose();
+            return;
         }
 
-        //disable_flywheel
-        // boolean flywheelActive = Backend.canUseInstancing(blockEntity.getLevel());
-        // if (flywheelActive) return;
         // --- 描画処理 ---
 
 

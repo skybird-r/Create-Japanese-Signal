@@ -306,12 +306,3 @@ mixin {
     // ゲームの起動引数を設定
     config "${mod_id}.mixins.json"
 }
-
-//disable_flywheel
-sourceSets {
-    main {
-        java {
-            exclude 'com/skybird/create_jp_signal/client/blockentityinstance/**'
-        }
-    }
-}

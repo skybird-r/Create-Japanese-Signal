@@ -2,9 +2,10 @@ package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.materials.BasicData;
+import dev.engine_room.flywheel.api.instance.Instance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalInstanceManager.SignalModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
@@ -20,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class SignalHeadInstance {
 
-    protected final MaterialManager materialManager;
+    protected final SignalInstanceManager materialManager;
     protected SignalHead signalHead;
     protected final BlockEntity blockEntity;
 
@@ -33,12 +34,12 @@ public abstract class SignalHeadInstance {
     // ★ここに追加：自分の座標を覚えておく
     protected BlockPos pos; 
 
-    protected final List<BasicData> allModels = new ArrayList<>();
+    protected final List<SignalModelData> allModels = new ArrayList<>();
 
     private Vec3 currentOffset = Vec3.ZERO;
     private Pair<Double, Double> currentRotation = Pair.of(0.0, 0.0);
 
-    public SignalHeadInstance(MaterialManager materialManager, SignalHead signalHead, BlockEntity be) {
+    public SignalHeadInstance(SignalInstanceManager materialManager, SignalHead signalHead, BlockEntity be) {
         this.materialManager = materialManager;
         this.signalHead = signalHead;
         this.blockEntity = be;
@@ -95,7 +96,7 @@ public abstract class SignalHeadInstance {
     }
 
     public void remove() {
-        allModels.forEach(BasicData::delete);
+        allModels.forEach(SignalModelData::delete);
         allModels.clear();
         accessory.delete();
         mastCouplerPositions.clear();
@@ -105,5 +106,11 @@ public abstract class SignalHeadInstance {
 
     public List<Vec3> getMastCouplerPositions() {
         return mastCouplerPositions;
+    }
+
+    public void collectCrumblingInstances(Consumer<Instance> consumer) {
+        allModels.forEach(model -> consumer.accept(model.instance()));
+        accessory.collectCrumblingInstances(consumer);
+        mastCouplerInstances.forEach(coupler -> coupler.collectCrumblingInstances(consumer));
     }
 }

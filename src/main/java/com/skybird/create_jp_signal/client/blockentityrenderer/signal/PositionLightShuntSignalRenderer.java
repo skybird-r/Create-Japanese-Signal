@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.stringtemplate.v4.compiler.CodeGenerator.primary_return;
 
-import dev.engine_room.flywheel.api.backend.Backend;
-//disable_flywheel
-//import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -50,7 +48,14 @@ public class PositionLightShuntSignalRenderer implements ISignalHeadRenderer{
         SignalAspect.State currentAspect = headData.getCurrentAspect();
         long gameTime = Minecraft.getInstance().level.getGameTime();
 
-        //disable_flywheel
+        if (VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
+            FlywheelSignalLightRenderer.renderShunt(
+                poseStack, bufferSource, overlay, headData, blockEntity, offset, rotation, appearance
+            );
+            return;
+        }
+
+        // Flywheel 0.6 implementation retained below for reference.
         // boolean flywheelActive = Backend.canUseInstancing(blockEntity.getLevel());
         // if (flywheelActive) {
         //     PoseStack ms = poseStack;

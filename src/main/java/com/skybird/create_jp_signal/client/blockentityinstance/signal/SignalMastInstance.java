@@ -1,8 +1,9 @@
 package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import java.util.function.Consumer;
+
+import dev.engine_room.flywheel.api.instance.Instance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalInstanceManager.SignalModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
@@ -13,15 +14,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class SignalMastInstance {
-    private final MaterialManager materialManager;
+    private final SignalInstanceManager materialManager;
     
     private BlockPos pos;
     private Vec3 offset;
     private double rotation;
 
-    private ModelData mastModel = null;
+    private SignalModelData mastModel = null;
 
-    public SignalMastInstance(MaterialManager materialManager) {
+    public SignalMastInstance(SignalInstanceManager materialManager) {
         this.materialManager = materialManager;
     }
 
@@ -39,10 +40,7 @@ public class SignalMastInstance {
             ms.mulPose(Axis.YP.rotationDegrees((float)rotation));
             ms.translate(-0.5, 0, -0.5);
 
-            mastModel = materialManager.defaultCutout()
-                .material(Materials.TRANSFORMED)
-                .getModel(PartialModelRegistry.SIGNAL_MAST)
-                .createInstance();
+            mastModel = materialManager.create(PartialModelRegistry.SIGNAL_MAST);
             mastModel.setTransform(ms);
             ms.popPose();
         }
@@ -63,6 +61,12 @@ public class SignalMastInstance {
         if (mastModel != null) {
             mastModel.delete();
             mastModel = null;
+        }
+    }
+
+    public void collectCrumblingInstances(Consumer<Instance> consumer) {
+        if (mastModel != null) {
+            consumer.accept(mastModel.instance());
         }
     }
 }

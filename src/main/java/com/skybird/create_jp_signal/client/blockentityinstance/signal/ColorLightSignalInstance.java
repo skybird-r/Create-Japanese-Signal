@@ -3,12 +3,10 @@ package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalInstanceManager.SignalModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
@@ -21,9 +19,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class ColorLightSignalInstance extends SignalHeadInstance {
 
-    private final List<ModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> staticParts = new ArrayList<>();
 
-    public ColorLightSignalInstance(MaterialManager materialManager, SignalHead headData, BlockEntity be) {
+    public ColorLightSignalInstance(SignalInstanceManager materialManager, SignalHead headData, BlockEntity be) {
         super(materialManager, headData, be);
     }
 
@@ -35,10 +33,12 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
 
         
 
-        TransformStack msr = TransformStack.of(ms);
         {
             ms.pushPose();
-            msr.translate(0.5, 0, 0.5).rotateY(rotation.getFirst()).translate(offset).rotateX(rotation.getSecond());
+            ms.translate(0.5, 0, 0.5);
+            ms.mulPose(Axis.YP.rotationDegrees(rotation.getFirst().floatValue()));
+            ms.translate(offset.x, offset.y, offset.z);
+            ms.mulPose(Axis.XP.rotationDegrees(rotation.getSecond().floatValue()));
 
             PartialModel backplateBottomModel = switch (appearance.getBackplateType()) {
                 case ROUND -> PartialModelRegistry.BACKPLATE_BOTTOM_ROUND;
@@ -63,40 +63,36 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
             int totalLampCount = this.signalHead.getCurrentAspect().getLampCount() + (appearance.isRepeater() ? 1 : 0);
 
             if (backplateBottomModel != null) {
-                ModelData backplateBottom = materialManager.defaultCutout()
-                    .material(Materials.TRANSFORMED)
-                    .getModel(backplateBottomModel)
-                    .createInstance();
+                SignalModelData backplateBottom = materialManager.create(backplateBottomModel);
                 staticParts.add(backplateBottom);
                 allModels.add(backplateBottom);
 
-                ModelData backplateTop = materialManager.defaultCutout()
-                    .material(Materials.TRANSFORMED)
-                    .getModel(backplateBottomModel)
-                    .createInstance();
+                SignalModelData backplateTop = materialManager.create(backplateBottomModel);
                 staticParts.add(backplateTop);
                 allModels.add(backplateTop);
 
-                ModelData backplateMiddle = materialManager.defaultCutout()
-                    .material(Materials.TRANSFORMED)
-                    .getModel(PartialModelRegistry.BACKPLATE_MIDDLE)
-                    .createInstance();
+                SignalModelData backplateMiddle = materialManager.create(PartialModelRegistry.BACKPLATE_MIDDLE);
                 staticParts.add(backplateMiddle);
                 allModels.add(backplateMiddle);
 
                 // 4*4はbackplate多分バグる
                 {
                     ms.pushPose();
-                    msr.unCentre();
+                    ms.translate(-0.5, -0.5, -0.5);
                     backplateBottom.setTransform(ms);
-                    msr.centre().translate(0, (5.0 * totalLampCount + 7.0)/16.0, 0).rotateZ(180).unCentre();
+                    ms.translate(0.5, 0.5, 0.5);
+                    ms.translate(0, (5.0 * totalLampCount + 7.0)/16.0, 0);
+                    ms.mulPose(Axis.ZP.rotationDegrees(180));
+                    ms.translate(-0.5, -0.5, -0.5);
                     backplateTop.setTransform(ms);
                     ms.popPose();
                 }
                 {
                     ms.pushPose();
                     float yScale = 1.0f/5 + totalLampCount;
-                    msr.unCentre().translate(0, 11.0/16 - 0.5 * yScale, 0).scale(1, yScale, 1);
+                    ms.translate(-0.5, -0.5, -0.5);
+                    ms.translate(0, 11.0/16 - 0.5 * yScale, 0);
+                    ms.scale(1, yScale, 1);
                     backplateMiddle.setTransform(ms);
                     ms.popPose();
                 }
@@ -104,16 +100,14 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
 
             {
                 ms.pushPose();
-                msr.translate(0, (boxOffset)/16, 0).unCentre();
+                ms.translate(0, boxOffset/16, 0);
+                ms.translate(-0.5, -0.5, -0.5);
                 for (int i = 0; i < totalLampCount; i++) {
-                    ModelData box = materialManager.defaultCutout()
-                        .material(Materials.TRANSFORMED)
-                        .getModel(lampBox)
-                        .createInstance();
+                    SignalModelData box = materialManager.create(lampBox);
                     staticParts.add(box);
                     allModels.add(box);
                     box.setTransform(ms);
-                    msr.translate(0, lampHeight/16, 0);
+                    ms.translate(0, lampHeight/16, 0);
                 }
                 mastCouplerPositions.add(new Vec3(offset.x, (boxOffset - 2.0)/16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
                 mastCouplerPositions.add(new Vec3(offset.x, (boxOffset + lampHeight * totalLampCount) / 16.0 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
@@ -140,7 +134,6 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
     @Override
     public void remove() {
         super.remove();
-        staticParts.forEach(ModelData::delete);
         staticParts.clear();
     }
 }

@@ -2,8 +2,7 @@ package com.skybird.create_jp_signal.client.blockentityrenderer.signal;
 
 import java.util.Map;
 
-//disable_flywheel
-//import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
@@ -38,9 +37,7 @@ public class BaseSignalBlockEntityRenderer implements BlockEntityRenderer<BaseSi
             MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         
-        //disable_flywheel
-        //boolean flywheelActive = Backend.canUseInstancing(be.getLevel());
-        boolean flywheelActive = false;
+        boolean flywheelActive = VisualizationManager.supportsVisualization(be.getLevel());
         
 
         ISignalType signalType = be.getSignalType();
@@ -93,4 +90,3 @@ public class BaseSignalBlockEntityRenderer implements BlockEntityRenderer<BaseSi
     }
 }
     
-

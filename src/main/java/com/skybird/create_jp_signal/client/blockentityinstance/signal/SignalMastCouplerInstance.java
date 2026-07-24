@@ -2,12 +2,12 @@ package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.api.instance.Instance;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalInstanceManager.SignalModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
@@ -17,33 +17,22 @@ import net.minecraft.world.phys.Vec3;
 
 public class SignalMastCouplerInstance {
 
-    private final MaterialManager materialManager;
-    private final List<ModelData> models = new ArrayList<>();
+    private final SignalInstanceManager materialManager;
+    private final List<SignalModelData> models = new ArrayList<>();
 
-    public SignalMastCouplerInstance(MaterialManager materialManager) {
+    public SignalMastCouplerInstance(SignalInstanceManager materialManager) {
         this.materialManager = materialManager;
     }
 
     public void init(Vec3 position, PoseStack ms, Vec3 offset, Pair<Double, Double> rotation) {
         delete();
-        TransformStack msr = TransformStack.of(ms);
-
-        ModelData mastCoupler = materialManager.defaultCutout()
-            .material(Materials.TRANSFORMED)
-            .getModel(PartialModelRegistry.MAST_COUPLER)
-            .createInstance();
+        SignalModelData mastCoupler = materialManager.create(PartialModelRegistry.MAST_COUPLER);
         models.add(mastCoupler);
 
-        ModelData mastPipe = materialManager.defaultCutout()
-            .material(Materials.TRANSFORMED)
-            .getModel(PartialModelRegistry.MAST_PIPE)
-            .createInstance();
+        SignalModelData mastPipe = materialManager.create(PartialModelRegistry.MAST_PIPE);
         models.add(mastPipe);
 
-        ModelData signalJoint = materialManager.defaultCutout()
-            .material(Materials.TRANSFORMED)
-            .getModel(PartialModelRegistry.SIGNAL_JOINT)
-            .createInstance();
+        SignalModelData signalJoint = materialManager.create(PartialModelRegistry.SIGNAL_JOINT);
         models.add(signalJoint);
         
         {
@@ -51,17 +40,20 @@ public class SignalMastCouplerInstance {
             double x = position.x;
             double y = position.y;
             double z = position.z;
-            msr.translate(0.5, 0, 0.5).rotateY(rotation.getFirst());
-            msr.translate(0, y, 0);
+            ms.translate(0.5, 0, 0.5);
+            ms.mulPose(Axis.YP.rotationDegrees(rotation.getFirst().floatValue()));
+            ms.translate(0, y, 0);
             {
                 ms.pushPose();
-                msr.rotateY(Math.toDegrees(Math.atan2(x, z))).translate(-0.5, -0.5, 0).scale(1, 1, (float)Math.sqrt(x * x + z * z) * 16);
+                ms.mulPose(Axis.YP.rotationDegrees((float) Math.toDegrees(Math.atan2(x, z))));
+                ms.translate(-0.5, -0.5, 0);
+                ms.scale(1, 1, (float)Math.sqrt(x * x + z * z) * 16);
                 mastPipe.setTransform(ms);
                 ms.popPose();
             }
-            msr.unCentre();
+            ms.translate(-0.5, -0.5, -0.5);
             mastCoupler.setTransform(ms);
-            msr.translate(x, 0, z);
+            ms.translate(x, 0, z);
             signalJoint.setTransform(ms);
 
             ms.popPose();
@@ -73,7 +65,11 @@ public class SignalMastCouplerInstance {
     }
 
     public void delete() {
-        models.forEach(ModelData::delete);
+        models.forEach(SignalModelData::delete);
         models.clear();
+    }
+
+    public void collectCrumblingInstances(Consumer<Instance> consumer) {
+        models.forEach(model -> consumer.accept(model.instance()));
     }
 }

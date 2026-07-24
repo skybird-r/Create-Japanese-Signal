@@ -3,12 +3,10 @@ package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalInstanceManager.SignalModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.PositionLightShuntSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
@@ -21,9 +19,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class PositionLightShuntSignalInstance extends SignalHeadInstance {
 
-    private final List<ModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> staticParts = new ArrayList<>();
 
-    public PositionLightShuntSignalInstance(MaterialManager materialManager, SignalHead signalHead, BlockEntity be) {
+    public PositionLightShuntSignalInstance(SignalInstanceManager materialManager, SignalHead signalHead, BlockEntity be) {
         super(materialManager, signalHead, be);
     }
     
@@ -36,10 +34,12 @@ public class PositionLightShuntSignalInstance extends SignalHeadInstance {
 
         
 
-        TransformStack msr = TransformStack.of(ms);
         {
             ms.pushPose();
-            msr.translate(0.5, 0, 0.5).rotateY(rotation.getFirst()).translate(offset).rotateX(rotation.getSecond());
+            ms.translate(0.5, 0, 0.5);
+            ms.mulPose(Axis.YP.rotationDegrees(rotation.getFirst().floatValue()));
+            ms.translate(offset.x, offset.y, offset.z);
+            ms.mulPose(Axis.XP.rotationDegrees(rotation.getSecond().floatValue()));
             PartialModel casingModel;
 
             casingModel = switch (appearance.getType()) {
@@ -51,12 +51,9 @@ public class PositionLightShuntSignalInstance extends SignalHeadInstance {
             
             {
                 ms.pushPose();
-                msr.translate(0, 2.0/16, 0);
-                msr.translate(-0.5, -2.0/16, -0.5);
-                ModelData casing = materialManager.defaultCutout()
-                    .material(Materials.TRANSFORMED)
-                    .getModel(casingModel)
-                    .createInstance();
+                ms.translate(0, 2.0/16, 0);
+                ms.translate(-0.5, -2.0/16, -0.5);
+                SignalModelData casing = materialManager.create(casingModel);
                 staticParts.add(casing);
                 allModels.add(casing);
                 casing.setTransform(ms);
@@ -83,7 +80,6 @@ public class PositionLightShuntSignalInstance extends SignalHeadInstance {
     @Override
     public void remove() {
         super.remove();
-        staticParts.forEach(ModelData::delete);
         staticParts.clear();
     }
     

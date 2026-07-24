@@ -1,19 +1,16 @@
 package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.visual.DynamicVisual;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
@@ -31,29 +28,32 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 
-public class BaseSignalBlockEntityInstance extends BlockEntityInstance<BaseSignalBlockEntity> implements DynamicInstance {
+public class BaseSignalBlockEntityInstance extends AbstractBlockEntityVisual<BaseSignalBlockEntity>
+        implements SimpleDynamicVisual {
 
     private final Map<AttachmentSlot, SignalHeadInstance> headInstances = new EnumMap<>(AttachmentSlot.class);
-    
-    // 使ってない
-    private final List<ModelData> mastModels = new ArrayList<>();
+    private final SignalInstanceManager materialManager;
+    private final SignalMastInstance mastInstance;
 
-    private SignalMastInstance mastInstance;
-
-    public BaseSignalBlockEntityInstance(MaterialManager materialManager, BaseSignalBlockEntity blockEntity) {
-        super(materialManager, blockEntity);
+    public BaseSignalBlockEntityInstance(VisualizationContext context, BaseSignalBlockEntity blockEntity,
+            float partialTick) {
+        super(context, blockEntity, partialTick);
+        materialManager = new SignalInstanceManager(context.instancerProvider());
         mastInstance = new SignalMastInstance(materialManager);
-        update(); 
+        rebuild();
     }
 
     @Override
-    public void update() {
-        remove();
+    public void update(float partialTick) {
+        rebuild();
+    }
+
+    private void rebuild() {
+        deleteModels();
         blockEntity.clientVisualChanged = false;
 
         PoseStack ms = new PoseStack();
-        TransformStack msr = TransformStack.of(ms);
-        msr.translate(getInstancePosition());
+        ms.translate(getVisualPosition().getX(), getVisualPosition().getY(), getVisualPosition().getZ());
         
 
 
@@ -65,10 +65,11 @@ public class BaseSignalBlockEntityInstance extends BlockEntityInstance<BaseSigna
             
             Vec3 offset = new Vec3((double)xPos/16, 0, (double)zPos/16);
 
-            mastInstance.init(blockEntity, ms, getInstancePosition(), offset, yRot);
+            mastInstance.init(blockEntity, ms, getVisualPosition(), offset, yRot);
 
-            msr.translate((double)xPos/16, 0.5, (double)zPos/16);
-            msr.rotateY(yRot).unCentre();
+            ms.translate((double)xPos/16, 0.5, (double)zPos/16);
+            ms.mulPose(Axis.YP.rotationDegrees(yRot));
+            ms.translate(-0.5, -0.5, -0.5);
 
         }
         
@@ -95,17 +96,17 @@ public class BaseSignalBlockEntityInstance extends BlockEntityInstance<BaseSigna
             Pair<Double, Double> rotation = blockEntity.getHeadRotation(slot);
             
             if (existingInstance != null) {
-                existingInstance.init(newHeadData, ms, getInstancePosition(), offset, rotation);
+                existingInstance.init(newHeadData, ms, getVisualPosition(), offset, rotation);
             } else {
                 SignalHeadInstance newInstance = createHeadInstance(newHeadData);
                 if (newInstance != null) {
-                    newInstance.init(newHeadData, ms, getInstancePosition(), offset, rotation);
+                    newInstance.init(newHeadData, ms, getVisualPosition(), offset, rotation);
                     headInstances.put(slot, newInstance);
                 }
             }
             ms.popPose();
         }
-        updateLight();
+        updateLight(0);
     }
     
     @Nullable
@@ -121,23 +122,20 @@ public class BaseSignalBlockEntityInstance extends BlockEntityInstance<BaseSigna
     }
 
     @Override
-    public void beginFrame() {
+    public void beginFrame(DynamicVisual.Context context) {
         if (blockEntity.clientVisualChanged) {
-            update();
+            rebuild();
         }
-        BlockPos currentPos = getInstancePosition();
+        BlockPos currentPos = getVisualPosition();
         for (SignalHeadInstance head : headInstances.values()) {
             head.beginFrame(currentPos);
         }
     }
 
     @Override
-    public void updateLight() {
+    public void updateLight(float partialTick) {
         // レベルがnullでないかチェック
         if (blockEntity.getLevel() != null && blockEntity.getBlockPos() != null) {
-            // マストの明るさ更新
-            relight(blockEntity.getBlockPos(), mastModels.stream());
-
             mastInstance.updateLight(blockEntity.getLevel(), blockEntity.getBlockPos());
             
             // ヘッドの明るさ更新
@@ -148,14 +146,19 @@ public class BaseSignalBlockEntityInstance extends BlockEntityInstance<BaseSigna
     }
 
     @Override
-    public void remove() {
-        // マストの削除
-        mastModels.forEach(ModelData::delete);
-        mastModels.clear();
+    protected void _delete() {
+        deleteModels();
+    }
 
+    private void deleteModels() {
         mastInstance.delete();
-        // ヘッドの削除
         headInstances.values().forEach(SignalHeadInstance::remove);
         headInstances.clear();
+    }
+
+    @Override
+    public void collectCrumblingInstances(Consumer<Instance> consumer) {
+        mastInstance.collectCrumblingInstances(consumer);
+        headInstances.values().forEach(head -> head.collectCrumblingInstances(consumer));
     }
 }
