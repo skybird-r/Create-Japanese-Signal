@@ -1,6 +1,5 @@
 package com.skybird.create_jp_signal.block.signal.source;
 
-import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import com.skybird.create_jp_signal.create.train.schedule.OperationType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -24,97 +22,38 @@ public class SignalRepeaterBlockEntity extends BlockEntity implements ISignalInd
 
     public int getRedSignalIndex(int max) {
         Level level = this.getLevel();
-        Set<BlockPos> visited = new HashSet<>();
-        if (level == null || level.isClientSide() || this.isRemoved()) {
+        if (max <= 0 || level == null || level.isClientSide() || this.isRemoved()) {
             return 0;
         }
-    
-        BlockPos previousPos = this.getBlockPos();
-        Direction facing = this.getBlockState().getValue(SignalRepeaterBlock.FACING);
-        BlockPos currentPos = previousPos.relative(facing);
-        visited.add(previousPos);
-        int maxCount = Math.min(16, max);
-    
-        for (int i = 0; i < maxCount; i++) {
 
+        Direction facing = this.getBlockState().getValue(SignalRepeaterBlock.FACING);
+        BlockPos currentPos = this.getBlockPos().relative(facing);
+        Integer previousSourceIndex = null;
+
+        while (true) {
             if (!level.isLoaded(currentPos)) {
-                return i;
+                return 0;
             }
+
             BlockEntity currentEntity = level.getBlockEntity(currentPos);
-    
+
             if (currentEntity instanceof SignalRepeaterBlockEntity repeater) {
-                if (repeater.isAnyRed(visited)) {
-                    return i;
-                }
-                if (currentEntity.getBlockState().getValue(SignalRepeaterBlock.FACING) == facing) {
-                    return i + 1;
-                }
+                return 1 + repeater.getRedSignalIndex(max - 1);
             } else if (currentEntity instanceof ISignalIndexSource source) {
-                if (source.isRed()) {
-                    return i;
-                }
-                
-            } else {
-                // sourceではないblock
-                if (i == 0) {
+                int sourceIndex = source.getRedSignalIndex(max);
+                if (sourceIndex <= 0) {
                     return 0;
-                } else {
-                    BlockEntity previousEntity = level.getBlockEntity(previousPos);
-                    if (previousEntity instanceof SignalRepeaterBlockEntity) {
-                        return i;
-                    } else if (previousEntity instanceof ISignalIndexSource source) {
-                        return i - 1 + source.getRedSignalIndex(max - i + 1);
-                    }
                 }
-            }
-            previousPos = currentPos;
-            currentPos = currentPos.relative(facing);
-        }
-        return maxCount;
-    }
-
-
-
-    public boolean isAnyRed(Set<BlockPos> visited) {
-        Level level = this.getLevel();
-        if (level == null || level.isClientSide() || this.isRemoved()) {
-            return true;
-        }
-        
-    
-        BlockPos startPos = this.getBlockPos();
-        if (!visited.add(startPos)){
-            return true;
-        }
-        Direction facing = this.getBlockState().getValue(SignalRepeaterBlock.FACING);
-        BlockPos currentPos = startPos.relative(facing);
-    
-        for (int i = 0; i < 16; i++) {
-
-            if (!level.isLoaded(currentPos)) {
-                return true;
-            }
-            BlockEntity currentEntity = level.getBlockEntity(currentPos);
-    
-            if (currentEntity instanceof SignalRepeaterBlockEntity repeater) {
-                if (repeater.isAnyRed(visited)) {
-                    return true;
-                }
-                if (currentEntity.getBlockState().getValue(SignalRepeaterBlock.FACING) == facing) {
-                    return false;
-                }
-            } else if (currentEntity instanceof ISignalIndexSource source) {
-                if (source.isRed()) {
-                    return true;
-                }
-                
+                previousSourceIndex = sourceIndex;
             } else {
-                // sourceではないblock
-                break;
+                if (previousSourceIndex == null) {
+                    return 0;
+                }
+                return Math.min(max, previousSourceIndex);
             }
+
             currentPos = currentPos.relative(facing);
         }
-        return false;
     }
     
     @Override
