@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SignalMastBlockEntity extends BlockEntity { 
 
+    public boolean clientVisualChanged = true;
 
     protected int rotation = 0;
     protected int xPos = 8;
@@ -82,4 +83,12 @@ public class SignalMastBlockEntity extends BlockEntity {
 
     @Override public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
     @Override public CompoundTag getUpdateTag() { return this.saveWithoutMetadata(); }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+        if (this.level != null && this.level.isClientSide) {
+            this.clientVisualChanged = true;
+        }
+    }
 }

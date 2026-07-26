@@ -3,8 +3,10 @@ package com.skybird.create_jp_signal.client.blockentityinstance.signal;
 import java.util.function.Consumer;
 
 import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.BaseSignalMastBlockEntity;
@@ -12,7 +14,8 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockEnti
 
 import net.minecraft.world.phys.Vec3;
 
-public class SignalMastBlockEntityInstance extends AbstractBlockEntityVisual<SignalMastBlockEntity> {
+public class SignalMastBlockEntityInstance extends AbstractBlockEntityVisual<SignalMastBlockEntity>
+        implements SimpleDynamicVisual {
     
     private final SignalMastInstance mastInstance;
 
@@ -30,6 +33,7 @@ public class SignalMastBlockEntityInstance extends AbstractBlockEntityVisual<Sig
 
     private void rebuild() {
         mastInstance.delete();
+        blockEntity.clientVisualChanged = false;
 
         int rotation = blockEntity.getRotation();
         int xPos = blockEntity.getXPos();
@@ -44,6 +48,13 @@ public class SignalMastBlockEntityInstance extends AbstractBlockEntityVisual<Sig
         mastInstance.init(blockEntity, ms, getVisualPosition(), offset, yRot);
 
         updateLight(0);
+    }
+
+    @Override
+    public void beginFrame(DynamicVisual.Context context) {
+        if (blockEntity.clientVisualChanged) {
+            rebuild();
+        }
     }
 
     @Override
