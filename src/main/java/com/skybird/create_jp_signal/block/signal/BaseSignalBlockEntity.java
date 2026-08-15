@@ -190,6 +190,13 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
     public abstract Vec3 getHeadOffset(AttachmentSlot slot);
     public abstract Pair<Double, Double> getHeadRotation(AttachmentSlot slot);
     public SignalLayout getLayout() { return this.layout; }
+
+    protected final void setLayoutChanged() {
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
+    }
  
 
     @Override

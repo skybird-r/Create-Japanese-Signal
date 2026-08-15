@@ -44,7 +44,7 @@ public class ColorSingleRoundSignalMastBlockEntity extends BaseSignalMastBlockEn
             this.layout.verticalSteps.put(AttachmentSlot.PRIMARY, 0);
             this.layout.globalHorizontalStep = -2;
         }
-        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        this.setLayoutChanged();
     }
 
     @Override
