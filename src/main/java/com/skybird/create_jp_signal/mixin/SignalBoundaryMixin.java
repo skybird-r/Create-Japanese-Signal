@@ -192,7 +192,7 @@ public abstract class SignalBoundaryMixin implements ISignalBoundary {
 
 			double distanceTraveled = 0;
 			
-			while (distanceTraveled < 4096) {
+			while (distanceTraveled < 8192) {
 				// エッジ
 				double positionOnEdge = 0;
 				// 出発時、edge内の手前の信号をスキップ
