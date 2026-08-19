@@ -18,6 +18,7 @@
     "ChangeThrottleInstructionMixin"
   ],
   "client": [
+    "ScheduleScreenMixin"
   ],
   "server": [
   ],

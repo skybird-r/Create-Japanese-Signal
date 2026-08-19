@@ -1,8 +1,10 @@
 package com.skybird.create_jp_signal.mixin;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -30,9 +32,13 @@ import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.create.mixin_interface.INavigation;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
 import com.skybird.create_jp_signal.create.train.schedule.OperationType;
+import com.skybird.create_jp_signal.create.train.schedule.TrainFlagSavedData;
 import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 
 @Mixin(value = Train.class, remap = false)
@@ -47,6 +53,7 @@ public abstract class TrainMixin implements ITrain {
     @Unique public double signalStoppingDistance;
     @Unique public int tickWaitBeforeDeparture;
     @Unique public long signalDepartureDelayEndTick;
+    @Unique public Set<String> pendingDepartureFlags;
 
     @Inject(
         method = "<init>",
@@ -59,6 +66,7 @@ public abstract class TrainMixin implements ITrain {
         this.signalStoppingDistance = 0;
         this.tickWaitBeforeDeparture = 40;
         this.signalDepartureDelayEndTick = -1;
+        this.pendingDepartureFlags = new HashSet<>();
     }
 
     @Inject(
@@ -66,6 +74,14 @@ public abstract class TrainMixin implements ITrain {
         at = @At("HEAD")
     )
     private void create_jp_signal_onUpdateNavigationTarget(Level level, double distance, CallbackInfo ci) {
+        if (Math.abs(distance) > 1.0e-6 && !this.pendingDepartureFlags.isEmpty()) {
+            TrainFlagSavedData flags = TrainFlagSavedData.get(level);
+            if (flags != null) {
+                long gameTime = TrainFlagSavedData.getSharedGameTime(level);
+                this.pendingDepartureFlags.forEach(name -> flags.setIfAbsent(name, gameTime));
+                this.pendingDepartureFlags.clear();
+            }
+        }
         if (((INavigation)this.navigation).getActiveSpeedLimits() == null) return;
         
         double distanceTraveled = Math.abs(distance);
@@ -148,6 +164,9 @@ public abstract class TrainMixin implements ITrain {
         tag.putDouble("SignalStoppingDistance", signalStoppingDistance);
         tag.putInt("TickWaitBeforeDeparture", tickWaitBeforeDeparture);
         tag.putLong("SignalDepartureDelayEndTick", signalDepartureDelayEndTick);
+        ListTag pendingFlagsTag = new ListTag();
+        pendingDepartureFlags.forEach(name -> pendingFlagsTag.add(StringTag.valueOf(name)));
+        tag.put("PendingDepartureFlags", pendingFlagsTag);
     }
 
     @Inject(
@@ -183,6 +202,13 @@ public abstract class TrainMixin implements ITrain {
         }
         if (tag.contains("SignalDepartureDelayEndTick")) {
             ((ITrain)train).setSignalDepartureDelayEndTick(tag.getLong("SignalDepartureDelayEndTick"));
+        }
+        ListTag pendingFlagsTag = tag.getList("PendingDepartureFlags", Tag.TAG_STRING);
+        for (int i = 0; i < pendingFlagsTag.size(); i++) {
+            String name = TrainFlagSavedData.normalizeName(pendingFlagsTag.getString(i));
+            if (!name.isEmpty()) {
+                ((ITrain) train).getPendingDepartureFlags().add(name);
+            }
         }
     }
 
@@ -224,6 +250,10 @@ public abstract class TrainMixin implements ITrain {
 
     public void setSignalDepartureDelayEndTick(long signalDepartureDelayEndTick) {
         this.signalDepartureDelayEndTick = signalDepartureDelayEndTick;
+    }
+
+    public Set<String> getPendingDepartureFlags() {
+        return this.pendingDepartureFlags;
     }
 
     public Map<UUID, Pair<SignalBoundary, Boolean>> getActiveReservations() {

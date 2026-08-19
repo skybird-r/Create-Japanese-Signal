@@ -385,6 +385,7 @@ public abstract class NavigationMixin implements INavigation {
     private void create_jp_signal_onCancelNavigationEnd(CallbackInfo ci) {
         ((ITrain)train).getActiveReservations().clear();
         ((ITrain)train).setSignalDepartureDelayEndTick(-1);
+        ((ITrain)train).getPendingDepartureFlags().clear();
         this.activeSpeedLimits.clear();
     }
 

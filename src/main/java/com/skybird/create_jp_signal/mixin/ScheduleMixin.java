@@ -21,6 +21,8 @@ import com.skybird.create_jp_signal.create.train.schedule.OperationTypeInstructi
 import com.skybird.create_jp_signal.create.train.schedule.SignalDepartureDelayCondition;
 import com.skybird.create_jp_signal.create.train.schedule.SignalStoppingDistanceInstruction;
 import com.skybird.create_jp_signal.create.train.schedule.TickWaitBeforeDepartureInstruction;
+import com.skybird.create_jp_signal.create.train.schedule.FlagElapsedCondition;
+import com.skybird.create_jp_signal.create.train.schedule.FlagOperationCondition;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -46,5 +48,7 @@ public abstract class ScheduleMixin {
         INSTRUCTION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "signal_stopping_distance"), SignalStoppingDistanceInstruction::new));
         INSTRUCTION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "tick_wait_before_departure"), TickWaitBeforeDepartureInstruction::new));
         CONDITION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "signal_departure_delay"), SignalDepartureDelayCondition::new));
+        CONDITION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "flag_operation"), FlagOperationCondition::new));
+        CONDITION_TYPES.add(Pair.of(new ResourceLocation(JpSignals.MODID, "flag_elapsed"), FlagElapsedCondition::new));
     }
 }

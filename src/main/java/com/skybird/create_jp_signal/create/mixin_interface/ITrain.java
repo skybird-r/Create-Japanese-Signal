@@ -1,6 +1,7 @@
 package com.skybird.create_jp_signal.create.mixin_interface;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.simibubi.create.content.trains.signal.SignalBoundary;
@@ -19,4 +20,5 @@ public interface ITrain {
     public void setTickWaitBeforeDeparture(int tickWaitBeforeDeparture);
     public long getSignalDepartureDelayEndTick();
     public void setSignalDepartureDelayEndTick(long signalDepartureDelayEndTick);
+    public Set<String> getPendingDepartureFlags();
 }
