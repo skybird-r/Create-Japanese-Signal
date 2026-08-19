@@ -16,7 +16,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 @Mixin(value = ScheduleScreen.class, remap = false)
 public abstract class ScheduleScreenMixin {
 
-    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "keyPressed(III)Z", at = @At("HEAD"), cancellable = true, remap = true)
     private void create_jp_signal_keepInventoryKeyInTextBox(
         int keyCode,
         int scanCode,
