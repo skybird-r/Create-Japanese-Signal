@@ -10,10 +10,12 @@ import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance;
+import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.block.signal.PositionLightRepeaterSignalAppearance.RepeaterForm;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,6 +24,24 @@ import net.minecraft.world.phys.Vec3;
 public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
 
     private final List<SignalModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> lightParts = new ArrayList<>();
+
+    private static final List<Vec3> NORMAL_LIGHT_POSITIONS = List.of(
+        lightPosition(0, 0), lightPosition(-5.0 / 16, 0), lightPosition(5.0 / 16, 0),
+        lightPosition(-3.5 / 16, -3.5 / 16), lightPosition(3.5 / 16, 3.5 / 16),
+        lightPosition(0, -5.0 / 16), lightPosition(0, 5.0 / 16),
+        lightPosition(0, 20.0 / 16), lightPosition(0, 15.0 / 16), lightPosition(0, 25.0 / 16)
+    );
+    private static final List<Vec3> TUNNEL_LIGHT_POSITIONS = List.of(
+        lightPosition(0, 0), lightPosition(-3.0 / 16, 0), lightPosition(3.0 / 16, 0),
+        lightPosition(-2.0 / 16, -2.0 / 16), lightPosition(2.0 / 16, 2.0 / 16),
+        lightPosition(0, -3.0 / 16), lightPosition(0, 3.0 / 16),
+        lightPosition(0, 12.0 / 16), lightPosition(0, 9.0 / 16), lightPosition(0, 15.0 / 16)
+    );
+
+    private static Vec3 lightPosition(double x, double y) {
+        return new Vec3(x, y, 0);
+    }
 
     public PositionLightRepeaterSignalInstance(SignalInstanceManager materialManager, SignalHead signalHead, BlockEntity be) {
         super(materialManager, signalHead, be);
@@ -98,15 +118,59 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
 
                 ms.popPose();
             }
+
+            {
+                List<Vec3> positions;
+                float lampScale;
+                double yOffset;
+                switch (appearance.getSignalSize()) {
+                    case NORMAL -> {
+                        positions = NORMAL_LIGHT_POSITIONS;
+                        lampScale = 2.5f;
+                        yOffset = 7.5 / 16;
+                    }
+                    case TUNNEL -> {
+                        positions = TUNNEL_LIGHT_POSITIONS;
+                        lampScale = 1.5f;
+                        yOffset = 3.0 / 16;
+                    }
+                    default -> throw new IllegalStateException("Unexpected signal size: " + appearance.getSignalSize());
+                }
+
+                int lampCount = appearance.getForm() == RepeaterForm.DOUBLE_DISC ? 10 : 7;
+                ms.pushPose();
+                ms.translate(0, yOffset + 0.25 / 16, 1.75 / 16);
+                for (int i = 0; i < lampCount; i++) {
+                    ms.pushPose();
+                    Vec3 position = positions.get(i);
+                    ms.translate(position.x, position.y, position.z);
+                    ms.scale(lampScale, lampScale, lampScale);
+                    SignalModelData light = materialManager.createFullBright(PartialModelRegistry.SIGNAL_LIGHT);
+                    light.setTransform(ms);
+                    lightParts.add(light);
+                    allModels.add(light);
+                    ms.popPose();
+                }
+                ms.popPose();
+            }
             
             ms.popPose();
         }
+        updateLightColors();
     }
 
-    // berにやらせる
     @Override
     public void beginFrame(BlockPos instancePos) {
         super.beginFrame(instancePos);
+        updateLightColors();
+    }
+
+    private void updateLightColors() {
+        long gameTime = Minecraft.getInstance().level.getGameTime();
+        for (int i = 0; i < lightParts.size(); i++) {
+            LampColor color = signalHead.getCurrentAspect().getLampColor(i, gameTime);
+            lightParts.get(i).setColor(color);
+        }
     }
 
     @Override
@@ -119,6 +183,7 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
     public void remove() {
         super.remove();
         staticParts.clear();
+        lightParts.clear();
     }
     
 }

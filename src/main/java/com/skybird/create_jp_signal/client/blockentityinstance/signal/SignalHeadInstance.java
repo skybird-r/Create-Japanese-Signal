@@ -54,6 +54,7 @@ public abstract class SignalHeadInstance {
                 && this.currentRotation.equals(rotation) 
                 && !allModels.isEmpty()) {
             this.signalHead = signalHead;
+            accessory.setSignalHead(signalHead);
             return;
         }
         this.currentOffset = offset;
@@ -87,7 +88,7 @@ public abstract class SignalHeadInstance {
     }
 
     public void beginFrame(BlockPos instancePos) {
-
+        accessory.beginFrame();
     }
 
     public void updateLight(Level level, BlockPos pos) {

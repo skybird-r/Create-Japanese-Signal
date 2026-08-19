@@ -37,6 +37,73 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
         return new Vec3(x, y, 0);
     }
 
+    private static void renderBackendOffLights(PoseStack poseStack, MultiBufferSource bufferSource,
+            BlockEntity blockEntity, PositionLightRepeaterSignalAppearance appearance,
+            SignalAspect.State aspect, SignalAccessory.Route route, int overlay, long gameTime) {
+        List<Vec3> positions;
+        float lampScale;
+        double yOffset;
+        switch (appearance.getSignalSize()) {
+            case NORMAL -> {
+                positions = NORMAL_VEC_LIST;
+                lampScale = 2.5f;
+                yOffset = 7.5 / 16;
+            }
+            case TUNNEL -> {
+                positions = TUNNEL_VEC_LIST;
+                lampScale = 1.5f;
+                yOffset = 3.0 / 16;
+            }
+            default -> throw new IllegalStateException("Unexpected signal size: " + appearance.getSignalSize());
+        }
+
+        ModelBlockRenderer modelRenderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
+        int lampCount = appearance.getForm() == RepeaterForm.DOUBLE_DISC ? 10 : 7;
+
+        poseStack.pushPose();
+        poseStack.translate(0, yOffset + 0.25 / 16, 1.75 / 16);
+        for (int i = 0; i < lampCount; i++) {
+            poseStack.pushPose();
+            Vec3 position = positions.get(i);
+            poseStack.translate(position.x, position.y, position.z);
+            poseStack.scale(lampScale, lampScale, lampScale);
+            LampColor color = aspect.getLampColor(i, gameTime);
+            modelRenderer.renderModel(
+                poseStack.last(),
+                bufferSource.getBuffer(RenderType.cutout()),
+                blockEntity.getBlockState(),
+                ModelRegistry.light,
+                color.getRed(), color.getGreen(), color.getBlue(),
+                LightTexture.FULL_BRIGHT,
+                overlay
+            );
+            poseStack.popPose();
+        }
+        poseStack.popPose();
+
+        if (appearance.getAccessory().getType() == SignalAccessory.Type.FORECAST) {
+            Iterator<LampColor> colors = SignalAccessory.getLampColors(
+                SignalAccessory.Type.FORECAST, route).iterator();
+            poseStack.pushPose();
+            poseStack.translate(-7.0 / 16, (2.25 - 8.0) / 16, 1.75 / 16);
+            poseStack.scale(3.5f, 3.5f, 3.5f);
+            for (int i = 0; i < 2; i++) {
+                LampColor color = colors.next();
+                modelRenderer.renderModel(
+                    poseStack.last(),
+                    bufferSource.getBuffer(RenderType.cutout()),
+                    blockEntity.getBlockState(),
+                    ModelRegistry.light,
+                    color.getRed(), color.getGreen(), color.getBlue(),
+                    LightTexture.FULL_BRIGHT,
+                    overlay
+                );
+                poseStack.translate(14.0 / 16 / 3.5, 0, 0);
+            }
+            poseStack.popPose();
+        }
+    }
+
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay, SignalHead headData, BlockEntity blockEntity , int packedLight, int packedOverlay, Vec3 offset, Pair<Double, Double> rotation) {
         if (!(headData.getAppearance() instanceof PositionLightRepeaterSignalAppearance appearance)) {
@@ -46,6 +113,13 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
         SignalAspect.State currentAspect = headData.getCurrentAspect();
         long gameTime = Minecraft.getInstance().level.getGameTime();
 
+        // The visual owns all light geometry while Flywheel is active. Keep the
+        // renderer below only as the backend-off fallback.
+        if (VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
+            return;
+        }
+
+        /* Flywheel 0.6 implementation retained below for reference.
         if (VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
             PoseStack ms = poseStack;
             TransformStack msr = TransformStack.of(ms);
@@ -224,6 +298,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
             ms.popPose();
             return;
         }
+        */
 
         // --- 描画処理 ---
 
@@ -231,11 +306,12 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
         
         {
             poseStack.pushPose();
-            ModelBlockRenderer modelRenderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
             BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
             
             poseStack.mulPose(Axis.YP.rotationDegrees((float)(double)rotation.getFirst()));
             poseStack.translate(offset.x, offset.y, offset.z);
+            renderBackendOffLights(poseStack, bufferSource, blockEntity, appearance,
+                currentAspect, headData.getCurrentRoute(), overlay, gameTime);
             double x = offset.x, z = offset.z;
             double distance = Math.sqrt(x * x + z * z);
             if (appearance.getSignalSize() == SignalSize.NORMAL) {

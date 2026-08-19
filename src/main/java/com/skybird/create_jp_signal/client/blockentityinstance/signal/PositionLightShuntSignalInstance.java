@@ -9,9 +9,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.PositionLightShuntSignalAppearance;
+import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,6 +22,14 @@ import net.minecraft.world.phys.Vec3;
 public class PositionLightShuntSignalInstance extends SignalHeadInstance {
 
     private final List<SignalModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> lightParts = new ArrayList<>();
+
+    private static final List<Vec3> LIGHT_POSITIONS = List.of(
+        new Vec3(0, 0, 0),
+        new Vec3(5.0 / 16, 0, 0),
+        new Vec3(3.5 / 16, 3.5 / 16, 0),
+        new Vec3(0, 5.0 / 16, 0)
+    );
 
     public PositionLightShuntSignalInstance(SignalInstanceManager materialManager, SignalHead signalHead, BlockEntity be) {
         super(materialManager, signalHead, be);
@@ -62,13 +72,44 @@ public class PositionLightShuntSignalInstance extends SignalHeadInstance {
             
                 ms.popPose();
             }
+
+            {
+                int lampCount = switch (appearance.getType()) {
+                    case TWO_WHITE, TWO_RED -> 3;
+                    case THREE_WHITE, THREE_RED -> 4;
+                };
+                ms.pushPose();
+                ms.translate(-2.5 / 16, 3.0 / 16, 1.75 / 16);
+                for (int i = 0; i < lampCount; i++) {
+                    ms.pushPose();
+                    Vec3 position = LIGHT_POSITIONS.get(i);
+                    ms.translate(position.x, position.y, position.z);
+                    ms.scale(2.5f, 2.5f, 2.5f);
+                    SignalModelData light = materialManager.createFullBright(PartialModelRegistry.SIGNAL_LIGHT);
+                    light.setTransform(ms);
+                    lightParts.add(light);
+                    allModels.add(light);
+                    ms.popPose();
+                }
+                ms.popPose();
+            }
             ms.popPose();
         }
+        updateLightColors();
     }
 
     @Override
     public void beginFrame(BlockPos instancePos) {
         super.beginFrame(instancePos);
+        updateLightColors();
+    }
+
+    private void updateLightColors() {
+        long gameTime = Minecraft.getInstance().level.getGameTime();
+        for (int i = 0; i < lightParts.size(); i++) {
+            LampColor color = signalHead.getCurrentAspect().getLampColor(i, gameTime);
+            lightParts.get(i).setColor(color);
+        }
     }
 
     @Override
@@ -81,6 +122,7 @@ public class PositionLightShuntSignalInstance extends SignalHeadInstance {
     public void remove() {
         super.remove();
         staticParts.clear();
+        lightParts.clear();
     }
     
 }

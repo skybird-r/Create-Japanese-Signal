@@ -49,9 +49,6 @@ public class PositionLightShuntSignalRenderer implements ISignalHeadRenderer{
         long gameTime = Minecraft.getInstance().level.getGameTime();
 
         if (VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
-            FlywheelSignalLightRenderer.renderShunt(
-                poseStack, bufferSource, overlay, headData, blockEntity, offset, rotation, appearance
-            );
             return;
         }
 

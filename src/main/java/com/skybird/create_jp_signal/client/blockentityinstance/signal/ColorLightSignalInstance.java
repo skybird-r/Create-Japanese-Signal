@@ -9,9 +9,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.ColorLightSignalAppearance;
+import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 public class ColorLightSignalInstance extends SignalHeadInstance {
 
     private final List<SignalModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> lightParts = new ArrayList<>();
 
     public ColorLightSignalInstance(SignalInstanceManager materialManager, SignalHead headData, BlockEntity be) {
         super(materialManager, headData, be);
@@ -114,15 +117,43 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
                 
                 ms.popPose();
             }
+
+            {
+                ms.pushPose();
+                ms.translate(0, (boxOffset + 0.25) / 16, 1.75 / 16);
+                ms.scale(lampHeight - 0.5f, lampHeight - 0.5f, lampHeight - 0.5f);
+                int lampCount = appearance.getHeadType().getLampCount() + (appearance.isRepeater() ? 1 : 0);
+                for (int i = 0; i < lampCount; i++) {
+                    SignalModelData light = materialManager.createFullBright(PartialModelRegistry.SIGNAL_LIGHT);
+                    light.setTransform(ms);
+                    lightParts.add(light);
+                    allModels.add(light);
+                    ms.translate(0, lampHeight / 16 / (lampHeight - 0.5), 0);
+                }
+                ms.popPose();
+            }
             ms.popPose();
         }
-        
+        updateLightColors();
     }
 
-    // berにやらせる
     @Override
     public void beginFrame(BlockPos instancePos) {
         super.beginFrame(instancePos);
+        updateLightColors();
+    }
+
+    private void updateLightColors() {
+        if (!(signalHead.getAppearance() instanceof ColorLightSignalAppearance appearance)) {
+            return;
+        }
+        long gameTime = Minecraft.getInstance().level.getGameTime();
+        for (int i = 0; i < lightParts.size(); i++) {
+            LampColor color = appearance.isRepeater()
+                ? i == 0 ? LampColor.PURPLE : signalHead.getCurrentAspect().getLampColor(i - 1, gameTime)
+                : signalHead.getCurrentAspect().getLampColor(i, gameTime);
+            lightParts.get(i).setColor(color);
+        }
     }
 
     @Override
@@ -135,5 +166,6 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
     public void remove() {
         super.remove();
         staticParts.clear();
+        lightParts.clear();
     }
 }

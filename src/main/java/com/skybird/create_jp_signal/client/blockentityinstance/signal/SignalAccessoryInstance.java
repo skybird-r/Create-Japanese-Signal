@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.block.signal.SignalAccessory;
+import com.skybird.create_jp_signal.block.signal.SignalAspect.LampColor;
 import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
@@ -20,6 +21,7 @@ import net.minecraft.world.phys.Vec3;
 public class SignalAccessoryInstance {
 
     private final List<SignalModelData> staticParts = new ArrayList<>();
+    private final List<SignalModelData> lightParts = new ArrayList<>();
     private final SignalInstanceManager materialManager;
     private SignalHead signalHead;
 
@@ -95,7 +97,88 @@ public class SignalAccessoryInstance {
                     mastCouplerPositions.add(new Vec3(offset.x, -10.0/16 + offset.y, offset.z).yRot((float)(double)rotation.getFirst()));
                 }
             }
+            initLights(ms, type);
             ms.popPose();
+        }
+        beginFrame();
+    }
+
+    private void initLights(PoseStack ms, SignalAccessory.Type type) {
+        switch (type) {
+            case FORECAST -> {
+                ms.pushPose();
+                ms.translate(-7.0 / 16, (2.25 - 8.0) / 16, 1.75 / 16);
+                ms.scale(3.5f, 3.5f, 3.5f);
+                for (int i = 0; i < 2; i++) {
+                    addLight(ms);
+                    ms.translate(14.0 / 16 / 3.5, 0, 0);
+                }
+                ms.popPose();
+            }
+            case INDICATOR_HOME -> {
+                ms.pushPose();
+                ms.translate(-5.0 / 16, 0.75 / 16 - 1, 1.75 / 16);
+                ms.scale(2.5f, 2.5f, 2.5f);
+                for (int row = 0; row < 3; row++) {
+                    for (int column = 0; column < 3; column++) {
+                        addLight(ms);
+                        ms.translate(5.0 / 16 / 2.5, 0, 0);
+                    }
+                    ms.translate(-15.0 / 16 / 2.5, 5.0 / 16 / 2.5, 0);
+                }
+                ms.popPose();
+            }
+            case INDICATOR_DEPARTURE -> {
+                ms.pushPose();
+                ms.translate(0, (0.75 - 11.0) / 16, 1.75 / 16);
+                ms.scale(2.5f, 2.5f, 2.5f);
+                addLight(ms);
+                ms.translate(-5.0 / 16 / 2.5, 5.0 / 16 / 2.5, 0);
+                for (int i = 0; i < 3; i++) {
+                    addLight(ms);
+                    ms.translate(5.0 / 16 / 2.5, 0, 0);
+                }
+                ms.popPose();
+            }
+            case INDICATOR_SHUNT -> {
+                ms.pushPose();
+                ms.translate(0, (0.5 - 8.0) / 16, 1.75 / 16);
+                ms.pushPose();
+                ms.translate(-3.75 / 16, 0, 0);
+                ms.scale(1.5f, 3.0f, 1.0f);
+                for (int i = 0; i < 3; i++) {
+                    addLight(ms);
+                    ms.translate(3.75 / 16 / 1.5, 0, 0);
+                }
+                ms.popPose();
+
+                ms.pushPose();
+                ms.translate(0, 3.5 / 16, 0);
+                ms.scale(9.0f, 1.5f, 1.0f);
+                addLight(ms);
+                ms.popPose();
+                ms.popPose();
+            }
+            case NONE -> {
+            }
+        }
+    }
+
+    private void addLight(PoseStack ms) {
+        SignalModelData light = materialManager.createFullBright(PartialModelRegistry.SIGNAL_LIGHT);
+        light.setTransform(ms);
+        lightParts.add(light);
+    }
+
+    public void setSignalHead(SignalHead signalHead) {
+        this.signalHead = signalHead;
+    }
+
+    public void beginFrame() {
+        List<LampColor> colors = SignalAccessory.getLampColors(
+            signalHead.getAppearance().getAccessory().getType(), signalHead.getCurrentRoute());
+        for (int i = 0; i < lightParts.size(); i++) {
+            lightParts.get(i).setColor(i < colors.size() ? colors.get(i) : LampColor.OFF);
         }
     }
 
@@ -106,11 +189,14 @@ public class SignalAccessoryInstance {
     public void delete() {
         staticParts.forEach(SignalModelData::delete);
         staticParts.clear();
+        lightParts.forEach(SignalModelData::delete);
+        lightParts.clear();
         mastCouplerPositions.clear();
     }
 
     public void collectCrumblingInstances(Consumer<Instance> consumer) {
         staticParts.forEach(model -> consumer.accept(model.instance()));
+        lightParts.forEach(model -> consumer.accept(model.instance()));
     }
 
     public List<Vec3> getMastCouplerPositions() {
