@@ -72,8 +72,8 @@ public class SignalMastBlockItem extends BlockItem {
                     }
                 }
 
-                // setPlacedByにあった計算式をそのまま持ってくる
-                int rotation = (((int)Math.round(player.getYRot() / 45.0)) & 7) * 2;
+                // 22.5度ごとの16方向にスナップする
+                int rotation = ((int)Math.round(player.getYRot() / 22.5)) & 15;
 
                 // 4. BlockEntityにデータを書き込む (RotationはsetPlacedByで設定されるので不要)
                 mastBE.setPlacementData(rotation, xPos, zPos); // rotationは後で上書きされる
