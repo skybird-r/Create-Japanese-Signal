@@ -9,7 +9,9 @@ import com.skybird.create_jp_signal.client.blockentityinstance.signal.SignalMast
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignalBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.track.SpeedLimitRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.track.PenaltyRenderer;
 import com.skybird.create_jp_signal.client.gui.ControlBoxScreen;
+import com.skybird.create_jp_signal.client.gui.PenaltyScreen;
 import com.skybird.create_jp_signal.client.gui.SignalLinkScreen;
 import com.skybird.create_jp_signal.client.gui.SpeedLimitScreen;
 
@@ -99,10 +101,15 @@ public class ClientSetup {
                 AllBlockEntities.SPEED_LIMIT_ENTITY.get(), 
                 SpeedLimitRenderer::new
             );
+            BlockEntityRenderers.register(
+                AllBlockEntities.PENALTY_ENTITY.get(),
+                PenaltyRenderer::new
+            );
 
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);
             MenuScreens.register(AllMenuTypes.SPEED_LIMIT_MENU.get(), SpeedLimitScreen::new);
+            MenuScreens.register(AllMenuTypes.PENALTY_MENU.get(), PenaltyScreen::new);
         });
     }
 
@@ -136,6 +143,7 @@ public class ClientSetup {
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/mast_pipe"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/signal_joint"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/track_overlay/speed_limit_marker"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/track_overlay/penalty_marker"));
 
 
         

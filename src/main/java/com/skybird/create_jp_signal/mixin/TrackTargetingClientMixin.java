@@ -44,7 +44,7 @@ public abstract class TrackTargetingClientMixin {
         cancellable = true
     )
     private static void create_jp_signal_onRender(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, CallbackInfo ci) {
-        if (lastType == AllEdgePointTypes.SPEED_LIMIT) {
+        if (lastType == AllEdgePointTypes.SPEED_LIMIT || lastType == AllEdgePointTypes.PENALTY) {
             Minecraft mc = Minecraft.getInstance();
             BlockPos pos = lastHovered;
             Level level = mc.level;
@@ -61,7 +61,9 @@ public abstract class TrackTargetingClientMixin {
                 
                 CustomOverlayRenderer.renderOverlay(mc.level, pos, direction, lastHoveredBezierSegment, ms, buffer, light,
                     OverlayTexture.NO_OVERLAY, 
-                    PartialModelRegistry.SPEED_LIMIT_MARKER,
+                    lastType == AllEdgePointTypes.PENALTY
+                        ? PartialModelRegistry.PENALTY_MARKER
+                        : PartialModelRegistry.SPEED_LIMIT_MARKER,
                     1 + 1 / 16f);
                 
                 ms.popPose();

@@ -10,6 +10,7 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.RepeaterSingleTunne
 import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlockEntity;
+import com.skybird.create_jp_signal.block.track.PenaltyBlockEntity;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -79,5 +80,10 @@ public class AllBlockEntities {
     public static final RegistryObject<BlockEntityType<SpeedLimitBlockEntity>> SPEED_LIMIT_ENTITY =
         BLOCK_ENTITIES.register("speed_limit_entity", () -> 
             BlockEntityType.Builder.<SpeedLimitBlockEntity>of(SpeedLimitBlockEntity::new, AllBlocks.SPEED_LIMIT.get())
+                .build(null));
+
+    public static final RegistryObject<BlockEntityType<PenaltyBlockEntity>> PENALTY_ENTITY =
+        BLOCK_ENTITIES.register("penalty_entity", () ->
+            BlockEntityType.Builder.<PenaltyBlockEntity>of(PenaltyBlockEntity::new, AllBlocks.PENALTY.get())
                 .build(null));
 }

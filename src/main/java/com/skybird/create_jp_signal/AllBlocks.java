@@ -11,6 +11,8 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMa
 import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockItem;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlock;
+import com.skybird.create_jp_signal.block.track.PenaltyBlock;
+import com.skybird.create_jp_signal.block.track.PenaltyBlockItem;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlock;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlockItem;
 
@@ -85,6 +87,11 @@ public class AllBlocks {
         () -> new SpeedLimitBlock(BlockBehaviour.Properties.of()));
     public static final RegistryObject<Item> SPEED_LIMIT_ITEM = ITEMS.register("speed_limit",
         () -> new SpeedLimitBlockItem(SPEED_LIMIT.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> PENALTY = BLOCKS.register("penalty",
+        () -> new PenaltyBlock(BlockBehaviour.Properties.of()));
+    public static final RegistryObject<Item> PENALTY_ITEM = ITEMS.register("penalty",
+        () -> new PenaltyBlockItem(PENALTY.get(), new Item.Properties()));
 
         
 }

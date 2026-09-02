@@ -12,11 +12,11 @@ import com.skybird.create_jp_signal.JpSignals;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.util.Mth;
 
 public class SpeedLimitBoundary extends SingleBlockEntityEdgePoint {
+
+    public static final double MAX_LIMIT_DISTANCE = 2000.0;
 
     private double speedLimit = 200.0; // km/h
     private double limitDistance = 0.0; // blocks
@@ -27,7 +27,9 @@ public class SpeedLimitBoundary extends SingleBlockEntityEdgePoint {
     public double getSpeedLimit() { return speedLimit; }
     public double getLimitDistance() { return limitDistance; }
     public void setSpeedLimit(double speedLimit) { this.speedLimit = speedLimit; }
-    public void setLimitDistance(double limitDistance) { this.limitDistance = limitDistance; }
+    public void setLimitDistance(double limitDistance) {
+        this.limitDistance = Mth.clamp(limitDistance, 0, MAX_LIMIT_DISTANCE);
+    }
 
     public boolean isBoundTo(BlockPos pos) {
         if (pos == null)
@@ -50,6 +52,6 @@ public class SpeedLimitBoundary extends SingleBlockEntityEdgePoint {
         super.read(nbt, migration, dimensions); 
         
         this.speedLimit = nbt.getDouble("SpeedLimit");
-        this.limitDistance = nbt.getDouble("LimitDistance");
+        setLimitDistance(nbt.getDouble("LimitDistance"));
     }
 }

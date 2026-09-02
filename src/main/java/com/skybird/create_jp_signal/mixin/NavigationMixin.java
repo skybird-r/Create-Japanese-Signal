@@ -21,6 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Navigation;
 import com.simibubi.create.content.trains.entity.Train;
@@ -33,6 +37,7 @@ import net.createmod.catnip.data.Pair;
 import com.skybird.create_jp_signal.create.mixin_interface.INavigation;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalBoundary;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
+import com.skybird.create_jp_signal.create.train.track.PenaltyBoundary;
 import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 
 import net.minecraft.util.Mth;
@@ -61,11 +66,66 @@ public abstract class NavigationMixin implements INavigation {
         return activeSpeedLimits;
     }
 
+    @WrapOperation(
+        method = "search(DDZLjava/util/ArrayList;Lcom/simibubi/create/content/trains/entity/Navigation$StationTest;)V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lcom/simibubi/create/content/trains/signal/TrackEdgePoint;canNavigateVia(Lcom/simibubi/create/content/trains/graph/TrackNode;)Z",
+            ordinal = 0
+        )
+    )
+    private boolean create_jp_signal_addInitialEdgePenalty(
+        TrackEdgePoint point,
+        TrackNode destinationNode,
+        Operation<Boolean> original,
+        @Local(index = 22) LocalIntRef initialPenalty
+    ) {
+        boolean canNavigate = original.call(point, destinationNode);
+        if (canNavigate)
+            create_jp_signal_addPenalty(point, destinationNode, initialPenalty);
+        return canNavigate;
+    }
+
+    @WrapOperation(
+        method = "search(DDZLjava/util/ArrayList;Lcom/simibubi/create/content/trains/entity/Navigation$StationTest;)V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lcom/simibubi/create/content/trains/signal/TrackEdgePoint;canNavigateVia(Lcom/simibubi/create/content/trains/graph/TrackNode;)Z",
+            ordinal = 1
+        )
+    )
+    private boolean create_jp_signal_addConnectedEdgePenalty(
+        TrackEdgePoint point,
+        TrackNode destinationNode,
+        Operation<Boolean> original,
+        @Local(index = 37) LocalIntRef newPenalty
+    ) {
+        boolean canNavigate = original.call(point, destinationNode);
+        if (canNavigate)
+            create_jp_signal_addPenalty(point, destinationNode, newPenalty);
+        return canNavigate;
+    }
+
+    @Unique
+    private static void create_jp_signal_addPenalty(TrackEdgePoint point, TrackNode destinationNode,
+        LocalIntRef accumulatedPenalty) {
+        if (!(point instanceof PenaltyBoundary penalty) || !penalty.isPrimary(destinationNode))
+            return;
+        long sum = (long) accumulatedPenalty.get() + penalty.getPenalty();
+        accumulatedPenalty.set((int) Math.min(Integer.MAX_VALUE, sum));
+    }
+
     // preDepartureLookAhead
 
     @ModifyConstant(method = "tick", constant = @Constant(doubleValue = 4.5))
     private double create_jp_signal_changePreDepartureLookAhead(double originalValue) {
         return 64.0;
+    }
+
+    @ModifyConstant(method = "tick", constant = @Constant(doubleValue = 0.0625D, ordinal = 0))
+    private double create_jp_signal_changeSignalReachedDistance(double originalValue) {
+        double signalStoppingDistance = ((ITrain) this.train).getSignalStoppingDistance();
+        return originalValue + signalStoppingDistance;
     }
 
     @Inject(

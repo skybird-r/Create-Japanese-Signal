@@ -58,7 +58,7 @@ public class SpeedLimitScreen extends AbstractContainerScreen<SpeedLimitMenu> {
         speedBuilder.addScrollInput(0, 160, (si, l) -> {
             si.withRange(15, 501)
                 .withStepFunction(c -> c.shift ? 25 : 5)
-                .titled(Component.literal("制限速度"));
+                .titled(Component.translatable("create_jp_signal.gui.speed_limit.speed"));
             l.withSuffix(" km/h");
         }, "Speed");
 
@@ -66,9 +66,9 @@ public class SpeedLimitScreen extends AbstractContainerScreen<SpeedLimitMenu> {
         ModularGuiLineBuilder distanceBuilder = new ModularGuiLineBuilder(this.font, distanceLine, x + 20, y + 50);
 
         distanceBuilder.addScrollInput(0, 160, (si, l) -> {
-            si.withRange(0, 501)
+            si.withRange(0, (int) SpeedLimitBoundary.MAX_LIMIT_DISTANCE + 1)
                 .withStepFunction(c -> c.shift ? 50 : 5)
-                .titled(Component.literal("制限距離"));
+                .titled(Component.translatable("create_jp_signal.gui.speed_limit.distance"));
             l.withSuffix(" m");
         }, "Distance");
 

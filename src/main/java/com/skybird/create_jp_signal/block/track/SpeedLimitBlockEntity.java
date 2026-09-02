@@ -15,6 +15,7 @@ import com.skybird.create_jp_signal.menu.SpeedLimitMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -92,7 +93,7 @@ public class SpeedLimitBlockEntity extends SmartBlockEntity implements MenuProvi
         super.read(tag, clientPacket);
         shouldRenderOverlay = tag.getBoolean("RenderOverlay");
         speedLimit = tag.getDouble("SpeedLimit");
-        limitDistance = tag.getDouble("LimitDistance");
+        limitDistance = Mth.clamp(tag.getDouble("LimitDistance"), 0, SpeedLimitBoundary.MAX_LIMIT_DISTANCE);
         
         // 念のため
         if (!clientPacket && edgePoint != null) {
@@ -109,7 +110,7 @@ public class SpeedLimitBlockEntity extends SmartBlockEntity implements MenuProvi
     
     @Override
     public Component getDisplayName() {
-        return Component.literal("Speed Limit Configuration");
+        return Component.translatable("create_jp_signal.gui.speed_limit.title");
     }
 
     @Nullable
@@ -122,12 +123,12 @@ public class SpeedLimitBlockEntity extends SmartBlockEntity implements MenuProvi
         if (this.edgePoint == null) return;
         
         this.speedLimit = speed;
-        this.limitDistance = distance;
+        this.limitDistance = Mth.clamp(distance, 0, SpeedLimitBoundary.MAX_LIMIT_DISTANCE);
 
         SpeedLimitBoundary boundary = this.edgePoint.getEdgePoint();
         if (boundary != null) {
             boundary.setSpeedLimit(speed);
-            boundary.setLimitDistance(distance);
+            boundary.setLimitDistance(this.limitDistance);
         }
         
         setChanged();

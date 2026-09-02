@@ -53,6 +53,11 @@ public class PacketHandler {
             SetSpeedLimitPacket::decode, 
             SetSpeedLimitPacket::handle
         );
+        CHANNEL.registerMessage(id++, SetPenaltyPacket.class,
+            SetPenaltyPacket::encode,
+            SetPenaltyPacket::decode,
+            SetPenaltyPacket::handle
+        );
     }
 
     public static void sendToServer(Object msg) {
