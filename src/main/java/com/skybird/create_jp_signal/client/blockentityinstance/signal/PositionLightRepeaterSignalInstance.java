@@ -168,7 +168,7 @@ public class PositionLightRepeaterSignalInstance extends SignalHeadInstance {
     private void updateLightColors() {
         long gameTime = Minecraft.getInstance().level.getGameTime();
         for (int i = 0; i < lightParts.size(); i++) {
-            LampColor color = signalHead.getCurrentAspect().getLampColor(i, gameTime);
+            LampColor color = signalHead.getDisplayedLampColor(i, gameTime);
             lightParts.get(i).setColor(color);
         }
     }

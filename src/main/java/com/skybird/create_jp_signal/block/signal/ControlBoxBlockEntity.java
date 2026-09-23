@@ -57,6 +57,7 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
         SignalAccessory.Route finalRoute = SignalAccessory.Route.NONE;
         double finalReserverMaxSpeed = 0.0;
         boolean mappingsChanged = false;
+        boolean allSourcesAvailable = true;
 
         boolean forShunt = (be.appearance instanceof PositionLightShuntSignalAppearance);
 
@@ -64,10 +65,14 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, AspectMapping> entry = iterator.next();
             BlockPos sourcePos = entry.getKey();
-            if (!level.isLoaded(sourcePos)) continue;
+            if (!level.isLoaded(sourcePos)) {
+                allSourcesAvailable = false;
+                continue;
+            }
             if (!(level.getBlockEntity(sourcePos) instanceof ISignalIndexSource source)) {
                 iterator.remove();
                 mappingsChanged = true;
+                allSourcesAvailable = false;
                 continue;
             }
             int currentIndex;
@@ -101,7 +106,9 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
 
-        if (finalAspect != null) signal.updateAspect(be.linkedHeadId, finalAspect, finalRoute);
+        if (finalAspect != null && allSourcesAvailable) {
+            signal.updateAspectFromController(be.linkedHeadId, finalAspect, finalRoute, level.getGameTime());
+        }
         if (mappingsChanged) {
             be.setChanged();
             level.sendBlockUpdated(pos, state, state, 3);
@@ -295,5 +302,3 @@ public class ControlBoxBlockEntity extends BlockEntity implements MenuProvider {
     public UUID getLinkedHeadId() { return linkedHeadId; }
     public BlockPos getLinkedSignalPos() { return linkedSignalPos; }
 }
-
-

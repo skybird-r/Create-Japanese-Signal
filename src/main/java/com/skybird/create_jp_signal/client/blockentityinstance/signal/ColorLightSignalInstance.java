@@ -150,8 +150,10 @@ public class ColorLightSignalInstance extends SignalHeadInstance {
         long gameTime = Minecraft.getInstance().level.getGameTime();
         for (int i = 0; i < lightParts.size(); i++) {
             LampColor color = appearance.isRepeater()
-                ? i == 0 ? LampColor.PURPLE : signalHead.getCurrentAspect().getLampColor(i - 1, gameTime)
-                : signalHead.getCurrentAspect().getLampColor(i, gameTime);
+                ? i == 0
+                    ? signalHead.filterDisplayedLampColor(LampColor.PURPLE, gameTime)
+                    : signalHead.getDisplayedLampColor(i - 1, gameTime)
+                : signalHead.getDisplayedLampColor(i, gameTime);
             lightParts.get(i).setColor(color);
         }
     }

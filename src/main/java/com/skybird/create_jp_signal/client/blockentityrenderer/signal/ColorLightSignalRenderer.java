@@ -329,10 +329,10 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
                             
                             SignalAspect.LampColor color;
                             if (appearance.isRepeater() && i == 0) {
-                                color = SignalAspect.LampColor.PURPLE;
+                                color = headData.filterDisplayedLampColor(SignalAspect.LampColor.PURPLE, gameTime);
                             } else {
                                 int aspectIndex = appearance.isRepeater() ? i - 1 : i;
-                                color = currentAspect.getLampColor(aspectIndex);
+                                color = headData.getDisplayedLampColor(aspectIndex, gameTime);
                             }
                             if (!currentAspect.isLit(gameTime)) color = LampColor.OFF;
                             
@@ -374,10 +374,10 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
                         
                         SignalAspect.LampColor color;
                         if (appearance.isRepeater() && i == 0) {
-                            color = SignalAspect.LampColor.PURPLE;
+                            color = headData.filterDisplayedLampColor(SignalAspect.LampColor.PURPLE, gameTime);
                         } else {
                             int aspectIndex = appearance.isRepeater() ? i - 1 : i;
-                            color = currentAspect.getLampColor(aspectIndex);
+                            color = headData.getDisplayedLampColor(aspectIndex, gameTime);
                         }
                         if (!currentAspect.isLit(gameTime)) color = LampColor.OFF;
                         
@@ -420,7 +420,7 @@ public class ColorLightSignalRenderer implements ISignalHeadRenderer {
             {
                 poseStack.pushPose();
                 SignalAccessory.Type accessory = appearance.getAccessory().getType();
-                SignalAccessory.Route route = headData.getCurrentRoute();
+                SignalAccessory.Route route = headData.getDisplayedRoute(gameTime);
 
                 // 場内信号用進路表示器
                 if (accessory == SignalAccessory.Type.INDICATOR_HOME) {

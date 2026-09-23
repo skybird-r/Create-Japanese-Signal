@@ -15,6 +15,7 @@ import com.skybird.create_jp_signal.block.signal.SignalHead;
 import com.skybird.create_jp_signal.client.PartialModelRegistry;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -175,8 +176,10 @@ public class SignalAccessoryInstance {
     }
 
     public void beginFrame() {
+        Level level = Minecraft.getInstance().level;
+        long gameTime = level == null ? Long.MIN_VALUE : level.getGameTime();
         List<LampColor> colors = SignalAccessory.getLampColors(
-            signalHead.getAppearance().getAccessory().getType(), signalHead.getCurrentRoute());
+            signalHead.getAppearance().getAccessory().getType(), signalHead.getDisplayedRoute(gameTime));
         for (int i = 0; i < lightParts.size(); i++) {
             lightParts.get(i).setColor(i < colors.size() ? colors.get(i) : LampColor.OFF);
         }

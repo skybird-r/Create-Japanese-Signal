@@ -23,11 +23,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -132,6 +134,32 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
                 }
                 return;
             }
+        }
+    }
+
+    public void updateAspectFromController(UUID headId, SignalAspect.State newAspect,
+            SignalAccessory.Route newRoute, long updateTick) {
+        for (SignalHead head : signalHeads.values()) {
+            if (!head.getUniqueId().equals(headId)) continue;
+
+            boolean aspectChanged = head.getCurrentAspect() != newAspect
+                || head.getCurrentRoute() != newRoute;
+            boolean wasStale = !head.isControlUpdateFresh(updateTick);
+
+            head.setCurrentAspect(newAspect);
+            head.setCurrentRoute(newRoute);
+            head.setLastControlUpdateTick(updateTick);
+
+            boolean heartbeatDue = head.isControlHeartbeatDue(updateTick);
+            if (aspectChanged) this.setChanged();
+
+            boolean signalChunkTicking = level instanceof ServerLevel serverLevel
+                && serverLevel.shouldTickBlocksAt(ChunkPos.asLong(getBlockPos()));
+            if (signalChunkTicking && (aspectChanged || wasStale || heartbeatDue)) {
+                head.markControlSynced(updateTick);
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+            }
+            return;
         }
     }
 

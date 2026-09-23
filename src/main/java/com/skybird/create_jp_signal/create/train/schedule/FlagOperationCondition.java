@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.trains.schedule.condition.ScheduledDelay;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FlagOperationCondition extends ScheduleWaitCondition {
+public class FlagOperationCondition extends ScheduledDelay {
 
     public enum Operation {
         SET_NOW("set_now"),
@@ -56,6 +56,11 @@ public class FlagOperationCondition extends ScheduleWaitCondition {
 
     public Operation getOperation() {
         return enumData("Operation", Operation.class);
+    }
+
+    @Override
+    public int totalWaitTicks() {
+        return 0;
     }
 
     @Override

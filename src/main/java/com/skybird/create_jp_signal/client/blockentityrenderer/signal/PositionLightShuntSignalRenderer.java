@@ -281,7 +281,7 @@ public class PositionLightShuntSignalRenderer implements ISignalHeadRenderer{
                 double xList[] = {0, 5.0/16, 3.5/16, 0};
                 double yList[] = {0, 0, 3.5/16, 5.0/16};
                 for (int i = 0; i < totalLampCount; i++) {
-                    LampColor color = currentAspect.getLampColor(i);
+                    LampColor color = headData.getDisplayedLampColor(i, gameTime);
                     {
                         poseStack.pushPose();
 
@@ -321,7 +321,7 @@ public class PositionLightShuntSignalRenderer implements ISignalHeadRenderer{
             {
                 poseStack.pushPose();
                 SignalAccessory.Type accessory = appearance.getAccessory().getType();
-                SignalAccessory.Route route = headData.getCurrentRoute();
+                SignalAccessory.Route route = headData.getDisplayedRoute(gameTime);
 
                 // 進路予告機
                 if (accessory == SignalAccessory.Type.INDICATOR_SHUNT) {

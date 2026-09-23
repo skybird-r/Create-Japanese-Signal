@@ -11,11 +11,17 @@ import net.minecraft.nbt.NbtUtils;
 
 public class SignalHead {
 
+    public static final long CONTROL_HEARTBEAT_INTERVAL_TICKS = 40;
+    public static final long CONTROL_UPDATE_TIMEOUT_TICKS = 100;
+    private static final long CONTROL_UPDATE_CLOCK_TOLERANCE_TICKS = 20;
+
     private final UUID uniqueId;
     private ISignalAppearance appearance;
     private SignalAspect.State currentAspect;
     private SignalAccessory.Route currentRoute;
     private BlockPos controllerPos;
+    private long lastControlUpdateTick = Long.MIN_VALUE;
+    private transient long lastControlSyncTick = Long.MIN_VALUE;
 
     // --- コンストラクタを修正 ---
     public SignalHead(UUID id, ISignalAppearance appearance, @Nullable BlockPos controllerPos) {
@@ -42,6 +48,41 @@ public class SignalHead {
     public SignalAccessory.Route getCurrentRoute() { return currentRoute; }
     public void setCurrentAspect(SignalAspect.State newAspect) { this.currentAspect = newAspect; }
     public void setCurrentRoute(SignalAccessory.Route currentRoute) { this.currentRoute = currentRoute; }
+
+    public long getLastControlUpdateTick() { return lastControlUpdateTick; }
+
+    public void setLastControlUpdateTick(long lastControlUpdateTick) {
+        this.lastControlUpdateTick = lastControlUpdateTick;
+    }
+
+    public boolean isControlUpdateFresh(long currentTick) {
+        if (lastControlUpdateTick == Long.MIN_VALUE) return false;
+        long age = currentTick - lastControlUpdateTick;
+        return age >= -CONTROL_UPDATE_CLOCK_TOLERANCE_TICKS && age <= CONTROL_UPDATE_TIMEOUT_TICKS;
+    }
+
+    public boolean isControlHeartbeatDue(long currentTick) {
+        return lastControlSyncTick == Long.MIN_VALUE
+            || currentTick - lastControlSyncTick >= CONTROL_HEARTBEAT_INTERVAL_TICKS;
+    }
+
+    public void markControlSynced(long currentTick) {
+        this.lastControlSyncTick = currentTick;
+    }
+
+    public SignalAspect.LampColor getDisplayedLampColor(int index, long currentTick) {
+        return isControlUpdateFresh(currentTick)
+            ? currentAspect.getLampColor(index, currentTick)
+            : SignalAspect.LampColor.OFF;
+    }
+
+    public SignalAspect.LampColor filterDisplayedLampColor(SignalAspect.LampColor color, long currentTick) {
+        return isControlUpdateFresh(currentTick) ? color : SignalAspect.LampColor.OFF;
+    }
+
+    public SignalAccessory.Route getDisplayedRoute(long currentTick) {
+        return isControlUpdateFresh(currentTick) ? currentRoute : SignalAccessory.Route.NONE;
+    }
 
     public void setAppearance(ISignalAppearance appearance) {
         this.appearance = appearance;
@@ -70,6 +111,9 @@ public class SignalHead {
 
         tag.putString("Aspect", this.currentAspect.name());
         tag.putString("Route", this.currentRoute.name());
+        if (this.lastControlUpdateTick != Long.MIN_VALUE) {
+            tag.putLong("LastControlUpdateTick", this.lastControlUpdateTick);
+        }
     }
 
     public static SignalHead fromNbt(CompoundTag tag) {
@@ -94,6 +138,10 @@ public class SignalHead {
             SignalAccessory.Route route = SignalAccessory.Route.valueOf(tag.getString("Route"));
             newHead.setCurrentRoute(route);
         } catch (IllegalArgumentException e) { /* 不正なデータはデフォルト値のまま */ }
+
+        if (tag.contains("LastControlUpdateTick", CompoundTag.TAG_LONG)) {
+            newHead.setLastControlUpdateTick(tag.getLong("LastControlUpdateTick"));
+        }
         
         return newHead;
     }

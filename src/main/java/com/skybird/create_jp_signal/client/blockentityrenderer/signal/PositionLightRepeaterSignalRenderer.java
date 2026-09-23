@@ -39,7 +39,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
 
     private static void renderBackendOffLights(PoseStack poseStack, MultiBufferSource bufferSource,
             BlockEntity blockEntity, PositionLightRepeaterSignalAppearance appearance,
-            SignalAspect.State aspect, SignalAccessory.Route route, int overlay, long gameTime) {
+            SignalHead signalHead, int overlay, long gameTime) {
         List<Vec3> positions;
         float lampScale;
         double yOffset;
@@ -67,7 +67,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
             Vec3 position = positions.get(i);
             poseStack.translate(position.x, position.y, position.z);
             poseStack.scale(lampScale, lampScale, lampScale);
-            LampColor color = aspect.getLampColor(i, gameTime);
+            LampColor color = signalHead.getDisplayedLampColor(i, gameTime);
             modelRenderer.renderModel(
                 poseStack.last(),
                 bufferSource.getBuffer(RenderType.cutout()),
@@ -83,7 +83,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
 
         if (appearance.getAccessory().getType() == SignalAccessory.Type.FORECAST) {
             Iterator<LampColor> colors = SignalAccessory.getLampColors(
-                SignalAccessory.Type.FORECAST, route).iterator();
+                SignalAccessory.Type.FORECAST, signalHead.getDisplayedRoute(gameTime)).iterator();
             poseStack.pushPose();
             poseStack.translate(-7.0 / 16, (2.25 - 8.0) / 16, 1.75 / 16);
             poseStack.scale(3.5f, 3.5f, 3.5f);
@@ -311,7 +311,7 @@ public class PositionLightRepeaterSignalRenderer implements ISignalHeadRenderer 
             poseStack.mulPose(Axis.YP.rotationDegrees((float)(double)rotation.getFirst()));
             poseStack.translate(offset.x, offset.y, offset.z);
             renderBackendOffLights(poseStack, bufferSource, blockEntity, appearance,
-                currentAspect, headData.getCurrentRoute(), overlay, gameTime);
+                headData, overlay, gameTime);
             double x = offset.x, z = offset.z;
             double distance = Math.sqrt(x * x + z * z);
             if (appearance.getSignalSize() == SignalSize.NORMAL) {

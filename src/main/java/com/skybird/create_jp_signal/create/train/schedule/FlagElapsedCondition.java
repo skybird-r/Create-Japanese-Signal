@@ -5,7 +5,7 @@ import java.util.OptionalLong;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.schedule.condition.TimedWaitCondition;
+import com.simibubi.create.content.trains.schedule.condition.ScheduledDelay;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.skybird.create_jp_signal.JpSignals;
 import com.skybird.create_jp_signal.util.Lang;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FlagElapsedCondition extends TimedWaitCondition {
+public class FlagElapsedCondition extends ScheduledDelay {
 
     public FlagElapsedCondition() {
         data.putString("FlagName", "");
@@ -44,6 +44,12 @@ public class FlagElapsedCondition extends TimedWaitCondition {
 
     @Override
     public int totalWaitTicks() {
+        // Create only includes ScheduledDelay conditions in display-board arrival
+        // predictions. Flag conditions are intentionally predicted as instantaneous.
+        return 0;
+    }
+
+    private int requiredWaitTicks() {
         return getWaitSeconds() * 20;
     }
 
@@ -107,11 +113,11 @@ public class FlagElapsedCondition extends TimedWaitCondition {
         }
 
         long elapsed = Math.max(0, TrainFlagSavedData.getSharedGameTime(level) - setTime.getAsLong());
-        long remaining = Math.max(0, (long) totalWaitTicks() - elapsed);
+        long remaining = Math.max(0, (long) requiredWaitTicks() - elapsed);
         int remainingSeconds = (int) Math.min(Integer.MAX_VALUE, (remaining + 19) / 20);
         updateStatusContext(context, setTime.getAsLong(), remainingSeconds);
 
-        if (elapsed < totalWaitTicks()) {
+        if (elapsed < requiredWaitTicks()) {
             return false;
         }
 
