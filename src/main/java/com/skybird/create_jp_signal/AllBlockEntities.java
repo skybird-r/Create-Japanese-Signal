@@ -11,6 +11,7 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.ShuntSingleSignalMa
 import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockEntity;
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlockEntity;
 import com.skybird.create_jp_signal.block.track.PenaltyBlockEntity;
+import com.skybird.create_jp_signal.block.track.ReservationLimitBlockEntity;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -86,4 +87,9 @@ public class AllBlockEntities {
         BLOCK_ENTITIES.register("penalty_entity", () ->
             BlockEntityType.Builder.<PenaltyBlockEntity>of(PenaltyBlockEntity::new, AllBlocks.PENALTY.get())
                 .build(null));
+
+    public static final RegistryObject<BlockEntityType<ReservationLimitBlockEntity>> RESERVATION_LIMIT_ENTITY =
+        BLOCK_ENTITIES.register("reservation_limit_entity", () ->
+            BlockEntityType.Builder.<ReservationLimitBlockEntity>of(ReservationLimitBlockEntity::new,
+                AllBlocks.RESERVATION_LIMIT.get()).build(null));
 }

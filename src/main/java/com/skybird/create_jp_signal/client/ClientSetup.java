@@ -10,8 +10,10 @@ import com.skybird.create_jp_signal.client.blockentityrenderer.signal.BaseSignal
 import com.skybird.create_jp_signal.client.blockentityrenderer.signal.SignalMastBlockEntityRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.track.SpeedLimitRenderer;
 import com.skybird.create_jp_signal.client.blockentityrenderer.track.PenaltyRenderer;
+import com.skybird.create_jp_signal.client.blockentityrenderer.track.ReservationLimitRenderer;
 import com.skybird.create_jp_signal.client.gui.ControlBoxScreen;
 import com.skybird.create_jp_signal.client.gui.PenaltyScreen;
+import com.skybird.create_jp_signal.client.gui.ReservationLimitScreen;
 import com.skybird.create_jp_signal.client.gui.SignalLinkScreen;
 import com.skybird.create_jp_signal.client.gui.SpeedLimitScreen;
 
@@ -105,11 +107,16 @@ public class ClientSetup {
                 AllBlockEntities.PENALTY_ENTITY.get(),
                 PenaltyRenderer::new
             );
+            BlockEntityRenderers.register(
+                AllBlockEntities.RESERVATION_LIMIT_ENTITY.get(),
+                ReservationLimitRenderer::new
+            );
 
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);
             MenuScreens.register(AllMenuTypes.SPEED_LIMIT_MENU.get(), SpeedLimitScreen::new);
             MenuScreens.register(AllMenuTypes.PENALTY_MENU.get(), PenaltyScreen::new);
+            MenuScreens.register(AllMenuTypes.RESERVATION_LIMIT_MENU.get(), ReservationLimitScreen::new);
         });
     }
 
@@ -144,6 +151,7 @@ public class ClientSetup {
         event.register(new ResourceLocation(JpSignals.MODID, "block/signal_parts/signal_joint"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/track_overlay/speed_limit_marker"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/track_overlay/penalty_marker"));
+        event.register(new ResourceLocation(JpSignals.MODID, "block/track_overlay/reservation_limit_marker"));
 
 
         

@@ -9,4 +9,7 @@ public class AllEdgePointTypes {
 
     public static final EdgePointType<PenaltyBoundary> PENALTY =
         EdgePointType.register(JpSignals.asResource("penalty"), PenaltyBoundary::new);
+
+    public static final EdgePointType<ReservationLimitBoundary> RESERVATION_LIMIT =
+        EdgePointType.register(JpSignals.asResource("reservation_limit"), ReservationLimitBoundary::new);
 }

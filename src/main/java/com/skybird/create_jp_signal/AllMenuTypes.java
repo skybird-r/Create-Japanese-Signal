@@ -2,6 +2,7 @@ package com.skybird.create_jp_signal;
 
 import com.skybird.create_jp_signal.menu.ControlBoxMenu;
 import com.skybird.create_jp_signal.menu.PenaltyMenu;
+import com.skybird.create_jp_signal.menu.ReservationLimitMenu;
 import com.skybird.create_jp_signal.menu.SignalLinkMenu;
 import com.skybird.create_jp_signal.menu.SpeedLimitMenu;
 
@@ -31,4 +32,7 @@ public class AllMenuTypes {
 
     public static final RegistryObject<MenuType<PenaltyMenu>> PENALTY_MENU =
         MENUS.register("penalty_menu", () -> IForgeMenuType.create(PenaltyMenu::new));
+
+    public static final RegistryObject<MenuType<ReservationLimitMenu>> RESERVATION_LIMIT_MENU =
+        MENUS.register("reservation_limit_menu", () -> IForgeMenuType.create(ReservationLimitMenu::new));
 }

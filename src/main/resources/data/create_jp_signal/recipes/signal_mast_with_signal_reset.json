@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "create_jp_signal:signal_mast_with_signal"
+        }
+    ],
+    "result": {
+        "item": "create_jp_signal:signal_mast_with_signal",
+        "count": 1
+    }
+}

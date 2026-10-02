@@ -38,6 +38,7 @@ import com.skybird.create_jp_signal.create.mixin_interface.INavigation;
 import com.skybird.create_jp_signal.create.mixin_interface.ISignalBoundary;
 import com.skybird.create_jp_signal.create.mixin_interface.ITrain;
 import com.skybird.create_jp_signal.create.train.track.PenaltyBoundary;
+import com.skybird.create_jp_signal.create.train.track.ReservationLimitBoundary;
 import com.skybird.create_jp_signal.create.train.track.SpeedLimitBoundary;
 
 import net.minecraft.util.Mth;
@@ -60,6 +61,8 @@ public abstract class NavigationMixin implements INavigation {
 
     @Unique public List<Pair<Double, MutableDouble>> activeSpeedLimits = new ArrayList<>();
     @Unique public List<Pair<Double, Double>> upcomingSpeedLimits = new ArrayList<>();
+    @Unique private double reservationScanLimit = Double.MAX_VALUE;
+    @Unique private double reservationSafetyDistance;
 
     @Override
     public List<Pair<Double, MutableDouble>> getActiveSpeedLimits() {
@@ -134,6 +137,8 @@ public abstract class NavigationMixin implements INavigation {
     )
     private void create_jp_signal_onTickHead(Level level, CallbackInfo ci) {
         this.upcomingSpeedLimits.clear();
+        this.reservationScanLimit = Double.MAX_VALUE;
+        this.reservationSafetyDistance = 0;
     }
 
     //scanDistance
@@ -148,10 +153,32 @@ public abstract class NavigationMixin implements INavigation {
     )
     private double create_jp_signal_modifyScanDistanceInput(double brakingDistanceNoFlicker) {
         ITrain trainExtension = (ITrain) this.train;
+        this.reservationSafetyDistance = brakingDistanceNoFlicker + trainExtension.getSignalStoppingDistance();
         return Math.max(
-            brakingDistanceNoFlicker + trainExtension.getSignalStoppingDistance(),
+            this.reservationSafetyDistance,
             trainExtension.getMinimumReservationDistance()
         );
+    }
+
+    @Inject(
+        method = "lambda$tick$0",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void create_jp_signal_applyDynamicReservationScanLimit(
+        MutableObject<Pair<UUID, Boolean>> trackingCrossSignal,
+        double scanDistance,
+        MutableDouble crossSignalDistanceTracker,
+        double brakingDistanceNoFlicker,
+        Double distance,
+        Pair<TrackEdgePoint, Couple<TrackNode>> couple,
+        CallbackInfoReturnable<Boolean> cir
+    ) {
+        if (this.reservationScanLimit == Double.MAX_VALUE)
+            this.reservationScanLimit = scanDistance;
+
+        if (trackingCrossSignal.getValue() == null && distance > this.reservationScanLimit)
+            cir.setReturnValue(true);
     }
 
     @ModifyVariable(
@@ -170,7 +197,7 @@ public abstract class NavigationMixin implements INavigation {
         Double distance,
         Pair<TrackEdgePoint, Couple<TrackNode>> couple
     ) {
-        return scanDistance;
+        return Math.min(scanDistance, this.reservationScanLimit);
     }
 
     @Inject(
@@ -195,6 +222,22 @@ public abstract class NavigationMixin implements INavigation {
         Couple<TrackNode> nodes,
         TrackEdgePoint boundary
     ) {
+        if (this.reservationScanLimit == Double.MAX_VALUE)
+            this.reservationScanLimit = scanDistance;
+
+        if (boundary instanceof ReservationLimitBoundary reservationLimit
+            && reservationLimit.isPrimary(nodes.getSecond())) {
+            double requestedLimit = Math.max(reservationLimit.getReservationLimit(), this.reservationSafetyDistance);
+            this.reservationScanLimit = Math.min(this.reservationScanLimit, requestedLimit);
+
+            if (!crossSignalTracked && distance > this.reservationScanLimit) {
+                cir.setReturnValue(true);
+                return;
+            }
+            cir.setReturnValue(false);
+            return;
+        }
+
         if (boundary instanceof SpeedLimitBoundary speedLimit) {
             boolean correctDirection = speedLimit.isPrimary(nodes.getSecond()); 
             

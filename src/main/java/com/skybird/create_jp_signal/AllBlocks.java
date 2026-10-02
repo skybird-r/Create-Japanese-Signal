@@ -13,6 +13,8 @@ import com.skybird.create_jp_signal.block.signal.signal_mast.SignalMastBlockItem
 import com.skybird.create_jp_signal.block.signal.source.SignalRepeaterBlock;
 import com.skybird.create_jp_signal.block.track.PenaltyBlock;
 import com.skybird.create_jp_signal.block.track.PenaltyBlockItem;
+import com.skybird.create_jp_signal.block.track.ReservationLimitBlock;
+import com.skybird.create_jp_signal.block.track.ReservationLimitBlockItem;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlock;
 import com.skybird.create_jp_signal.block.track.SpeedLimitBlockItem;
 
@@ -92,6 +94,11 @@ public class AllBlocks {
         () -> new PenaltyBlock(BlockBehaviour.Properties.of()));
     public static final RegistryObject<Item> PENALTY_ITEM = ITEMS.register("penalty",
         () -> new PenaltyBlockItem(PENALTY.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> RESERVATION_LIMIT = BLOCKS.register("reservation_limit",
+        () -> new ReservationLimitBlock(BlockBehaviour.Properties.of()));
+    public static final RegistryObject<Item> RESERVATION_LIMIT_ITEM = ITEMS.register("reservation_limit",
+        () -> new ReservationLimitBlockItem(RESERVATION_LIMIT.get(), new Item.Properties()));
 
         
 }

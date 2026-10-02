@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.skybird.create_jp_signal.AllItems;
+import com.skybird.create_jp_signal.item.SignalMastWithSignalItem;
 import com.skybird.create_jp_signal.block.signal.BaseSignalBlock;
 
 import net.minecraft.core.BlockPos;
@@ -90,7 +91,7 @@ public abstract class BaseSignalMastBlock extends BaseSignalBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof BaseSignalMastBlockEntity mastBE) {
             String blockId = ForgeRegistries.BLOCKS.getKey(this).toString();
-            stack.getOrCreateTag().putString("SelectedBlockType", blockId);
+            SignalMastWithSignalItem.setSelectedBlockType(stack, blockId);
         }
 
         return stack;

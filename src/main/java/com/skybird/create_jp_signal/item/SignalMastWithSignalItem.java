@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,6 +33,30 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class SignalMastWithSignalItem extends Item {
+
+    public static final String DEFAULT_BLOCK_TYPE = "create_jp_signal:color_single_round_signal_mast";
+
+    public static void normalizeTag(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null) return;
+        if (tag.contains("SelectedBlockType", CompoundTag.TAG_STRING)
+                && (tag.getString("SelectedBlockType").isEmpty()
+                    || DEFAULT_BLOCK_TYPE.equals(tag.getString("SelectedBlockType")))) {
+            tag.remove("SelectedBlockType");
+        }
+        if (tag.isEmpty()) stack.setTag(null);
+    }
+
+    public static void setSelectedBlockType(ItemStack stack, String blockId) {
+        stack.getOrCreateTag().putString("SelectedBlockType", blockId);
+        normalizeTag(stack);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, level, entity, slot, selected);
+        if (!level.isClientSide) normalizeTag(stack);
+    }
 
     public SignalMastWithSignalItem(Properties pProperties) {
         super(pProperties);
@@ -56,7 +81,8 @@ public class SignalMastWithSignalItem extends Item {
                 selectedBlockName = Lang.translatable("item.signal_item.none").withStyle(ChatFormatting.AQUA);
             }
         } else {
-            selectedBlockName = Lang.translatable("item.signal_item.none").withStyle(ChatFormatting.AQUA);
+            selectedBlockName = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(DEFAULT_BLOCK_TYPE))
+                    .getName().withStyle(ChatFormatting.AQUA);
         }
 
         pTooltipComponents.add(Lang.translatable("item.signal_item.selected_signal", selectedBlockName)
@@ -92,11 +118,12 @@ public class SignalMastWithSignalItem extends Item {
         }
         
         // 1. アイテムのNBTから、設置するブロックのIDを取得する
-        CompoundTag nbt = stack.getOrCreateTag();
-        String blockIdStr = nbt.getString("SelectedBlockType");
+        normalizeTag(stack);
+        CompoundTag nbt = stack.getTag();
+        String blockIdStr = nbt == null ? "" : nbt.getString("SelectedBlockType");
         if (blockIdStr.isEmpty()) {
             // NBTがなければデフォルトのブロックIDを設定する（例）
-            blockIdStr = "create_jp_signal:color_single_round_signal_mast"; 
+            blockIdStr = DEFAULT_BLOCK_TYPE;
         }
 
         Block blockToPlace = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockIdStr));

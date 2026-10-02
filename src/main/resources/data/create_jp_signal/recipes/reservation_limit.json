@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "create:railway_casing"
+        },
+        {
+            "item": "minecraft:redstone_torch"
+        }
+    ],
+    "result": {
+        "item": "create_jp_signal:reservation_limit",
+        "count": 16
+    }
+}

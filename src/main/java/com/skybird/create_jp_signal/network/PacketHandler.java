@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class PacketHandler {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(JpSignals.MODID, "main"),
         () -> PROTOCOL_VERSION,
@@ -57,6 +57,11 @@ public class PacketHandler {
             SetPenaltyPacket::encode,
             SetPenaltyPacket::decode,
             SetPenaltyPacket::handle
+        );
+        CHANNEL.registerMessage(id++, SetReservationLimitPacket.class,
+            SetReservationLimitPacket::encode,
+            SetReservationLimitPacket::decode,
+            SetReservationLimitPacket::handle
         );
     }
 

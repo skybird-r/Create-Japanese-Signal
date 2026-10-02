@@ -20,7 +20,7 @@ public class ChangeThrottleInstructionMixin {
         index = 1
     )
     private static int modifyMaxRange(int originalMax) {
-        return 201;
+        return 241;
     }
 
     @ModifyArg(

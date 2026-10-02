@@ -32,7 +32,7 @@ public class SelectSignalMastPacket {
             ItemStack stack = player.getMainHandItem();
             // プレイヤーが正しいアイテムを持っているかサーバー側で検証
             if (stack.getItem() instanceof SignalMastWithSignalItem) {
-                stack.getOrCreateTag().putString("SelectedBlockType", packet.blockId);
+                SignalMastWithSignalItem.setSelectedBlockType(stack, packet.blockId);
             }
         });
         ctx.get().setPacketHandled(true);
