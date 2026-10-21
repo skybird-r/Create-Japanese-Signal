@@ -1,5 +1,8 @@
 package com.skybird.create_jp_signal.client;
 
+import com.skybird.create_jp_signal.client.text.FlywheelText;
+import com.skybird.create_jp_signal.client.text.SignText;
+
 import com.skybird.create_jp_signal.client.gui.SelectSignalMastScreen;
 import com.skybird.create_jp_signal.item.SignalMastWithSignalItem;
 
@@ -12,6 +15,25 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = "create_jp_signal", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
+    // Visual creation and updates may run on Flywheel worker threads. Bake the shared
+    // reusable digit models on the render thread before either tick/frame work starts.
+    private static void prepareSignGlyphs() {
+        if (Minecraft.getInstance().level == null) return;
+        for (char character : "0123456789.LO".toCharArray()) {
+            FlywheelText.prepare(Character.toString(character), SignText.FontMode.MINECRAFT_ENGLISH);
+        }
+    }
+
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.HIGHEST)
+    public static void prepareMarkerTick(net.minecraftforge.event.TickEvent.ClientTickEvent event) {
+        if (event.phase == net.minecraftforge.event.TickEvent.Phase.START) prepareSignGlyphs();
+    }
+
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.HIGHEST)
+    public static void prepareMarkerFrame(net.minecraftforge.event.TickEvent.RenderTickEvent event) {
+        if (event.phase == net.minecraftforge.event.TickEvent.Phase.START) prepareSignGlyphs();
+    }
+
     @SubscribeEvent
     public static void onLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
         // プレイヤーがスニーク中（シフトキーを押している）か

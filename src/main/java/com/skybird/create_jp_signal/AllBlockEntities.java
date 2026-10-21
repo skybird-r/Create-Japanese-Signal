@@ -1,5 +1,9 @@
 package com.skybird.create_jp_signal;
 
+import com.skybird.create_jp_signal.block.sign.GradientPostBlockEntity;
+
+import com.skybird.create_jp_signal.block.sign.KilometerPostBlockEntity;
+
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlockEntity;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlockEntity;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleRoundSignalMastBlockEntity;
@@ -22,6 +26,14 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, JpSignals.MODID);
+
+    public static final RegistryObject<BlockEntityType<GradientPostBlockEntity>> GRADIENT_POST_ENTITY =
+        BLOCK_ENTITIES.register("gradient_post_entity", () -> BlockEntityType.Builder.of(
+            GradientPostBlockEntity::new, AllBlocks.GRADIENT_POST.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<KilometerPostBlockEntity>> KILOMETER_POST_ENTITY =
+        BLOCK_ENTITIES.register("kilometer_post_entity", () -> BlockEntityType.Builder.of(
+            KilometerPostBlockEntity::new, AllBlocks.KILOMETER_POST.get()).build(null));
 
     // public static final RegistryObject<BlockEntityType<Signal3LBlockEntity>> SIGNAL_3L_ENTITY =
     //     BLOCK_ENTITIES.register("signal_3l_entity", () ->

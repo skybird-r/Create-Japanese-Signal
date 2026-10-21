@@ -1,5 +1,13 @@
 package com.skybird.create_jp_signal.client;
 
+import com.skybird.create_jp_signal.client.blockentityinstance.sign.GradientPostVisual;
+import com.skybird.create_jp_signal.client.blockentityrenderer.sign.GradientPostRenderer;
+import com.skybird.create_jp_signal.client.gui.GradientPostScreen;
+
+import com.skybird.create_jp_signal.client.blockentityrenderer.sign.KilometerPostRenderer;
+import com.skybird.create_jp_signal.client.blockentityinstance.sign.KilometerPostVisual;
+import com.skybird.create_jp_signal.client.gui.KilometerPostScreen;
+
 import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
 import com.skybird.create_jp_signal.AllBlockEntities;
 import com.skybird.create_jp_signal.AllMenuTypes;
@@ -111,6 +119,18 @@ public class ClientSetup {
                 AllBlockEntities.RESERVATION_LIMIT_ENTITY.get(),
                 ReservationLimitRenderer::new
             );
+
+            BlockEntityRenderers.register(AllBlockEntities.GRADIENT_POST_ENTITY.get(), GradientPostRenderer::new);
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.GRADIENT_POST_ENTITY.get())
+                .factory(GradientPostVisual::new).apply();
+            MenuScreens.register(AllMenuTypes.GRADIENT_POST_MENU.get(), GradientPostScreen::new);
+
+            BlockEntityRenderers.register(AllBlockEntities.KILOMETER_POST_ENTITY.get(),
+                KilometerPostRenderer::new);
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.KILOMETER_POST_ENTITY.get())
+                .factory(KilometerPostVisual::new).apply();
+            MenuScreens.register(AllMenuTypes.KILOMETER_POST_MENU.get(),
+                KilometerPostScreen::new);
 
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);

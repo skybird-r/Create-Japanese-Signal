@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [" S ", "ACA", " R "],
+  "key": {
+    "S": { "item": "minecraft:string" },
+    "A": { "item": "create:andesite_alloy" },
+    "C": { "item": "create:railway_casing" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": { "item": "create_jp_signal:track_distance_meter", "count": 1 }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:stone"
+  },
+  "result": "create_jp_signal:kilometer_post",
+  "count": 4
+}

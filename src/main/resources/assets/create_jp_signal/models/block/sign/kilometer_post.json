@@ -1,0 +1,10 @@
+{
+  "loader": "forge:obj",
+  "model": "create_jp_signal:models/block/sign/kilometer_post.obj",
+  "flip_v": true,
+  "automatic_culling": false,
+  "shade_quads": true,
+  "textures": {
+    "particle": "create_jp_signal:block/sign/kilometer_post"
+  }
+}

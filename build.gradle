@@ -306,3 +306,11 @@ mixin {
     // ゲームの起動引数を設定
     config "${mod_id}.mixins.json"
 }
+// Standalone graph regression checks; no game launch or artifact cleanup required.
+tasks.register('verifyTrackDistanceSearch', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    workingDir layout.buildDirectory.dir('distance-search-verification')
+    doFirst { workingDir.mkdirs() }
+    mainClass = 'com.simibubi.create.content.trains.graph.TrackDistanceSearchTest'
+}

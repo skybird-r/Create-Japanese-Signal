@@ -18,10 +18,13 @@
     "ChangeThrottleInstructionMixin"
   ],
   "client": [
-    "ScheduleScreenMixin"
+    "ScheduleScreenMixin",
+    "TextRenderTypeAccessor",
+    "TextCompositeStateAccessor",
+    "TextTextureStateAccessor",
+    "FontTextureAccessor"
   ],
-  "server": [
-  ],
+  "server": [],
   "injectors": {
     "defaultRequire": 1
   }

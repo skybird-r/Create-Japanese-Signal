@@ -15,6 +15,11 @@ public class PartialModelRegistry {
     public static final PartialModel PENALTY_MARKER = block("track_overlay/penalty_marker");
     public static final PartialModel RESERVATION_LIMIT_MARKER = block("track_overlay/reservation_limit_marker");
 
+    public static final PartialModel GRADIENT_POST = block("sign/gradient_post");
+    public static final PartialModel GRADIENT_POST_BAR = block("sign/gradient_post_bar");
+
+    public static final PartialModel KILOMETER_POST = block("sign/kilometer_post");
+
     public static final PartialModel SIGNAL_MAST = block("signal_mast");
 
     public static final PartialModel SIGNAL_LIGHT = block("white_light");

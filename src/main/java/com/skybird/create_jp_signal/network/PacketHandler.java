@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class PacketHandler {
-    private static final String PROTOCOL_VERSION = "2";
+    private static final String PROTOCOL_VERSION = "5";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(JpSignals.MODID, "main"),
         () -> PROTOCOL_VERSION,
@@ -63,6 +63,13 @@ public class PacketHandler {
             SetReservationLimitPacket::decode,
             SetReservationLimitPacket::handle
         );
+        CHANNEL.registerMessage(id++, SetKilometerPostPacket.class,
+            SetKilometerPostPacket::encode, SetKilometerPostPacket::decode, SetKilometerPostPacket::handle);
+        CHANNEL.registerMessage(id++, SetGradientPostPacket.class,
+            SetGradientPostPacket::encode, SetGradientPostPacket::decode, SetGradientPostPacket::handle);
+        CHANNEL.registerMessage(id++, MeasureTrackCurvePacket.class,
+            MeasureTrackCurvePacket::encode, MeasureTrackCurvePacket::decode, MeasureTrackCurvePacket::handle,
+            java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
     }
 
     public static void sendToServer(Object msg) {

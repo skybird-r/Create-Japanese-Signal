@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:stone"
+  },
+  "result": "create_jp_signal:gradient_post",
+  "count": 4
+}

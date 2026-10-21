@@ -1,5 +1,11 @@
 package com.skybird.create_jp_signal;
 
+import com.skybird.create_jp_signal.block.sign.GradientPostBlock;
+import com.skybird.create_jp_signal.block.sign.GradientPostBlockItem;
+
+import com.skybird.create_jp_signal.block.sign.KilometerPostBlock;
+import com.skybird.create_jp_signal.block.sign.KilometerPostBlockItem;
+
 import com.skybird.create_jp_signal.block.signal.ControlBoxBlock;
 import com.skybird.create_jp_signal.block.signal.debug.DebugInputBlock;
 import com.skybird.create_jp_signal.block.signal.signal_mast.ColorSingleRoundSignalMastBlock;
@@ -29,6 +35,16 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JpSignals.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JpSignals.MODID);
+
+    public static final RegistryObject<Block> GRADIENT_POST = BLOCKS.register("gradient_post",
+        () -> new GradientPostBlock(BlockBehaviour.Properties.of()));
+    public static final RegistryObject<Item> GRADIENT_POST_ITEM = ITEMS.register("gradient_post",
+        () -> new GradientPostBlockItem(GRADIENT_POST.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> KILOMETER_POST = BLOCKS.register("kilometer_post",
+        () -> new KilometerPostBlock(BlockBehaviour.Properties.of()));
+    public static final RegistryObject<Item> KILOMETER_POST_ITEM = ITEMS.register("kilometer_post",
+        () -> new KilometerPostBlockItem(KILOMETER_POST.get(), new Item.Properties()));
 
     // public static final RegistryObject<Block> SIGNAL_3LIGHT = BLOCKS.register("signal_3light",  
     //     () -> new Signal3LBlock(BlockBehaviour.Properties.of()));
