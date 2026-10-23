@@ -64,7 +64,10 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
     @Override
     public AABB getRenderBoundingBox() {
         // 描画範囲拡張
-        return new AABB(this.worldPosition).inflate(3.0);
+        double nameHeight = signalHeads.values().stream()
+            .mapToDouble(head -> head.getSignalName().isEmpty() ? 0 : SignalName.boardHeightPixels(head.getSignalNameCells().size()) / 16)
+            .max().orElse(0);
+        return new AABB(this.worldPosition).inflate(3.0).expandTowards(0, nameHeight, 0);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity be) {
@@ -192,6 +195,24 @@ public abstract class BaseSignalBlockEntity extends BlockEntity {
             }
         }
         return null;
+    }
+
+    public void updateSignalNames(Map<UUID, String> names) {
+        if (level == null || level.isClientSide) return;
+        boolean changed = false;
+        for (var entry : names.entrySet()) {
+            SignalHead head = getSignalHead(entry.getKey());
+            if (head == null) continue;
+            String name = SignalName.normalize(entry.getValue());
+            if (!head.getSignalName().equals(name)) {
+                head.setSignalName(name);
+                changed = true;
+            }
+        }
+        if (changed) {
+            setChanged();
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     public MenuProvider getLinkMenuProvider(BlockPos controlBoxPos) {

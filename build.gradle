@@ -314,3 +314,26 @@ tasks.register('verifyTrackDistanceSearch', JavaExec) {
     doFirst { workingDir.mkdirs() }
     mainClass = 'com.simibubi.create.content.trains.graph.TrackDistanceSearchTest'
 }
+
+// Rendering geometry checks need the same compile-only Flywheel API as main sources.
+configurations.testCompileOnly.extendsFrom(configurations.compileOnly)
+
+// Name persistence, vertical writing, and placement against the supplied models.
+tasks.register('verifySignalNames', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    workingDir layout.buildDirectory.dir('signal-name-verification')
+    doFirst { workingDir.mkdirs() }
+    systemProperty 'jpSignal.resources', file('src/main/resources').absolutePath
+    mainClass = 'com.skybird.create_jp_signal.block.signal.SignalNameTest'
+}
+
+// Posted sign persistence, model attachment and numeric layout; no game launch needed.
+tasks.register('verifyRailwaySigns', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    workingDir layout.buildDirectory.dir('railway-sign-verification')
+    doFirst { workingDir.mkdirs() }
+    systemProperty 'jpSignal.resources', file('src/main/resources').absolutePath
+    mainClass = 'com.skybird.create_jp_signal.block.sign.RailwaySignTest'
+}

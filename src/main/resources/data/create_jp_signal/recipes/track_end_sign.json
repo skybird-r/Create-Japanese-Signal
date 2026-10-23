@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "create:iron_sheet"
+  },
+  "result": "create_jp_signal:track_end_sign",
+  "count": 8
+}

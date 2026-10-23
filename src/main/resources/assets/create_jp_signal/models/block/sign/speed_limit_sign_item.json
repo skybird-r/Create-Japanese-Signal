@@ -1,0 +1,163 @@
+{
+  "textures": {
+    "0": "create_jp_signal:block/sign/speed_limit_sign",
+    "particle": "create_jp_signal:block/sign/speed_limit_sign",
+    "post": "create_jp_signal:block/sign/sign_post"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        -14,
+        7.5
+      ],
+      "to": [
+        8.5,
+        9,
+        8.5
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          7.5,
+          0,
+          7.5
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            16
+          ],
+          "texture": "#post"
+        },
+        "east": {
+          "uv": [
+            1,
+            0,
+            2,
+            16
+          ],
+          "texture": "#post"
+        },
+        "south": {
+          "uv": [
+            2,
+            0,
+            3,
+            16
+          ],
+          "texture": "#post"
+        },
+        "west": {
+          "uv": [
+            3,
+            0,
+            4,
+            16
+          ],
+          "texture": "#post"
+        },
+        "up": {
+          "uv": [
+            4,
+            0,
+            5,
+            1
+          ],
+          "texture": "#post"
+        },
+        "down": {
+          "uv": [
+            4,
+            1,
+            5,
+            2
+          ],
+          "texture": "#post"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        8.5
+      ],
+      "to": [
+        14,
+        9,
+        9
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          2,
+          0,
+          8.5
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            6,
+            4.5
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            6,
+            1,
+            6.25,
+            5.5
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            4.5,
+            6,
+            9
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            6,
+            5.5,
+            6.25,
+            10
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            6,
+            0,
+            12,
+            0.25
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            6,
+            0.5,
+            12,
+            0.75
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

@@ -22,7 +22,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class KilometerPostBlock extends BaseEntityBlock implements IWrenchable {
     public KilometerPostBlock(Properties properties) {
-        super(properties.noOcclusion().strength(1.5F, 6.0F));
+        super(properties.noCollission().noOcclusion().strength(1.5F, 6.0F));
     }
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new KilometerPostBlockEntity(pos, state); }

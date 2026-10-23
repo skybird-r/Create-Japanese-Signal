@@ -48,5 +48,28 @@ public abstract class BaseSignalBlock extends BaseEntityBlock implements IWrench
         return InteractionResult.SUCCESS;
     }
 
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.item.Item> NAME_EDIT_BYPASS =
+        net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+            new net.minecraft.resources.ResourceLocation("create_jp_signal", "signal_name_edit_bypass"));
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
+            net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand,
+            net.minecraft.world.phys.BlockHitResult hit) {
+        var held = player.getItemInHand(hand);
+        if (held.is(NAME_EDIT_BYPASS) || com.simibubi.create.AllTags.AllItemTags.WRENCH.matches(held)
+                || player.isShiftKeyDown() || !player.mayBuild() || player.isSpectator()) return InteractionResult.PASS;
+        if (!(level.getBlockEntity(pos) instanceof BaseSignalBlockEntity signal) || signal.getSignalHeads().isEmpty())
+            return InteractionResult.PASS;
+        if (!level.isClientSide && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            var provider = new net.minecraft.world.SimpleMenuProvider(
+                (id, inventory, unused) -> new com.skybird.create_jp_signal.menu.SignalNameMenu(id, inventory, signal),
+                net.minecraft.network.chat.Component.translatable("create_jp_signal.gui.signal_name.title"));
+            net.minecraftforge.network.NetworkHooks.openScreen(serverPlayer, provider,
+                buffer -> com.skybird.create_jp_signal.menu.SignalNameMenu.writeOpeningData(buffer, signal));
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
     // getTickerは個別で実装
 }

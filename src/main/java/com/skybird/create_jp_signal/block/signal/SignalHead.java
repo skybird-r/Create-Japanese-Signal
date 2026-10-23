@@ -20,6 +20,8 @@ public class SignalHead {
     private SignalAspect.State currentAspect;
     private SignalAccessory.Route currentRoute;
     private BlockPos controllerPos;
+    private String signalName = "";
+    private java.util.List<SignalName.Cell> signalNameCells = java.util.List.of();
     private long lastControlUpdateTick = Long.MIN_VALUE;
     private transient long lastControlSyncTick = Long.MIN_VALUE;
 
@@ -40,6 +42,13 @@ public class SignalHead {
             this.currentAspect = SignalAspect.State.OFF_3;
         }
         this.currentRoute = SignalAccessory.Route.NONE;
+    }
+
+    public String getSignalName() { return signalName; }
+    public java.util.List<SignalName.Cell> getSignalNameCells() { return signalNameCells; }
+    public void setSignalName(String name) {
+        signalName = SignalName.normalize(name);
+        signalNameCells = SignalName.cells(signalName);
     }
 
     public UUID getUniqueId() { return uniqueId; }
@@ -97,6 +106,7 @@ public class SignalHead {
 
     public void writeNbt(CompoundTag tag) {
         tag.putUUID("Id", this.uniqueId);
+        tag.putString("SignalName", this.signalName);
 
         if (this.appearance != null) {
             tag.putString("AppearanceType", this.appearance.getTypeId());
@@ -128,6 +138,7 @@ public class SignalHead {
         }
 
         SignalHead newHead = new SignalHead(id, appearance, controllerPos);
+        newHead.setSignalName(tag.getString("SignalName"));
         
         try {
             SignalAspect.State aspect = SignalAspect.State.valueOf(tag.getString("Aspect"));

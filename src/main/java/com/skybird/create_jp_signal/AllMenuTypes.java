@@ -1,5 +1,7 @@
 package com.skybird.create_jp_signal;
 
+import com.skybird.create_jp_signal.menu.SpeedLimitSignMenu;
+
 import com.skybird.create_jp_signal.menu.GradientPostMenu;
 
 import com.skybird.create_jp_signal.menu.KilometerPostMenu;
@@ -22,11 +24,20 @@ public class AllMenuTypes {
     public static final RegistryObject<MenuType<ControlBoxMenu>> CONTROL_BOX_MENU =
         MENUS.register("control_box_menu", () -> IForgeMenuType.create(ControlBoxMenu::new));
 
+    public static final RegistryObject<MenuType<com.skybird.create_jp_signal.menu.BlockSignalNumberMenu>> BLOCK_SIGNAL_NUMBER_MENU =
+        MENUS.register("block_signal_number_menu", () -> IForgeMenuType.create(com.skybird.create_jp_signal.menu.BlockSignalNumberMenu::new));
+
+    public static final RegistryObject<MenuType<SpeedLimitSignMenu>> SPEED_LIMIT_SIGN_MENU =
+        MENUS.register("speed_limit_sign_menu", () -> IForgeMenuType.create(SpeedLimitSignMenu::new));
+
     public static final RegistryObject<MenuType<GradientPostMenu>> GRADIENT_POST_MENU =
         MENUS.register("gradient_post_menu", () -> IForgeMenuType.create(GradientPostMenu::new));
 
     public static final RegistryObject<MenuType<KilometerPostMenu>> KILOMETER_POST_MENU =
         MENUS.register("kilometer_post_menu", () -> IForgeMenuType.create(KilometerPostMenu::new));
+
+    public static final RegistryObject<MenuType<com.skybird.create_jp_signal.menu.SignalNameMenu>> SIGNAL_NAME_MENU =
+        MENUS.register("signal_name_menu", () -> IForgeMenuType.create(com.skybird.create_jp_signal.menu.SignalNameMenu::new));
 
     // public static final RegistryObject<MenuType<MastConfigMenu>> MAST_CONFIG_MENU =
     //     MENUS.register("mast_config_menu", () -> IForgeMenuType.create(MastConfigMenu::new));

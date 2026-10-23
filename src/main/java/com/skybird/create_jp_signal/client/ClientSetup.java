@@ -1,5 +1,9 @@
 package com.skybird.create_jp_signal.client;
 
+import com.skybird.create_jp_signal.client.blockentityrenderer.sign.RailwaySignRenderer;
+import com.skybird.create_jp_signal.client.blockentityinstance.sign.RailwaySignVisual;
+import com.skybird.create_jp_signal.client.gui.SpeedLimitSignScreen;
+
 import com.skybird.create_jp_signal.client.blockentityinstance.sign.GradientPostVisual;
 import com.skybird.create_jp_signal.client.blockentityrenderer.sign.GradientPostRenderer;
 import com.skybird.create_jp_signal.client.gui.GradientPostScreen;
@@ -120,6 +124,13 @@ public class ClientSetup {
                 ReservationLimitRenderer::new
             );
 
+            BlockEntityRenderers.register(AllBlockEntities.RAILWAY_SIGN_ENTITY.get(), RailwaySignRenderer::new);
+            SimpleBlockEntityVisualizer.builder(AllBlockEntities.RAILWAY_SIGN_ENTITY.get())
+                .factory(RailwaySignVisual::new).apply();
+            MenuScreens.register(AllMenuTypes.SPEED_LIMIT_SIGN_MENU.get(), SpeedLimitSignScreen::new);
+            MenuScreens.register(AllMenuTypes.BLOCK_SIGNAL_NUMBER_MENU.get(),
+                com.skybird.create_jp_signal.client.gui.BlockSignalNumberScreen::new);
+
             BlockEntityRenderers.register(AllBlockEntities.GRADIENT_POST_ENTITY.get(), GradientPostRenderer::new);
             SimpleBlockEntityVisualizer.builder(AllBlockEntities.GRADIENT_POST_ENTITY.get())
                 .factory(GradientPostVisual::new).apply();
@@ -132,6 +143,7 @@ public class ClientSetup {
             MenuScreens.register(AllMenuTypes.KILOMETER_POST_MENU.get(),
                 KilometerPostScreen::new);
 
+            MenuScreens.register(AllMenuTypes.SIGNAL_NAME_MENU.get(), com.skybird.create_jp_signal.client.gui.SignalNameScreen::new);
             MenuScreens.register(AllMenuTypes.CONTROL_BOX_MENU.get(), ControlBoxScreen::new);
             MenuScreens.register(AllMenuTypes.SIGNAL_LINK_MENU.get(), SignalLinkScreen::new);
             MenuScreens.register(AllMenuTypes.SPEED_LIMIT_MENU.get(), SpeedLimitScreen::new);
@@ -142,6 +154,11 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void onRegisterModels(ModelEvent.RegisterAdditional event) {
+        for (String model : new String[] {"block_signal_no_plate", "sign_post", "speed_limit_sign", "speed_limit_sign_left",
+                "speed_limit_sign_right", "speed_limit_end_sign", "train_stop_limit_sign",
+                "shunt_limit_sign", "track_end_sign"}) {
+            event.register(JpSignals.asResource("block/sign/" + model));
+        }
         event.register(new ResourceLocation(JpSignals.MODID, "block/light"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/light_green"));
         event.register(new ResourceLocation(JpSignals.MODID, "block/light_yellow"));

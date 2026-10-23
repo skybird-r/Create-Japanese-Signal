@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create_jp_signal:signal_configurator",
+    "create_jp_signal:signal_mast_with_signal",
+    "create_jp_signal:track_distance_meter"
+  ]
+}

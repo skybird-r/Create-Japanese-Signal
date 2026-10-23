@@ -53,12 +53,12 @@ public class GradientPostVisual extends AbstractBlockEntityVisual<GradientPostBl
         pose.popPose();
         for (int side = 0; side < 2; side++) {
             pose.pushPose();
-            GradientPostLayout.barRotation(pose, blockEntity.getGradient(side));
+            GradientPostLayout.barRotation(pose, blockEntity.getGradient(side), side, blockEntity.tunnelMode());
             pose.pushPose();
-            GradientPostLayout.barModel(pose, side);
+            GradientPostLayout.barModel(pose, side, blockEntity.tunnelMode());
             create(MODELS.get(PartialModelRegistry.GRADIENT_POST_BAR), pose);
             pose.popPose();
-            GradientPostLayout.textFace(pose, side);
+            GradientPostLayout.textFace(pose, side, blockEntity.tunnelMode());
             var glyphs = GradientPostText.glyphs(blockEntity.getGradient(side), blockEntity.showDecimals(), blockEntity.useLetterO(),
                 text -> FlywheelText.model(text, SignText.FontMode.MINECRAFT_ENGLISH).advance());
             for (var glyph : glyphs) {

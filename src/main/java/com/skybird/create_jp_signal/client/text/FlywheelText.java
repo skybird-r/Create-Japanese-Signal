@@ -16,17 +16,14 @@ import dev.engine_room.flywheel.lib.material.SimpleMaterialShaders;
 import dev.engine_room.flywheel.lib.material.StandardMaterialShaders;
 import com.skybird.create_jp_signal.mixin.TextCompositeStateAccessor;
 import com.skybird.create_jp_signal.mixin.TextTextureStateAccessor;
-import dev.engine_room.flywheel.api.material.CardinalLightingMode;
+import dev.engine_room.flywheel.lib.material.Materials;
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.vertex.MutableVertexList;
-import dev.engine_room.flywheel.lib.material.CutoutShaders;
-import dev.engine_room.flywheel.lib.material.LightShaders;
 import dev.engine_room.flywheel.lib.material.SimpleMaterial;
 import dev.engine_room.flywheel.lib.model.QuadMesh;
 import dev.engine_room.flywheel.lib.model.SimpleModel;
 import dev.engine_room.flywheel.lib.util.RendererReloadCache;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
@@ -64,7 +61,7 @@ public final class FlywheelText {
         int advance = SignText.font().width(sequence);
         SignText.font().drawInBatch(sequence, 0, 0, 0xFFFFFFFF, false,
             new Matrix4f(), type -> captures.computeIfAbsent(texture(type), ignored -> new Capture()),
-            Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
+            Font.DisplayMode.NORMAL, 0, 0);
         List<Model.ConfiguredMesh> meshes = new ArrayList<>();
         float minX = Float.POSITIVE_INFINITY, minY = Float.POSITIVE_INFINITY;
         float maxX = Float.NEGATIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
@@ -78,15 +75,20 @@ public final class FlywheelText {
             var texture = net.minecraft.client.Minecraft.getInstance().getTextureManager().getTexture(entry.getKey());
             boolean intensity = texture instanceof net.minecraft.client.gui.font.FontTexture
                 && !((FontTextureAccessor) texture).jpSignal$isColored();
-            var shaders = intensity ? new SimpleMaterialShaders(StandardMaterialShaders.DEFAULT.vertexSource(),
-                JpSignals.asResource("material/text_intensity.frag")) : StandardMaterialShaders.DEFAULT;
-            var material = SimpleMaterial.builder().shaders(shaders).texture(entry.getKey()).mipmap(false)
-                .cutout(CutoutShaders.ONE_TENTH).backfaceCulling(false).useOverlay(false)
-                .light(LightShaders.FLAT).cardinalLightingMode(CardinalLightingMode.OFF).build();
+            var material = createMaterial(entry.getKey(), intensity);
             meshes.add(new Model.ConfiguredMesh(material, new TextMesh(List.copyOf(vertices))));
         }
         if (meshes.isEmpty()) return new TextModel(EMPTY_MODEL, 0, 0, 0, 0, advance);
         return new TextModel(new SimpleModel(meshes), minX, minY, maxX, maxY, advance);
+    }
+
+    static SimpleMaterial createMaterial(ResourceLocation texture, boolean intensity) {
+        var shaders = intensity ? new SimpleMaterialShaders(StandardMaterialShaders.DEFAULT.vertexSource(),
+            JpSignals.asResource("material/text_intensity.frag")) : StandardMaterialShaders.DEFAULT;
+        // Match ordinary block geometry's light map, embedded lighting and directional
+        // shading. Only atlas sampling and two-sided glyph geometry differ from the board.
+        return SimpleMaterial.builderOf(Materials.CUTOUT_BLOCK).shaders(shaders).texture(texture)
+            .backfaceCulling(false).useOverlay(false).build();
     }
 
     private static ResourceLocation texture(RenderType type) {
@@ -130,8 +132,10 @@ public final class FlywheelText {
                 out.r(i, v.r); out.g(i, v.g); out.b(i, v.b); out.a(i, v.a);
                 out.u(i, v.u); out.v(i, v.v);
                 out.overlay(i, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
-                out.light(i, LightTexture.FULL_BRIGHT);
-                out.normalX(i, 0); out.normalY(i, 0); out.normalZ(i, -1);
+                // The transformed instance combines mesh and world light with max().
+                // Keep mesh light neutral so the instance's sampled light can darken text.
+                out.light(i, 0);
+                out.normalX(i, 0); out.normalY(i, 0); out.normalZ(i, 1);
             }
         }
     }

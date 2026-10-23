@@ -34,12 +34,12 @@ public class GradientPostRenderer implements BlockEntityRenderer<GradientPostBlo
         pose.popPose();
         for (int side = 0; side < 2; side++) {
             pose.pushPose();
-            GradientPostLayout.barRotation(pose, post.getGradient(side));
+            GradientPostLayout.barRotation(pose, post.getGradient(side), side, post.tunnelMode());
             pose.pushPose();
-            GradientPostLayout.barModel(pose, side);
+            GradientPostLayout.barModel(pose, side, post.tunnelMode());
             model(PartialModelRegistry.GRADIENT_POST_BAR, post, pose, buffers, light, overlay);
             pose.popPose();
-            GradientPostLayout.textFace(pose, side);
+            GradientPostLayout.textFace(pose, side, post.tunnelMode());
             var glyphs = GradientPostText.glyphs(post.getGradient(side), post.showDecimals(), post.useLetterO(), text ->
                 SignText.font().width(SignText.sequence(text, SignText.FontMode.MINECRAFT_ENGLISH)));
             for (var glyph : glyphs) {

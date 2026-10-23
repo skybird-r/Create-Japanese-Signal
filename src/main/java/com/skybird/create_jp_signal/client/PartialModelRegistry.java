@@ -15,10 +15,23 @@ public class PartialModelRegistry {
     public static final PartialModel PENALTY_MARKER = block("track_overlay/penalty_marker");
     public static final PartialModel RESERVATION_LIMIT_MARKER = block("track_overlay/reservation_limit_marker");
 
+    public static final PartialModel SPEED_LIMIT_SIGN = block("sign/speed_limit_sign");
+    public static final PartialModel SPEED_LIMIT_END_SIGN = block("sign/speed_limit_end_sign");
+    public static final PartialModel TRAIN_STOP_LIMIT_SIGN = block("sign/train_stop_limit_sign");
+    public static final PartialModel SHUNT_LIMIT_SIGN = block("sign/shunt_limit_sign");
+    public static final PartialModel TRACK_END_SIGN = block("sign/track_end_sign");
+    public static final PartialModel SPEED_LIMIT_SIGN_LEFT = block("sign/speed_limit_sign_left");
+    public static final PartialModel SPEED_LIMIT_SIGN_RIGHT = block("sign/speed_limit_sign_right");
+    public static final PartialModel BLOCK_SIGNAL_NO_PLATE = block("sign/block_signal_no_plate");
+    public static final PartialModel SIGN_POST = block("sign/sign_post");
+
     public static final PartialModel GRADIENT_POST = block("sign/gradient_post");
     public static final PartialModel GRADIENT_POST_BAR = block("sign/gradient_post_bar");
 
     public static final PartialModel KILOMETER_POST = block("sign/kilometer_post");
+
+    public static final PartialModel SIGNAL_NAME_BOARD = block("sign/signal_name_board");
+    public static final PartialModel SIGNAL_NAME_BOARD_POST = block("sign/signal_name_board_post");
 
     public static final PartialModel SIGNAL_MAST = block("signal_mast");
 

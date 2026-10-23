@@ -20,7 +20,7 @@ public class KilometerPostBlockEntity extends BlockEntity implements MenuProvide
     private int xPos = 8;
     private int zPos = 8;
     private int distance;
-    private boolean useLetterO;
+    private boolean useLetterO = true;
     public boolean clientVisualChanged = true;
 
     public KilometerPostBlockEntity(BlockPos pos, BlockState state) {
@@ -68,7 +68,7 @@ public class KilometerPostBlockEntity extends BlockEntity implements MenuProvide
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        useLetterO = tag.getBoolean("UseLetterO");
+        useLetterO = !tag.contains("UseLetterO") || tag.getBoolean("UseLetterO");
         rotation = tag.getInt("Rotation") & 15;
         xPos = tag.contains("XPos") ? Mth.clamp(tag.getInt("XPos"), 0, 16) : 8;
         zPos = tag.contains("ZPos") ? Mth.clamp(tag.getInt("ZPos"), 0, 16) : 8;

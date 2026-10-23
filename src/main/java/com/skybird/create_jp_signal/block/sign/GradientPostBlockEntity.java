@@ -23,7 +23,8 @@ public class GradientPostBlockEntity extends BlockEntity implements MenuProvider
     private int frontGradient;
     private int backGradient;
     private boolean showDecimals = true;
-    private boolean useLetterO;
+    private boolean useLetterO = true;
+    private boolean tunnelMode;
     public boolean clientVisualChanged = true;
 
     public GradientPostBlockEntity(BlockPos pos, BlockState state) {
@@ -38,6 +39,7 @@ public class GradientPostBlockEntity extends BlockEntity implements MenuProvider
     public int getFrontGradient() { return frontGradient; }
     public int getBackGradient() { return backGradient; }
     public int getGradient(int side) { return side == 0 ? frontGradient : backGradient; }
+    public boolean tunnelMode() { return tunnelMode; }
     public boolean showDecimals() { return showDecimals; }
 
     public void setPlacementData(int rotation, int x, int z) {
@@ -47,14 +49,15 @@ public class GradientPostBlockEntity extends BlockEntity implements MenuProvider
         notifyUpdate();
     }
 
-    public void setGradients(int front, int back, boolean decimals, boolean useLetterO) {
+    public void setGradients(int front, int back, boolean decimals, boolean useLetterO, boolean tunnelMode) {
         int newFront = Mth.clamp(front, -9999, 9999);
         int newBack = Mth.clamp(back, -9999, 9999);
-        if (frontGradient == newFront && backGradient == newBack && showDecimals == decimals && this.useLetterO == useLetterO) return;
+        if (frontGradient == newFront && backGradient == newBack && showDecimals == decimals && this.useLetterO == useLetterO && this.tunnelMode == tunnelMode) return;
         frontGradient = newFront;
         backGradient = newBack;
         showDecimals = decimals;
         this.useLetterO = useLetterO;
+        this.tunnelMode = tunnelMode;
         notifyUpdate();
     }
 
@@ -68,6 +71,7 @@ public class GradientPostBlockEntity extends BlockEntity implements MenuProvider
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putBoolean("UseLetterO", useLetterO);
+        tag.putBoolean("TunnelMode", tunnelMode);
         tag.putInt("Rotation", rotation);
         tag.putInt("XPos", xPos);
         tag.putInt("ZPos", zPos);
@@ -79,7 +83,9 @@ public class GradientPostBlockEntity extends BlockEntity implements MenuProvider
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        useLetterO = tag.getBoolean("UseLetterO");
+        useLetterO = !tag.contains("UseLetterO") || tag.getBoolean("UseLetterO");
+        // Missing in older worlds: false keeps their original, normal configuration.
+        tunnelMode = tag.getBoolean("TunnelMode");
         rotation = tag.getInt("Rotation") & 15;
         xPos = tag.contains("XPos") ? Mth.clamp(tag.getInt("XPos"), 0, 16) : 8;
         zPos = tag.contains("ZPos") ? Mth.clamp(tag.getInt("ZPos"), 0, 16) : 8;

@@ -22,7 +22,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class GradientPostBlock extends BaseEntityBlock implements IWrenchable {
     public GradientPostBlock(Properties properties) {
-        super(properties.noOcclusion().strength(1.5F, 6.0F));
+        super(properties.noCollission().noOcclusion().strength(1.5F, 6.0F));
     }
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new GradientPostBlockEntity(pos, state); }
@@ -40,17 +40,21 @@ public class GradientPostBlock extends BaseEntityBlock implements IWrenchable {
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         double x = 8, z = 8;
         int rotation = 0;
+        boolean tunnelMode = false;
         if (level.getBlockEntity(pos) instanceof GradientPostBlockEntity marker) {
             x = marker.getXPos(); z = marker.getZPos();
             rotation = marker.getRotation();
+            tunnelMode = marker.tunnelMode();
         }
         double angle = Math.toRadians(180 - rotation * 22.5);
         double shaftRadius = 1.5 * (Math.abs(Math.cos(angle)) + Math.abs(Math.sin(angle)));
         // The full sweep covers all three bar slopes, including their outer tips.
         double minX = x - shaftRadius, maxX = x + shaftRadius;
         double minZ = z - shaftRadius, maxZ = z + shaftRadius;
-        for (double localX : new double[] {-10.1, 2.5}) {
-            for (double localZ : new double[] {-2, 2}) {
+        double[] barX = tunnelMode ? new double[] {-12.5, 12.5} : new double[] {-10.1, 2.5};
+        double[] barZ = tunnelMode ? new double[] {1.5, 2} : new double[] {-2, 2};
+        for (double localX : barX) {
+            for (double localZ : barZ) {
                 double worldX = x + localX * Math.cos(angle) + localZ * Math.sin(angle);
                 double worldZ = z - localX * Math.sin(angle) + localZ * Math.cos(angle);
                 minX = Math.min(minX, worldX); maxX = Math.max(maxX, worldX);
@@ -59,7 +63,7 @@ public class GradientPostBlock extends BaseEntityBlock implements IWrenchable {
         }
         return net.minecraft.world.phys.shapes.Shapes.or(
             Block.box(x - shaftRadius, 0, z - shaftRadius, x + shaftRadius, 18, z + shaftRadius),
-            Block.box(minX, 6, minZ, maxX, 19, maxZ));
+            Block.box(minX, tunnelMode ? 4.75 : 6, minZ, maxX, tunnelMode ? 20.25 : 19, maxZ));
     }
 
     @Override
@@ -73,6 +77,7 @@ public class GradientPostBlock extends BaseEntityBlock implements IWrenchable {
                 buffer.writeVarInt(marker.getBackGradient());
                 buffer.writeBoolean(marker.showDecimals());
                 buffer.writeBoolean(marker.useLetterO());
+                buffer.writeBoolean(marker.tunnelMode());
             });
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

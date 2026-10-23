@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 public class GradientPostMenu extends AbstractContainerMenu {
     public final BlockPos pos;
     public final boolean useLetterO;
+    public final boolean tunnelMode;
     public final int frontGradient;
     public final int backGradient;
     public final boolean showDecimals;
@@ -25,6 +26,7 @@ public class GradientPostMenu extends AbstractContainerMenu {
         backGradient = post.getBackGradient();
         showDecimals = post.showDecimals();
         useLetterO = post.useLetterO();
+        tunnelMode = post.tunnelMode();
     }
 
     public GradientPostMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
@@ -35,6 +37,7 @@ public class GradientPostMenu extends AbstractContainerMenu {
         backGradient = buffer.readVarInt();
         showDecimals = buffer.readBoolean();
         useLetterO = buffer.readBoolean();
+        tunnelMode = buffer.readBoolean();
     }
 
     @Override public boolean stillValid(Player player) {

@@ -1,5 +1,7 @@
 package com.skybird.create_jp_signal;
 
+import com.skybird.create_jp_signal.block.sign.RailwaySignBlockEntity;
+
 import com.skybird.create_jp_signal.block.sign.GradientPostBlockEntity;
 
 import com.skybird.create_jp_signal.block.sign.KilometerPostBlockEntity;
@@ -26,6 +28,11 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, JpSignals.MODID);
+
+    public static final RegistryObject<BlockEntityType<RailwaySignBlockEntity>> RAILWAY_SIGN_ENTITY =
+        BLOCK_ENTITIES.register("railway_sign_entity", () -> BlockEntityType.Builder.of(RailwaySignBlockEntity::new,
+            AllBlocks.SPEED_LIMIT_SIGN.get(), AllBlocks.SPEED_LIMIT_END_SIGN.get(), AllBlocks.TRAIN_STOP_LIMIT_SIGN.get(),
+            AllBlocks.SHUNT_LIMIT_SIGN.get(), AllBlocks.TRACK_END_SIGN.get(), AllBlocks.BLOCK_SIGNAL_NO_PLATE.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<GradientPostBlockEntity>> GRADIENT_POST_ENTITY =
         BLOCK_ENTITIES.register("gradient_post_entity", () -> BlockEntityType.Builder.of(

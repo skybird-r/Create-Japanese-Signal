@@ -82,6 +82,9 @@ public class BaseSignalBlockEntityRenderer implements BlockEntityRenderer<BaseSi
                 Vec3 offset = be.getHeadOffset(entry.getKey());
                 Pair<Double, Double> rotation = be.getHeadRotation(entry.getKey());
                 headRenderer.render(pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, entry.getValue(), be, pPackedLight, pPackedOverlay, offset, rotation);
+                if (!flywheelActive)
+                    SignalNameBoardRenderer.render(pPoseStack, pBufferSource, pPackedLight, pPackedOverlay,
+                        entry.getValue(), be, offset, rotation);
                 pPoseStack.popPose();
             }
             

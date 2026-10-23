@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class PacketHandler {
-    private static final String PROTOCOL_VERSION = "5";
+    private static final String PROTOCOL_VERSION = "9";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(JpSignals.MODID, "main"),
         () -> PROTOCOL_VERSION,
@@ -69,6 +69,15 @@ public class PacketHandler {
             SetGradientPostPacket::encode, SetGradientPostPacket::decode, SetGradientPostPacket::handle);
         CHANNEL.registerMessage(id++, MeasureTrackCurvePacket.class,
             MeasureTrackCurvePacket::encode, MeasureTrackCurvePacket::decode, MeasureTrackCurvePacket::handle,
+            java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(id++, SetSignalNamesPacket.class,
+            SetSignalNamesPacket::encode, SetSignalNamesPacket::decode, SetSignalNamesPacket::handle,
+            java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(id++, SetSpeedLimitSignPacket.class,
+            SetSpeedLimitSignPacket::encode, SetSpeedLimitSignPacket::decode, SetSpeedLimitSignPacket::handle,
+            java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(id++, SetBlockSignalNumberPacket.class,
+            SetBlockSignalNumberPacket::encode, SetBlockSignalNumberPacket::decode, SetBlockSignalNumberPacket::handle,
             java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
     }
 

@@ -53,6 +53,10 @@ final class SignalInstanceManager {
         return new SignalModelData(instance);
     }
 
+    SignalModelData create(Model model) {
+        return new SignalModelData(instancerProvider.instancer(InstanceTypes.TRANSFORMED, model).createInstance());
+    }
+
     SignalModelData createFullBright(PartialModel model) {
         TransformedInstance instance = instancerProvider
             .instancer(InstanceTypes.TRANSFORMED, FULL_BRIGHT_CUTOUT_MODELS.get(model))
@@ -83,6 +87,8 @@ final class SignalInstanceManager {
             instance.color(color.getRed(), color.getGreen(), color.getBlue());
             instance.setChanged();
         }
+
+        void setColor(int r, int g, int b) { instance.color(r, g, b).setChanged(); }
 
         void delete() {
             instance.delete();

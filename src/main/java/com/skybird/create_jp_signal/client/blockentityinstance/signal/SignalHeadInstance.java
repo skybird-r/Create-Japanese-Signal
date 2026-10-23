@@ -36,11 +36,14 @@ public abstract class SignalHeadInstance {
 
     protected final List<SignalModelData> allModels = new ArrayList<>();
 
+    private final SignalNameBoardInstance nameBoard;
+
     private Vec3 currentOffset = Vec3.ZERO;
     private Pair<Double, Double> currentRotation = Pair.of(0.0, 0.0);
 
     public SignalHeadInstance(SignalInstanceManager materialManager, SignalHead signalHead, BlockEntity be) {
         this.materialManager = materialManager;
+        nameBoard = new SignalNameBoardInstance(materialManager);
         this.signalHead = signalHead;
         this.blockEntity = be;
         accessory = new SignalAccessoryInstance(materialManager, signalHead);
@@ -50,6 +53,7 @@ public abstract class SignalHeadInstance {
     public void init(SignalHead signalHead, PoseStack ms, BlockPos pos, Vec3 offset, Pair<Double, Double> rotation) {
         this.pos = pos;
         if (this.signalHead.getAppearance().hasSameStaticParts(signalHead.getAppearance()) 
+                && this.signalHead.getSignalName().equals(signalHead.getSignalName())
                 && this.currentOffset.equals(offset) 
                 && this.currentRotation.equals(rotation) 
                 && !allModels.isEmpty()) {
@@ -63,6 +67,8 @@ public abstract class SignalHeadInstance {
         initInternal(signalHead, ms, pos, offset, rotation);
         initAccessory(signalHead, ms, pos, offset, rotation);
         initMastCoupler(ms, offset, rotation);
+        if (blockEntity instanceof com.skybird.create_jp_signal.block.signal.BaseSignalBlockEntity signal)
+            nameBoard.init(signalHead, signal, ms, offset, rotation);
     }
 
     public abstract void initInternal(SignalHead signalHead, PoseStack ms, BlockPos pos, Vec3 offset, Pair<Double, Double> rotation);
@@ -93,6 +99,7 @@ public abstract class SignalHeadInstance {
 
     public void updateLight(Level level, BlockPos pos) {
         accessory.updateLight(level, pos);
+        nameBoard.updateLight(level, pos);
         mastCouplerInstances.forEach(coupler -> coupler.updateLight(level, pos));
     }
 
@@ -100,6 +107,7 @@ public abstract class SignalHeadInstance {
         allModels.forEach(SignalModelData::delete);
         allModels.clear();
         accessory.delete();
+        nameBoard.delete();
         mastCouplerPositions.clear();
         mastCouplerInstances.forEach(SignalMastCouplerInstance::delete);
         mastCouplerInstances.clear();
@@ -112,6 +120,7 @@ public abstract class SignalHeadInstance {
     public void collectCrumblingInstances(Consumer<Instance> consumer) {
         allModels.forEach(model -> consumer.accept(model.instance()));
         accessory.collectCrumblingInstances(consumer);
+        nameBoard.collectCrumblingInstances(consumer);
         mastCouplerInstances.forEach(coupler -> coupler.collectCrumblingInstances(consumer));
     }
 }

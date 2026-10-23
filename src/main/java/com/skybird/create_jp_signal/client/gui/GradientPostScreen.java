@@ -19,11 +19,12 @@ public class GradientPostScreen extends AbstractContainerScreen<GradientPostMenu
     private ModularGuiLine backLine;
     private Checkbox decimals;
     private Checkbox letterO;
+    private Checkbox tunnel;
 
     public GradientPostScreen(GradientPostMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         imageWidth = 220;
-        imageHeight = 175;
+        imageHeight = 200;
     }
 
     @Override protected void init() {
@@ -36,6 +37,7 @@ public class GradientPostScreen extends AbstractContainerScreen<GradientPostMenu
             data.putInt("Front", menu.frontGradient);
             data.putInt("Back", menu.backGradient);
         }
+        boolean tunnelMode = tunnel == null ? menu.tunnelMode : tunnel.selected();
         boolean useLetterO = letterO == null ? menu.useLetterO : letterO.selected();
         boolean showDecimals = decimals == null ? menu.showDecimals : decimals.selected();
         frontLine = createLine(40, "Front", "front");
@@ -46,8 +48,10 @@ public class GradientPostScreen extends AbstractContainerScreen<GradientPostMenu
             Component.translatable("create_jp_signal.gui.gradient_post.decimals"), showDecimals));
         letterO = addRenderableWidget(new Checkbox(leftPos + 20, topPos + 118, 180, 20,
             Component.translatable("create_jp_signal.gui.sign.use_letter_o"), useLetterO));
+        tunnel = addRenderableWidget(new Checkbox(leftPos + 20, topPos + 142, 180, 20,
+            Component.translatable("create_jp_signal.gui.gradient_post.tunnel_mode"), tunnelMode));
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
-            .bounds(leftPos + 60, topPos + 148, 100, 20).build());
+            .bounds(leftPos + 60, topPos + 173, 100, 20).build());
     }
 
     private ModularGuiLine createLine(int y, String key, String title) {
@@ -67,7 +71,7 @@ public class GradientPostScreen extends AbstractContainerScreen<GradientPostMenu
             frontLine.saveValues(data);
             backLine.saveValues(data);
             PacketHandler.sendToServer(new SetGradientPostPacket(menu.pos,
-                data.getInt("Front"), data.getInt("Back"), decimals.selected(), letterO.selected()));
+                data.getInt("Front"), data.getInt("Back"), decimals.selected(), letterO.selected(), tunnel.selected()));
         }
         super.onClose();
     }
@@ -76,8 +80,8 @@ public class GradientPostScreen extends AbstractContainerScreen<GradientPostMenu
     }
     @Override protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawCenteredString(font, title, imageWidth / 2, 8, 0xFFFFFF);
-        graphics.drawString(font, Component.translatable("create_jp_signal.gui.gradient_post.front"), 20, 24, 0xFFFFFF);
-        graphics.drawString(font, Component.translatable("create_jp_signal.gui.gradient_post.back"), 20, 57, 0xFFFFFF);
+        graphics.drawString(font, Component.translatable("create_jp_signal.gui.gradient_post." + (tunnel.selected() ? "left" : "front")), 20, 24, 0xFFFFFF);
+        graphics.drawString(font, Component.translatable("create_jp_signal.gui.gradient_post." + (tunnel.selected() ? "right" : "back")), 20, 57, 0xFFFFFF);
     }
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);

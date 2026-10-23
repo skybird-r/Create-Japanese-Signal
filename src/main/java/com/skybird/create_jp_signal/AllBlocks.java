@@ -1,5 +1,9 @@
 package com.skybird.create_jp_signal;
 
+import com.skybird.create_jp_signal.block.sign.RailwaySignBlock;
+import com.skybird.create_jp_signal.block.sign.RailwaySignBlockItem;
+import com.skybird.create_jp_signal.block.sign.RailwaySignType;
+
 import com.skybird.create_jp_signal.block.sign.GradientPostBlock;
 import com.skybird.create_jp_signal.block.sign.GradientPostBlockItem;
 
@@ -35,6 +39,36 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JpSignals.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JpSignals.MODID);
+
+    public static final RegistryObject<Block> BLOCK_SIGNAL_NO_PLATE = BLOCKS.register("block_signal_no_plate",
+        () -> new RailwaySignBlock(BlockBehaviour.Properties.of(), RailwaySignType.BLOCK_SIGNAL_NO_PLATE));
+    public static final RegistryObject<Item> BLOCK_SIGNAL_NO_PLATE_ITEM = ITEMS.register("block_signal_no_plate",
+        () -> new RailwaySignBlockItem(BLOCK_SIGNAL_NO_PLATE.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> SPEED_LIMIT_SIGN = BLOCKS.register("speed_limit_sign",
+        () -> new RailwaySignBlock(BlockBehaviour.Properties.of(), RailwaySignType.SPEED_LIMIT));
+    public static final RegistryObject<Item> SPEED_LIMIT_SIGN_ITEM = ITEMS.register("speed_limit_sign",
+        () -> new RailwaySignBlockItem(SPEED_LIMIT_SIGN.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> SPEED_LIMIT_END_SIGN = BLOCKS.register("speed_limit_end_sign",
+        () -> new RailwaySignBlock(BlockBehaviour.Properties.of(), RailwaySignType.SPEED_LIMIT_END));
+    public static final RegistryObject<Item> SPEED_LIMIT_END_SIGN_ITEM = ITEMS.register("speed_limit_end_sign",
+        () -> new RailwaySignBlockItem(SPEED_LIMIT_END_SIGN.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> TRAIN_STOP_LIMIT_SIGN = BLOCKS.register("train_stop_limit_sign",
+        () -> new RailwaySignBlock(BlockBehaviour.Properties.of(), RailwaySignType.TRAIN_STOP_LIMIT));
+    public static final RegistryObject<Item> TRAIN_STOP_LIMIT_SIGN_ITEM = ITEMS.register("train_stop_limit_sign",
+        () -> new RailwaySignBlockItem(TRAIN_STOP_LIMIT_SIGN.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> SHUNT_LIMIT_SIGN = BLOCKS.register("shunt_limit_sign",
+        () -> new RailwaySignBlock(BlockBehaviour.Properties.of(), RailwaySignType.SHUNT_LIMIT));
+    public static final RegistryObject<Item> SHUNT_LIMIT_SIGN_ITEM = ITEMS.register("shunt_limit_sign",
+        () -> new RailwaySignBlockItem(SHUNT_LIMIT_SIGN.get(), new Item.Properties()));
+
+    public static final RegistryObject<Block> TRACK_END_SIGN = BLOCKS.register("track_end_sign",
+        () -> new RailwaySignBlock(BlockBehaviour.Properties.of(), RailwaySignType.TRACK_END));
+    public static final RegistryObject<Item> TRACK_END_SIGN_ITEM = ITEMS.register("track_end_sign",
+        () -> new RailwaySignBlockItem(TRACK_END_SIGN.get(), new Item.Properties()));
 
     public static final RegistryObject<Block> GRADIENT_POST = BLOCKS.register("gradient_post",
         () -> new GradientPostBlock(BlockBehaviour.Properties.of()));
